@@ -1,0 +1,21 @@
+{
+  "name": "gproa-web-v3",
+  "version": "1.0.0",
+  "description": "GProA Technology - Landing Page v3",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "gproa",
+    "technology",
+    "portfolio"
+  ],
+  "author": "GProA Technology",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}
