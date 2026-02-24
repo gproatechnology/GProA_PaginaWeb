@@ -1,6 +1,6 @@
 /**
  * Noticias IA Carousel Module
- * Navegación estilo Windows Explorer con puntos
+ * Navegación estilo Windows Explorer con puntos y filtros
  */
 
 export function initNoticiasIA() {
@@ -8,13 +8,13 @@ export function initNoticiasIA() {
     const dots = document.querySelectorAll('.noticia-dot');
     const prevBtn = document.getElementById('noticiasPrev');
     const nextBtn = document.getElementById('noticiasNext');
+    const filterBtns = document.querySelectorAll('.filter-btn');
     
-    if (!track || !dots.length) return;
+    if (!track) return;
 
     let currentIndex = 0;
+    let currentFilter = 'todas';
     let cardsPerView = getCardsPerView();
-    const totalCards = track.children.length;
-    const maxIndex = Math.max(0, totalCards - cardsPerView);
 
     function getCardsPerView() {
         if (window.innerWidth <= 768) return 1;
@@ -22,15 +22,40 @@ export function initNoticiasIA() {
         return 3;
     }
 
-    function updateCarousel() {
-        const cardWidth = track.children[0].offsetWidth + 30; // width + gap
-        const offset = currentIndex * cardWidth;
-        track.style.transform = `translateX(-${offset}px)`;
+    function getVisibleCards() {
+        const allCards = Array.from(track.querySelectorAll('.noticia-card'));
+        if (currentFilter === 'todas') {
+            return allCards.filter(card => !card.classList.contains('hidden'));
+        }
+        return allCards.filter(card => card.dataset.category === currentFilter && !card.classList.contains('hidden'));
+    }
 
-        // Update dots
+    function updateDots() {
+        const visibleCards = getVisibleCards();
+        const maxIndex = Math.max(0, visibleCards.length - cardsPerView);
+        
+        // Update dots visibility
         dots.forEach((dot, index) => {
+            dot.style.display = index < visibleCards.length ? 'block' : 'none';
             dot.classList.toggle('active', index === currentIndex);
         });
+    }
+
+    function updateCarousel() {
+        const visibleCards = getVisibleCards();
+        const maxIndex = Math.max(0, visibleCards.length - cardsPerView);
+        
+        // Ensure currentIndex is within bounds
+        currentIndex = Math.max(0, Math.min(currentIndex, maxIndex));
+
+        if (visibleCards.length > 0) {
+            const cardWidth = visibleCards[0].offsetWidth + 30; // width + gap
+            const offset = currentIndex * cardWidth;
+            track.style.transform = `translateX(-${offset}px)`;
+        }
+
+        // Update dots
+        updateDots();
 
         // Update button states
         if (prevBtn) {
@@ -43,10 +68,43 @@ export function initNoticiasIA() {
         }
     }
 
+    function filterCards(category) {
+        currentFilter = category;
+        currentIndex = 0;
+        
+        const allCards = track.querySelectorAll('.noticia-card');
+        
+        allCards.forEach((card, index) => {
+            if (category === 'todas' || card.dataset.category === category) {
+                card.classList.remove('hidden');
+                // Reset animation
+                card.style.animation = 'none';
+                card.offsetHeight; // Trigger reflow
+                card.style.animation = `fadeInUp 0.6s ease forwards ${index * 0.05}s`;
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+
+        // Small delay to allow cards to be filtered before updating carousel
+        setTimeout(updateCarousel, 50);
+    }
+
     function goToSlide(index) {
+        const visibleCards = getVisibleCards();
+        const maxIndex = Math.max(0, visibleCards.length - cardsPerView);
         currentIndex = Math.max(0, Math.min(index, maxIndex));
         updateCarousel();
     }
+
+    // Filter buttons
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterCards(btn.dataset.filter);
+        });
+    });
 
     // Dot navigation
     dots.forEach((dot, index) => {
@@ -118,42 +176,10 @@ export function initNoticiasIA() {
             const newCardsPerView = getCardsPerView();
             if (newCardsPerView !== cardsPerView) {
                 cardsPerView = newCardsPerView;
-                // Recalculate max index
-                const newMaxIndex = Math.max(0, totalCards - cardsPerView);
-                if (currentIndex > newMaxIndex) {
-                    currentIndex = newMaxIndex;
-                }
                 updateCarousel();
             }
         }, 250);
     });
-
-    // Auto-play (optional - disabled by default)
-    // Uncomment to enable auto-play
-    /*
-    let autoPlayInterval;
-    
-    function startAutoPlay() {
-        autoPlayInterval = setInterval(() => {
-            if (currentIndex >= maxIndex) {
-                currentIndex = 0;
-            } else {
-                currentIndex++;
-            }
-            updateCarousel();
-        }, 5000);
-    }
-
-    function stopAutoPlay() {
-        clearInterval(autoPlayInterval);
-    }
-
-    const carousel = document.querySelector('.noticias-carousel');
-    carousel.addEventListener('mouseenter', stopAutoPlay);
-    carousel.addEventListener('mouseleave', startAutoPlay);
-    
-    startAutoPlay();
-    */
 
     // Initial update
     updateCarousel();

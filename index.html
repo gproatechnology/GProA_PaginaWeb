@@ -152,77 +152,183 @@
                 <p>Las últimas novedades en inteligencia artificial y automatización</p>
             </header>
 
+            <!-- Filtros de categoría -->
+            <div class="noticias-filters" id="noticiasFilters">
+                <button class="filter-btn active" data-filter="todas">
+                    <i class="fas fa-globe"></i> Todas
+                </button>
+                <button class="filter-btn" data-filter="ia-generativa">
+                    <i class="fas fa-brain"></i> IA Generativa
+                </button>
+                <button class="filter-btn" data-filter="hardware">
+                    <i class="fas fa-microchip"></i> Hardware
+                </button>
+                <button class="filter-btn" data-filter="industria">
+                    <i class="fas fa-industry"></i> Industria
+                </button>
+                <button class="filter-btn" data-filter="mercado">
+                    <i class="fas fa-chart-line"></i> Mercado
+                </button>
+                <button class="filter-btn" data-filter="etica">
+                    <i class="fas fa-balance-scale"></i> Ética
+                </button>
+            </div>
+
             <div class="noticias-carousel">
                 <div class="noticias-track" id="noticiasTrack">
-                    <!-- Noticia 1 -->
-                    <article class="noticia-card">
+                    <!-- Noticia 1 - IA Generativa -->
+                    <article class="noticia-card" data-category="ia-generativa">
                         <div class="noticia-icon">
                             <i class="fas fa-brain"></i>
                         </div>
                         <div class="noticia-content">
+                            <span class="noticia-category">IA Generativa</span>
                             <h3>GPT-5: Nueva Era en IA</h3>
                             <p>OpenAI lanza GPT-5 con capacidades de razonamiento avanzado, revolucionando la interacción humano-máquina.</p>
                             <span class="noticia-date"><i class="fas fa-calendar"></i> Feb 2025</span>
                         </div>
                     </article>
 
-                    <!-- Noticia 2 -->
-                    <article class="noticia-card">
+                    <!-- Noticia 2 - Hardware -->
+                    <article class="noticia-card" data-category="hardware">
                         <div class="noticia-icon">
                             <i class="fas fa-microchip"></i>
                         </div>
                         <div class="noticia-content">
+                            <span class="noticia-category">Hardware</span>
                             <h3>Chips Especializados IA</h3>
                             <p>NVIDIA presenta nuevos chips especializados para IA generativa con 10x más rendimiento.</p>
                             <span class="noticia-date"><i class="fas fa-calendar"></i> Ene 2025</span>
                         </div>
                     </article>
 
-                    <!-- Noticia 3 -->
-                    <article class="noticia-card">
+                    <!-- Noticia 3 - Industria -->
+                    <article class="noticia-card" data-category="industria">
                         <div class="noticia-icon">
                             <i class="fas fa-industry"></i>
                         </div>
                         <div class="noticia-content">
+                            <span class="noticia-category">Industria</span>
                             <h3>Automatización Industrial</h3>
                             <p>La automatización industrial reduce costos en un 40% con implementación de IA.</p>
                             <span class="noticia-date"><i class="fas fa-calendar"></i> Ene 2025</span>
                         </div>
                     </article>
 
-                    <!-- Noticia 4 -->
-                    <article class="noticia-card">
+                    <!-- Noticia 4 - Mercado -->
+                    <article class="noticia-card" data-category="mercado">
                         <div class="noticia-icon">
                             <i class="fas fa-chart-line"></i>
                         </div>
                         <div class="noticia-content">
+                            <span class="noticia-category">Mercado</span>
                             <h3>Mercado de IA</h3>
                             <p>El mercado de IA alcanzará $500 mil millones en 2025, según nuevos estudios.</p>
                             <span class="noticia-date"><i class="fas fa-calendar"></i> Dic 2024</span>
                         </div>
                     </article>
 
-                    <!-- Noticia 5 -->
-                    <article class="noticia-card">
+                    <!-- Noticia 5 - Industria -->
+                    <article class="noticia-card" data-category="industria">
                         <div class="noticia-icon">
                             <i class="fas fa-cogs"></i>
                         </div>
                         <div class="noticia-content">
+                            <span class="noticia-category">Industria</span>
                             <h3>Gemelos Digitales</h3>
                             <p>Los gemelos digitales transforman la manufactura inteligente con simulación en tiempo real.</p>
                             <span class="noticia-date"><i class="fas fa-calendar"></i> Dic 2024</span>
                         </div>
                     </article>
 
-                    <!-- Noticia 6 -->
-                    <article class="noticia-card">
+                    <!-- Noticia 6 - Ética -->
+                    <article class="noticia-card" data-category="etica">
                         <div class="noticia-icon">
-                            <i class="fas fa-shield-alt"></i>
+                            <i class="fas fa-balance-scale"></i>
                         </div>
                         <div class="noticia-content">
+                            <span class="noticia-category">Ética</span>
                             <h3>Ética en IA</h3>
                             <p>Nueva normativa de ética en IA implementada globalmente para uso responsable.</p>
                             <span class="noticia-date"><i class="fas fa-calendar"></i> Nov 2024</span>
+                        </div>
+                    </article>
+
+                    <!-- Noticia 7 - IA Generativa -->
+                    <article class="noticia-card" data-category="ia-generativa">
+                        <div class="noticia-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="noticia-content">
+                            <span class="noticia-category">IA Generativa</span>
+                            <h3>Claude 4 de Anthropic</h3>
+                            <p>Anthropic lanza Claude 4 con capacidades de razonamiento mejoradas y contexto extendido.</p>
+                            <span class="noticia-date"><i class="fas fa-calendar"></i> Nov 2024</span>
+                        </div>
+                    </article>
+
+                    <!-- Noticia 8 - Hardware -->
+                    <article class="noticia-card" data-category="hardware">
+                        <div class="noticia-icon">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <div class="noticia-content">
+                            <span class="noticia-category">Hardware</span>
+                            <h3>TPU v5 de Google</h3>
+                            <p>Google presenta TPU v5 con rendimiento 4x superior para entrenamiento de modelos grandes.</p>
+                            <span class="noticia-date"><i class="fas fa-calendar"></i> Oct 2024</span>
+                        </div>
+                    </article>
+
+                    <!-- Noticia 9 - Mercado -->
+                    <article class="noticia-card" data-category="mercado">
+                        <div class="noticia-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="noticia-content">
+                            <span class="noticia-category">Mercado</span>
+                            <h3>Inversión en Startups IA</h3>
+                            <p>Las startups de IA recaudan $100 mil millones en 2024, récord histórico de inversión.</p>
+                            <span class="noticia-date"><i class="fas fa-calendar"></i> Oct 2024</span>
+                        </div>
+                    </article>
+
+                    <!-- Noticia 10 - Industria -->
+                    <article class="noticia-card" data-category="industria">
+                        <div class="noticia-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <div class="noticia-content">
+                            <span class="noticia-category">Industria</span>
+                            <h3>Robótica Inteligente</h3>
+                            <p>Nueva generación de robots colaborativos con IA integrada para fábricas del futuro.</p>
+                            <span class="noticia-date"><i class="fas fa-calendar"></i> Sep 2024</span>
+                        </div>
+                    </article>
+
+                    <!-- Noticia 11 - Ética -->
+                    <article class="noticia-card" data-category="etica">
+                        <div class="noticia-icon">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <div class="noticia-content">
+                            <span class="noticia-category">Ética</span>
+                            <h3>Privacidad en IA</h3>
+                            <p>UE aprueba nuevas regulaciones de privacidad para sistemas de IA empresariales.</p>
+                            <span class="noticia-date"><i class="fas fa-calendar"></i> Sep 2024</span>
+                        </div>
+                    </article>
+
+                    <!-- Noticia 12 - IA Generativa -->
+                    <article class="noticia-card" data-category="ia-generativa">
+                        <div class="noticia-icon">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="noticia-content">
+                            <span class="noticia-category">IA Generativa</span>
+                            <h3>DALL-E 4 y Midjourney v7</h3>
+                            <p>Nueva generación de generadores de imágenes con fotorrealismo sin precedentes.</p>
+                            <span class="noticia-date"><i class="fas fa-calendar"></i> Ago 2024</span>
                         </div>
                     </article>
                 </div>
@@ -235,6 +341,12 @@
                     <button class="noticia-dot" data-index="3" aria-label="Ver noticia 4"></button>
                     <button class="noticia-dot" data-index="4" aria-label="Ver noticia 5"></button>
                     <button class="noticia-dot" data-index="5" aria-label="Ver noticia 6"></button>
+                    <button class="noticia-dot" data-index="6" aria-label="Ver noticia 7"></button>
+                    <button class="noticia-dot" data-index="7" aria-label="Ver noticia 8"></button>
+                    <button class="noticia-dot" data-index="8" aria-label="Ver noticia 9"></button>
+                    <button class="noticia-dot" data-index="9" aria-label="Ver noticia 10"></button>
+                    <button class="noticia-dot" data-index="10" aria-label="Ver noticia 11"></button>
+                    <button class="noticia-dot" data-index="11" aria-label="Ver noticia 12"></button>
                 </div>
 
                 <!-- Flechas de navegación -->
