@@ -15,7 +15,6 @@
     align-items: center;
     gap: 15px;
     overflow: hidden;
-    transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .ai-news-icon {
@@ -75,16 +74,11 @@
     color: var(--primary);
 }
 
-/* When banner is hidden by close button */
+/* When banner is hidden */
 .ai-news-banner.hidden {
     transform: translateY(-100%);
     opacity: 0;
     pointer-events: none;
-}
-
-/* When banner is hidden by scroll */
-.ai-news-banner.scroll-hidden {
-    transform: translateY(-100%);
 }
 
 /* Adjust navigation when banner is visible */
