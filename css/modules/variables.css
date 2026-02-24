@@ -1,0 +1,50 @@
+/* ============================================
+   CSS Variables - Design Tokens
+   ============================================ */
+
+:root {
+    /* Colors */
+    --primary: #00e0ff;
+    --primary-dark: #00b8d4;
+    --primary-light: #4df3ff;
+    --secondary: #0066ff;
+    --dark: #0a0f1c;
+    --dark-secondary: #0d1526;
+    --darker: #050a14;
+    --light: #e0f2fe;
+    --light-secondary: #94a3b8;
+    --gray: #1e293b;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, #0066ff, #00e0ff);
+    --gradient-dark: linear-gradient(135deg, #0a0f1c, #1e293b);
+    --gradient-card: linear-gradient(135deg, rgba(0, 10, 20, 0.8), rgba(0, 40, 80, 0.8));
+
+    /* Typography */
+    --font-heading: 'Orbitron', sans-serif;
+    --font-body: 'Exo 2', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Spacing */
+    --section-padding: 100px 0;
+    --container-padding: 0 20px;
+
+    /* Transitions */
+    --transition: all 0.3s ease;
+    --transition-slow: all 0.5s ease;
+
+    /* Shadows */
+    --shadow-sm: 0 2px 10px rgba(0, 224, 255, 0.1);
+    --shadow-md: 0 4px 20px rgba(0, 224, 255, 0.15);
+    --shadow-lg: 0 8px 40px rgba(0, 224, 255, 0.2);
+    --shadow-glow: 0 0 30px rgba(0, 224, 255, 0.3);
+
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 15px;
+    --radius-lg: 25px;
+    --radius-full: 50%;
+}

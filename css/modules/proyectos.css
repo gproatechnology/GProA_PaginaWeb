@@ -1,0 +1,141 @@
+/* ============================================
+   Proyectos Section Styles
+   ============================================ */
+
+.proyectos {
+    padding: var(--section-padding);
+    background: var(--dark);
+}
+
+.proyectos-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.proyecto-tab {
+    padding: 12px 25px;
+    background: var(--gray);
+    border-radius: var(--radius-sm);
+    color: var(--light-secondary);
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.proyecto-tab:hover {
+    background: rgba(0, 224, 255, 0.1);
+    color: var(--primary);
+}
+
+.proyecto-tab.active {
+    background: var(--primary);
+    color: var(--dark);
+}
+
+.proyecto-card {
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+    animation: fadeIn 0.5s ease;
+}
+
+.proyecto-card.active {
+    display: grid;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.proyecto-info h3 {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    margin-bottom: 5px;
+}
+
+.proyecto-desc {
+    font-size: 1.1rem;
+    color: var(--primary);
+    margin-bottom: 20px;
+}
+
+.proyecto-info>p {
+    color: var(--light-secondary);
+    margin-bottom: 25px;
+}
+
+.proyecto-features {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.proyecto-features li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--light-secondary);
+}
+
+.proyecto-features li i {
+    color: var(--success);
+}
+
+.proyecto-links {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.proyecto-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.proyecto-placeholder {
+    width: 100%;
+    max-width: 400px;
+    aspect-ratio: 4/3;
+    background: var(--gradient-card);
+    border: 2px dashed rgba(0, 224, 255, 0.3);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.proyecto-placeholder i {
+    font-size: 4rem;
+    color: var(--primary);
+    opacity: 0.5;
+}
+
+.proyecto-placeholder span {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--light-secondary);
+}
+
+@media (max-width: 992px) {
+    .proyecto-card {
+        grid-template-columns: 1fr;
+    }
+    
+    .proyecto-image {
+        order: -1;
+    }
+}
