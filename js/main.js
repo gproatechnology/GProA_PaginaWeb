@@ -12,6 +12,7 @@ import { initProjectTabs } from './modules/project-tabs.js';
 import { initContactForm } from './modules/contact-form.js';
 import { initScrollEffects } from './modules/scroll-effects.js';
 import { initAINewsBanner } from './modules/ai-news-banner.js';
+import { initNoticiasIA } from './modules/noticias-ia.js';
 import './modules/gartner-charts.js';
 import './modules/org-modal.js';
 
@@ -25,4 +26,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initProjectTabs();
     initContactForm();
     initScrollEffects();
+    initNoticiasIA();
 });
