@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initNavigation();
     initHeroCanvas();
     initFloatingSymbols();
+    initServicios();
     initProjectTabs();
     initContactForm();
     initScrollEffects();
@@ -55,6 +56,72 @@ function initNavigation() {
                     behavior: 'smooth',
                     block: 'start'
                 });
+            }
+        });
+    });
+}
+
+/* ============================================
+   Servicios Expandibles
+   ============================================ */
+function initServicios() {
+    const servicioCards = document.querySelectorAll('.servicio-card');
+    
+    servicioCards.forEach(card => {
+        const header = card.querySelector('.servicio-header');
+        const toggle = card.querySelector('.servicio-toggle');
+        
+        // Función para alternar el estado expandido
+        const toggleCard = () => {
+            const isExpanded = card.classList.contains('expanded');
+            
+            // Cerrar todas las demás tarjetas
+            servicioCards.forEach(otherCard => {
+                if (otherCard !== card) {
+                    otherCard.classList.remove('expanded');
+                    const otherToggle = otherCard.querySelector('.servicio-toggle');
+                    if (otherToggle) {
+                        otherToggle.setAttribute('aria-expanded', 'false');
+                    }
+                }
+            });
+            
+            // Alternar la tarjeta actual
+            card.classList.toggle('expanded');
+            
+            // Actualizar aria-expanded
+            if (toggle) {
+                toggle.setAttribute('aria-expanded', !isExpanded);
+            }
+            
+            // Scroll suave hacia la tarjeta si se está expandiendo
+            if (!isExpanded) {
+                setTimeout(() => {
+                    card.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest'
+                    });
+                }, 100);
+            }
+        };
+        
+        // Event listeners
+        if (header) {
+            header.addEventListener('click', toggleCard);
+        }
+        
+        if (toggle) {
+            toggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleCard();
+            });
+        }
+        
+        // Accesibilidad: Enter y Space
+        header?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleCard();
             }
         });
     });
