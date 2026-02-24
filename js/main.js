@@ -11,11 +11,13 @@ import { initServicios } from './modules/servicios.js';
 import { initProjectTabs } from './modules/project-tabs.js';
 import { initContactForm } from './modules/contact-form.js';
 import { initScrollEffects } from './modules/scroll-effects.js';
+import { initAINewsBanner } from './modules/ai-news-banner.js';
 import './modules/gartner-charts.js';
 import './modules/org-modal.js';
 
 // Initialize all modules when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+    initAINewsBanner();
     initNavigation();
     initHeroCanvas();
     initFloatingSymbols();

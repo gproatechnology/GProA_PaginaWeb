@@ -1,0 +1,131 @@
+/* ============================================
+   AI News Banner Styles
+   ============================================ */
+
+.ai-news-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(90deg, var(--darker), var(--dark-secondary), var(--darker));
+    border-bottom: 1px solid rgba(0, 224, 255, 0.2);
+    padding: 10px 0;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    overflow: hidden;
+}
+
+.ai-news-icon {
+    padding: 0 15px;
+    color: var(--primary);
+    font-size: 1.1rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.ai-news-ticker {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.ai-news-track {
+    display: flex;
+    gap: 50px;
+    animation: scroll 60s linear infinite;
+    white-space: nowrap;
+}
+
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.ai-news-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--light);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.ai-news-item i {
+    color: var(--primary);
+    font-size: 0.85rem;
+}
+
+.ai-news-close {
+    padding: 5px 15px;
+    color: var(--light-secondary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.ai-news-close:hover {
+    color: var(--primary);
+}
+
+/* When banner is hidden */
+.ai-news-banner.hidden {
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Adjust navigation when banner is visible */
+.main-nav {
+    top: 0;
+    transition: top 0.3s ease;
+}
+
+body.has-banner .main-nav {
+    top: 45px;
+}
+
+/* Adjust hero section */
+body.has-banner .hero {
+    padding-top: 125px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .ai-news-banner {
+        padding: 8px 0;
+    }
+    
+    .ai-news-item {
+        font-size: 0.8rem;
+    }
+    
+    .ai-news-icon {
+        display: none;
+    }
+    
+    body.has-banner .main-nav {
+        top: 35px;
+    }
+    
+    body.has-banner .hero {
+        padding-top: 115px;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .ai-news-track {
+        animation: none;
+    }
+    
+    .ai-news-icon {
+        animation: none;
+    }
+}

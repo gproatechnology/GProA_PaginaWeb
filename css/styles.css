@@ -6,6 +6,7 @@
 /* Import CSS Modules */
 @import url('./modules/variables.css');
 @import url('./modules/base.css');
+@import url('./modules/ai-news-banner.css');
 @import url('./modules/navigation.css');
 @import url('./modules/hero.css');
 @import url('./modules/buttons.css');
