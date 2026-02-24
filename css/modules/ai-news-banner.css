@@ -61,26 +61,6 @@
     font-size: 0.85rem;
 }
 
-.ai-news-close {
-    padding: 5px 15px;
-    color: var(--light-secondary);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.ai-news-close:hover {
-    color: var(--primary);
-}
-
-/* When banner is hidden */
-.ai-news-banner.hidden {
-    transform: translateY(-100%);
-    opacity: 0;
-    pointer-events: none;
-}
-
 /* Adjust navigation when banner is visible */
 .main-nav {
     top: 0;
