@@ -40,4 +40,34 @@ export function initAINewsBanner() {
             track.style.animationPlayState = 'running';
         });
     }
+
+    // Hide/show banner based on scroll direction
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    const handleScroll = () => {
+        const currentScrollY = window.scrollY;
+        
+        // Only process if banner is not manually closed
+        if (localStorage.getItem('aiNewsBannerHidden') === 'true') return;
+
+        if (currentScrollY > lastScrollY && currentScrollY > 100) {
+            // Scrolling down - hide banner
+            banner.classList.add('scroll-hidden');
+        } else {
+            // Scrolling up - show banner
+            banner.classList.remove('scroll-hidden');
+        }
+
+        lastScrollY = currentScrollY;
+        ticking = false;
+    };
+
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(handleScroll);
+            ticking = true;
+        }
+    }, { passive: true });
 }
+
