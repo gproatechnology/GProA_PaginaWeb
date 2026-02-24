@@ -84,8 +84,11 @@
 </head>
 
 <body>
+    <!-- Skip Link for Accessibility -->
+    <a href="#inicio" class="skip-link">Saltar al contenido principal</a>
+
     <!-- Símbolos flotantes decorativos -->
-    <div class="floating-symbols" id="symbolsContainer"></div>
+    <div class="floating-symbols" id="symbolsContainer" aria-hidden="true"></div>
 
     <!-- Navegación -->
     <nav class="main-nav" id="mainNav">
@@ -653,28 +656,40 @@
                     </div>
                 </div>
 
-                <form class="contacto-form" id="contactForm">
+                <form class="contacto-form" id="contactForm" action="https://formspree.io/f/mdklrzab" method="POST">
                     <div class="form-group">
                         <label for="name">Nombre</label>
-                        <input type="text" id="name" name="name" required>
+                        <input type="text" id="name" name="name" required minlength="2" maxlength="100" placeholder="Tu nombre completo">
+                        <span class="form-error" id="nameError"></span>
                     </div>
 
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" id="email" name="email" required placeholder="tu@email.com">
+                        <span class="form-error" id="emailError"></span>
                     </div>
 
                     <div class="form-group">
                         <label for="subject">Asunto</label>
-                        <input type="text" id="subject" name="subject" required>
+                        <input type="text" id="subject" name="subject" required minlength="5" maxlength="200" placeholder="¿En qué podemos ayudarte?">
+                        <span class="form-error" id="subjectError"></span>
                     </div>
 
                     <div class="form-group">
                         <label for="message">Mensaje</label>
-                        <textarea id="message" name="message" rows="5" required></textarea>
+                        <textarea id="message" name="message" rows="5" required minlength="10" maxlength="2000" placeholder="Describe tu proyecto o consulta..."></textarea>
+                        <span class="form-error" id="messageError"></span>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
+                    <!-- Honeypot field for spam protection -->
+                    <input type="text" name="_gotcha" style="display:none">
+
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <span class="btn-text">Enviar Mensaje</span>
+                        <span class="btn-loading" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i> Enviando...
+                        </span>
+                    </button>
                 </form>
             </div>
         </div>

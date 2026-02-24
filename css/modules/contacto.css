@@ -118,6 +118,59 @@
     min-height: 120px;
 }
 
+/* Placeholder styling */
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--light-secondary);
+    opacity: 0.6;
+}
+
+/* Validation states */
+.form-group input.invalid,
+.form-group textarea.invalid {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.form-group input.invalid:focus,
+.form-group textarea.invalid:focus {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+/* Error messages */
+.form-error {
+    display: block;
+    color: var(--danger);
+    font-size: 0.85rem;
+    margin-top: 6px;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: all 0.2s ease;
+}
+
+.form-error.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Submit button states */
+.btn-loading {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-loading i {
+    font-size: 1rem;
+}
+
+#submitBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
 @media (max-width: 768px) {
     .contacto-grid {
         grid-template-columns: 1fr;
