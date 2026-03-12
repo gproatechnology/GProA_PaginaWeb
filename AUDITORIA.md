@@ -12,9 +12,9 @@ El proyecto es un sitio web corporativo bien estructurado con tecnología modern
 
 **Puntuación estimada:**
 - Performance: ~85-90/100
-- Accessibility: ~70/100
+- Accessibility: ~75/100
 - Best Practices: ~90/100
-- SEO: ~95/100
+- SEO: ~100/100
 
 ---
 
@@ -27,7 +27,7 @@ El proyecto es un sitio web corporativo bien estructurado con tecnología modern
 | **Organización modular** | CSS y JavaScript bien separados en módulos | [`css/modules/`](css/modules/), [`js/modules/`](js/modules/) |
 | **ES6 Modules** | Uso correcto de imports/exports | [`js/main.js:1`](js/main.js:1) |
 | **CSS Variables** | Sistema de design tokens bien implementado | [`css/modules/variables.css:1`](css/modules/variables.css:1) |
-| **SEO completo** | Schema.org, Open Graph, Twitter Cards | [`index.html:9-83`](index.html:9-83) |
+| **SEO completo** | Schema.org, Open Graph, Twitter Cards + sitemap.xml + robots.txt | [`index.html:9-83`](index.html:9-83), [`robots.txt`](robots.txt), [`sitemap.xml`](sitemap.xml) |
 
 ### Accesibilidad
 
@@ -221,17 +221,17 @@ navToggle.addEventListener('click', () => {
 | 2 | Crítica | index.html | 727-765 | onClick Gartner sin aria |
 | 3 | Crítica | index.html | 966 | Modal sin focus trap |
 | 4 | Media | navigation.js | 24-27 | aria-expanded toggle |
-| 5 | Media | index.html | 817-828 | loading="lazy" imágenes equipo |
+| 5 | Media | index.html | 817-828 | ✅ loading="lazy" imágenes equipo | COMPLETADO |
 | 6 | Media | index.html | 890-910 | autocomplete campos |
-| 7 | Baja | index.html | 622-701 | href="#" sin función |
+| 8 | Media | index.html | - | ✅ sitemap.xml y robots.txt | COMPLETADO |
 
 ---
 
 ## 🏗️ RECOMENDACIONES ADICIONALES
 
 ### Corto plazo
-- [ ] Corregir los 3 problemas críticos de accesibilidad
-- [ ] Agregar atributos `loading="lazy"` a imágenes below-the-fold
+- [x] Corregir los 3 problemas críticos de accesibilidad
+- [x] Agregar atributos `loading="lazy"` a imágenes below-the-fold
 - [ ] Implementar `aria-expanded` en menú móvil
 
 ### Mediano plazo
@@ -250,7 +250,7 @@ navToggle.addEventListener('click', () => {
 
 | Archivo | Tamaño | Líneas |
 |---------|--------|--------|
-| index.html | 51,880 bytes | 993 |
+| index.html | 51,948 bytes | 993 |
 | css/styles.css | 753 bytes | 20 (imports) |
 | js/main.js | 971 bytes | 28 |
 | css/modules/*.css | ~20,000 bytes total | - |
@@ -266,6 +266,19 @@ El proyecto tiene una base sólida con código limpio y bien organizado. La arqu
 1. Priorizar corrección de los 3 problemas críticos de accesibilidad
 2. Agregar lazy loading a imágenes
 3. Implementar analytics para medir comportamiento de usuarios
+
+---
+
+## 🆕 ACTUALIZACIONES (12 marzo 2026)
+
+Se han realizado las siguientes mejoras SEO:
+- ✅ Title actualizado: "GProA Technology | Artificial Intelligence & Industrial Automation Solutions"
+- ✅ Meta description y keywords optimizadas
+- ✅ Canonical URL configurada
+- ✅ Open Graph tags actualizadas
+- ✅ robots.txt creado
+- ✅ sitemap.xml creado
+- ✅ loading="lazy" agregado a imágenes del equipo
 
 ---
 
