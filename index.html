@@ -118,6 +118,15 @@
 
     <!-- Hero Section -->
     <section class="hero" id="inicio">
+        <!-- Video de fondo (reemplaza el canvas) -->
+        <div class="hero-video-container">
+            <video class="hero-video" autoplay muted loop playsinline poster="./assets/images/logoweb2.png">
+                <source src="./assets/video/hero-background.mp4" type="video/mp4">
+            </video>
+            <div class="hero-overlay"></div>
+        </div>
+        
+        <!-- Canvas original (como fallback) -->
         <canvas id="heroCanvas" aria-hidden="true"></canvas>
 
         <div class="hero-content">
@@ -177,7 +186,7 @@
             <div class="noticias-carousel">
                 <div class="noticias-track" id="noticiasTrack">
                     <!-- Noticia 1 - IA Generativa -->
-                    <article class="noticia-card" data-category="ia-generativa">
+                    <article class="noticia-card" data-category="ia-generativa" onclick="window.open('https://news.google.com/search?q=GPT-5%20OpenAI%20inteligencia%20artificial', '_blank')">
                         <div class="noticia-icon">
                             <i class="fas fa-brain"></i>
                         </div>
@@ -186,11 +195,12 @@
                             <h3>GPT-5: Nueva Era en IA</h3>
                             <p>OpenAI lanza GPT-5 con capacidades de razonamiento avanzado, revolucionando la interacción humano-máquina.</p>
                             <span class="noticia-date"><i class="fas fa-calendar"></i> Feb 2025</span>
+                            <span class="noticia-link"><i class="fas fa-external-link-alt"></i> Ver en Google News</span>
                         </div>
                     </article>
 
                     <!-- Noticia 2 - Hardware -->
-                    <article class="noticia-card" data-category="hardware">
+                    <article class="noticia-card" data-category="hardware" onclick="window.open('https://news.google.com/search?q=NVIDIA%20chips%20IA%20generativa', '_blank')">
                         <div class="noticia-icon">
                             <i class="fas fa-microchip"></i>
                         </div>
@@ -199,11 +209,12 @@
                             <h3>Chips Especializados IA</h3>
                             <p>NVIDIA presenta nuevos chips especializados para IA generativa con 10x más rendimiento.</p>
                             <span class="noticia-date"><i class="fas fa-calendar"></i> Ene 2025</span>
+                            <span class="noticia-link"><i class="fas fa-external-link-alt"></i> Ver en Google News</span>
                         </div>
                     </article>
 
                     <!-- Noticia 3 - Industria -->
-                    <article class="noticia-card" data-category="industria">
+                    <article class="noticia-card" data-category="industria" onclick="window.open('https://news.google.com/search?q=automatizaci%C3%B3n%20industrial%20inteligencia%20artificial', '_blank')">
                         <div class="noticia-icon">
                             <i class="fas fa-industry"></i>
                         </div>
@@ -212,11 +223,12 @@
                             <h3>Automatización Industrial</h3>
                             <p>La automatización industrial reduce costos en un 40% con implementación de IA.</p>
                             <span class="noticia-date"><i class="fas fa-calendar"></i> Ene 2025</span>
+                            <span class="noticia-link"><i class="fas fa-external-link-alt"></i> Ver en Google News</span>
                         </div>
                     </article>
 
                     <!-- Noticia 4 - Mercado -->
-                    <article class="noticia-card" data-category="mercado">
+                    <article class="noticia-card" data-category="mercado" onclick="window.open('https://news.google.com/search?q=mercado%20inteligencia%20artificial%202025', '_blank')">
                         <div class="noticia-icon">
                             <i class="fas fa-chart-line"></i>
                         </div>
@@ -225,6 +237,7 @@
                             <h3>Mercado de IA</h3>
                             <p>El mercado de IA alcanzará $500 mil millones en 2025, según nuevos estudios.</p>
                             <span class="noticia-date"><i class="fas fa-calendar"></i> Dic 2024</span>
+                            <span class="noticia-link"><i class="fas fa-external-link-alt"></i> Ver en Google News</span>
                         </div>
                     </article>
 
@@ -963,6 +976,18 @@
 
     <!-- JavaScript -->
     <script type="module" src="./js/main.js"></script>
+    <!-- Botón flotante de WhatsApp -->
+    <div class="whatsapp-float" id="whatsappFloat">
+        <a href="https://wa.me/524681208570?text=Hola%20GProA%20Technology,%20deseo%20más%20información..." 
+           target="_blank" 
+           rel="noopener noreferrer"
+           class="whatsapp-btn"
+           aria-label="Contactar por WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+        <span class="whatsapp-tooltip">¡Escríbenos!</span>
+    </div>
+
 </body>
 
 </html>
