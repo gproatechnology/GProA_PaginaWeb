@@ -24,6 +24,11 @@ export function initNavigation() {
         navToggle.addEventListener('click', () => {
             navLinks.classList.toggle('active');
             navToggle.classList.toggle('active');
+            
+            // Update aria-expanded for accessibility
+            const isExpanded = navToggle.classList.contains('active');
+            navToggle.setAttribute('aria-expanded', isExpanded);
+            navToggle.setAttribute('aria-label', isExpanded ? 'Cerrar menú' : 'Abrir menú');
         });
     }
 

@@ -45,3 +45,15 @@
     background: var(--primary);
     color: var(--dark);
 }
+
+/* Disabled buttons (aria-disabled) */
+.btn[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.btn[aria-disabled="true"]:hover {
+    transform: none;
+    box-shadow: var(--shadow-sm);
+}
