@@ -13,7 +13,7 @@ export default [
     "icon": "fa-file-alt",
     "acronym": "GECRAI",
     "demoUrl": "./proyectos/gecrai/demo/",
-    "pdfUrl": "./proyectos/gecrai/docs/manual-usuario.pdf"
+    "docsUrl": "./proyectos/gecrai/docs/manual-usuario.html"
   },
   {
     "id": "giacelia",

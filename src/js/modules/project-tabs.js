@@ -41,7 +41,7 @@ export async function initProjectTabs() {
                 </ul>
                 <div class="proyecto-links">
                     ${proyecto.demoUrl ? `<button type="button" class="btn btn-primary" data-demo="${proyecto.demoUrl}" aria-label="Abrir demo de ${proyecto.title}">Ver Demo</button>` : ''}
-                    ${proyecto.pdfUrl ? `<a href="${proyecto.pdfUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-outline" aria-label="Descargar PDF de ${proyecto.title}">Descargar PDF</a>` : ''}
+                    ${proyecto.docsUrl ? `<a href="${proyecto.docsUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-outline" aria-label="Ver documentación de ${proyecto.title}">Ver documentación</a>` : ''}
                 </div>
             </div>
             <div class="proyecto-image">
