@@ -3,160 +3,466 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GECRAI 1.1 - Demo</title>
+    <title>GECRAI 1.1 - Demo Enterprise</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0a0f1c 0%, #1a2332 100%);
+            background: linear-gradient(135deg, #050a14 0%, #0a1526 100%);
             color: #e0f2fe;
+            min-height: 100vh;
+        }
+        .app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(0,224,255,0.15);
+            background: rgba(10,15,28,0.8);
+            backdrop-filter: blur(6px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .brand {
+            font-family: 'Orbitron', sans-serif;
+            color: #00e0ff;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .badge {
+            padding: 6px 14px;
+            background: rgba(0,224,255,0.15);
+            border: 1px solid rgba(0,224,255,0.25);
+            border-radius: 999px;
+            font-size: 0.85rem;
+            color: #00e0ff;
+        }
+        .btn {
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            color: #050a14;
+            background: linear-gradient(135deg,#0066ff,#00e0ff);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px rgba(0,224,255,0.35);
+        }
+        .btn-outline {
+            background: transparent;
+            color: #00e0ff;
+            border: 1px solid rgba(0,224,255,0.4);
+        }
+        .layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            flex: 1;
+        }
+        .sidebar {
+            border-right: 1px solid rgba(0,224,255,0.1);
+            background: rgba(10,15,28,0.6);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .nav-item {
+            text-align: left;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: transparent;
+            color: #94a3b8;
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .nav-item.active {
+            background: rgba(0,224,255,0.1);
+            color: #00e0ff;
+            border-color: rgba(0,224,255,0.25);
+        }
+        .content {
+            padding: 24px;
+            overflow-y: auto;
+        }
+        .screen {
+            display: none;
+            animation: fadeIn .4s ease;
+        }
+        .screen.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .grid {
+            display: grid;
+            gap: 16px;
+        }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .card {
+            background: linear-gradient(145deg, rgba(20,30,50,0.95), rgba(10,20,35,0.95));
+            border: 1px solid rgba(0,224,255,0.15);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        .card h3 {
+            color: #00e0ff;
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+        }
+        .metric {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .form-group {
+            margin-bottom: 14px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #00e0ff;
+            font-weight: 600;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(5,10,20,0.9);
+            border: 1px solid rgba(0,224,255,0.3);
+            border-radius: 10px;
+            color: #e0f2fe;
+            font-size: 1rem;
+        }
+        .result {
+            margin-top: 18px;
+            padding: 16px;
+            background: rgba(16,185,129,0.1);
+            border: 1px solid rgba(16,185,129,0.3);
+            border-radius: 12px;
+            display: none;
+        }
+        .result.show { display: block; }
+        .login-screen {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
-        .container {
-            max-width: 900px;
+        .login-card {
             width: 100%;
-            background: rgba(20, 30, 50, 0.95);
-            border: 1px solid rgba(0, 224, 255, 0.2);
-            border-radius: 16px;
-            padding: 40px;
-            box-shadow: 0 0 30px rgba(0, 224, 255, 0.15);
+            max-width: 420px;
+            background: linear-gradient(145deg, rgba(20,30,50,0.95), rgba(10,20,35,0.95));
+            border: 1px solid rgba(0,224,255,0.2);
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 0 40px rgba(0,224,255,0.15);
         }
-        h1 {
-            font-family: 'Orbitron', sans-serif;
+        .login-card h1 {
             color: #00e0ff;
-            margin-bottom: 10px;
             text-align: center;
+            margin-bottom: 6px;
         }
-        .subtitle {
+        .login-card p {
             text-align: center;
             color: #94a3b8;
-            margin-bottom: 30px;
-        }
-        .demo-area {
-            background: rgba(5, 10, 20, 0.8);
-            border: 1px solid rgba(0, 224, 255, 0.15);
-            border-radius: 12px;
-            padding: 30px;
             margin-bottom: 20px;
         }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #00e0ff;
-            font-weight: 600;
-        }
-        input, textarea, select {
-            width: 100%;
-            padding: 12px;
-            background: rgba(10, 15, 28, 0.9);
-            border: 1px solid rgba(0, 224, 255, 0.3);
-            border-radius: 8px;
+        .toast {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            padding: 12px 16px;
+            background: rgba(10,15,28,0.95);
+            border: 1px solid rgba(0,224,255,0.3);
             color: #e0f2fe;
-            font-size: 1rem;
-        }
-        button {
-            background: linear-gradient(135deg, #0066ff, #00e0ff);
-            color: #0a0f1c;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0, 224, 255, 0.4);
-        }
-        .result {
-            margin-top: 20px;
-            padding: 20px;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 8px;
+            border-radius: 12px;
             display: none;
+            z-index: 100;
         }
-        .result.show {
-            display: block;
-        }
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            background: rgba(0, 224, 255, 0.2);
-            border-radius: 20px;
-            font-size: 0.85rem;
-            margin-bottom: 10px;
+        .toast.show { display: block; }
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; }
+            .grid-3, .grid-2 { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>GECRAI 1.1</h1>
-        <p class="subtitle">Generador de Consultas Regulatorias con Asistencia Inteligente</p>
+    <div class="app" id="app">
+        <div class="login-screen" id="loginScreen">
+            <form class="login-card" id="loginForm">
+                <h1>GECRAI 1.1</h1>
+                <p>Demo Enterprise</p>
+                <div class="form-group">
+                    <label>Usuario</label>
+                    <input type="text" id="loginUser" value="demo@gecrai.app" autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="loginPass" value="demo123" autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn" style="width:100%">Ingresar</button>
+            </form>
+        </div>
 
-        <div class="demo-area">
-            <span class="badge">Demo interactiva</span>
-            <h2 style="color: #00e0ff; margin-bottom: 20px;">Consulta de Normativa</h2>
-
-            <div class="form-group">
-                <label for="normativa">Normativa a consultar</label>
-                <select id="normativa">
-                    <option value="">Selecciona una normativa</option>
-                    <option value="NOM-001-SEDE-2012">NOM-001-SEDE-2012</option>
-                    <option value="NOM-002-SEDE-2010">NOM-002-SEDE-2010</option>
-                    <option value="NOM-003-SEDE-2005">NOM-003-SEDE-2005</option>
-                </select>
+        <div id="mainApp" style="display:none;">
+            <div class="topbar">
+                <div class="brand">GECRAI <span style="color:#94a3b8;font-weight:500;">Enterprise</span></div>
+                <div class="topbar-actions">
+                    <span class="badge" id="envBadge">Producción</span>
+                    <button class="btn btn-outline" id="logoutBtn">Cerrar sesión</button>
+                </div>
             </div>
+            <div class="layout">
+                <aside class="sidebar">
+                    <button class="nav-item active" data-screen="dashboard">Dashboard</button>
+                    <button class="nav-item" data-screen="consulta">Nueva consulta</button>
+                    <button class="nav-item" data-screen="memorias">Memorias</button>
+                    <button class="nav-item" data-screen="reportes">Reportes</button>
+                </aside>
+                <main class="content">
+                    <section class="screen active" id="screen-dashboard">
+                        <div class="grid grid-3">
+                            <div class="card">
+                                <h3>Consultas del mes</h3>
+                                <div class="metric" id="dashConsultas">0</div>
+                                <p style="color:#94a3b8;margin-top:8px;">+12% vs mes anterior</p>
+                            </div>
+                            <div class="card">
+                                <h3>Memorias generadas</h3>
+                                <div class="metric" id="dashMemorias">0</div>
+                                <p style="color:#94a3b8;margin-top:8px;">Tiempo ahorrado: 34h</p>
+                            </div>
+                            <div class="card">
+                                <h3>Precisión normativa</h3>
+                                <div class="metric">98.4%</div>
+                                <p style="color:#94a3b8;margin-top:8px;">Validación automática</p>
+                            </div>
+                        </div>
+                        <div class="card" style="margin-top:18px;">
+                            <h3>Actividad reciente</h3>
+                            <canvas id="activityChart" height="120"></canvas>
+                        </div>
+                    </section>
 
-            <div class="form-group">
-                <label for="voltaje">Voltaje (V)</label>
-                <input type="number" id="voltaje" placeholder="Ej: 220" min="0">
-            </div>
+                    <section class="screen" id="screen-consulta">
+                        <div class="card">
+                            <h3>Consulta regulatoria inteligente</h3>
+                            <div class="grid grid-2">
+                                <div>
+                                    <div class="form-group">
+                                        <label>Normativa</label>
+                                        <select id="normativa">
+                                            <option value="">Selecciona una normativa</option>
+                                            <option>NOM-001-SEDE-2012</option>
+                                            <option>NOM-002-SEDE-2010</option>
+                                            <option>NOM-003-SEDE-2005</option>
+                                            <option>NOM-019-SCFI-2011</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Voltaje (V)</label>
+                                        <input type="number" id="voltaje" placeholder="Ej: 220" min="0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Corriente (A)</label>
+                                        <input type="number" id="corriente" placeholder="Ej: 10" min="0">
+                                    </div>
+                                    <button class="btn" id="btnGenerar">Generar memoria</button>
+                                </div>
+                                <div>
+                                    <div class="form-group">
+                                        <label>Resultado</label>
+                                        <textarea id="resultado" readonly rows="9" placeholder="Se mostrará el resultado aquí..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
 
-            <div class="form-group">
-                <label for="corriente">Corriente (A)</label>
-                <input type="number" id="corriente" placeholder="Ej: 10" min="0">
-            </div>
+                    <section class="screen" id="screen-memorias">
+                        <div class="card">
+                            <h3>Memorias guardadas</h3>
+                            <div id="memoriasList" style="display:flex;flex-direction:column;gap:10px;"></div>
+                        </div>
+                    </section>
 
-            <button onclick="generarMemoria()">Generar Memoria de Cálculo</button>
-
-            <div id="resultado" class="result">
-                <h3 style="color: #10b981; margin-bottom: 10px;">✓ Memoria generada</h3>
-                <p><strong>Normativa:</strong> <span id="resNormativa"></span></p>
-                <p><strong>Voltaje:</strong> <span id="resVoltaje"></span> V</p>
-                <p><strong>Corriente:</strong> <span id="resCorriente"></span> A</p>
-                <p><strong>Potencia calculada:</strong> <span id="resPotencia"></span> W</p>
-                <p style="margin-top: 10px; color: #94a3b8;">Esta es una demo simplificada. En la versión completa se genera el documento PDF automáticamente.</p>
+                    <section class="screen" id="screen-reportes">
+                        <div class="card">
+                            <h3>Uso por normativa</h3>
+                            <canvas id="usageChart" height="140"></canvas>
+                        </div>
+                        <div class="card" style="margin-top:18px;">
+                            <h3>KPIs</h3>
+                            <div class="grid grid-2">
+                                <div>
+                                    <p style="color:#94a3b8;margin-bottom:6px;">Tiempo promedio</p>
+                                    <div class="metric">2.4s</div>
+                                </div>
+                                <div>
+                                    <p style="color:#94a3b8;margin-bottom:6px;">Exactitud</p>
+                                    <div class="metric">98.4%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
             </div>
         </div>
     </div>
 
+    <div class="toast" id="toast"></div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        function generarMemoria() {
-            const normativa = document.getElementById('normativa').value;
-            const voltaje = parseFloat(document.getElementById('voltaje').value) || 0;
-            const corriente = parseFloat(document.getElementById('corriente').value) || 0;
+        const state = {
+            memorias: JSON.parse(localStorage.getItem('gecrai_memorias') || '[]')
+        };
 
-            if (!normativa || !voltaje || !corriente) {
-                alert('Completa todos los campos');
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2200);
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            initDashboard();
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+            showToast('Sesión cerrada');
+        });
+
+        document.querySelectorAll('.nav-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                document.getElementById('screen-' + btn.dataset.screen).classList.add('active');
+            });
+        });
+
+        document.getElementById('btnGenerar').addEventListener('click', () => {
+            const normativa = document.getElementById('normativa').value;
+            const voltaje = parseFloat(document.getElementById('voltaje').value);
+            const corriente = parseFloat(document.getElementById('corriente').value);
+            const out = document.getElementById('resultado');
+
+            if (!normativa || Number.isNaN(voltaje) || Number.isNaN(corriente)) {
+                showToast('Completa normativa, voltaje y corriente');
                 return;
             }
 
             const potencia = voltaje * corriente;
+            const memoria = {
+                id: Date.now(),
+                normativa,
+                voltaje,
+                corriente,
+                potencia,
+                fecha: new Date().toISOString()
+            };
+            state.memorias.push(memoria);
+            localStorage.setItem('gecrai_memorias', JSON.stringify(state.memorias));
 
-            document.getElementById('resNormativa').textContent = normativa;
-            document.getElementById('resVoltaje').textContent = voltaje;
-            document.getElementById('resCorriente').textContent = corriente;
-            document.getElementById('resPotencia').textContent = potencia.toFixed(2);
+            out.value = `Normativa: ${normativa}\nVoltaje: ${voltaje} V\nCorriente: ${corriente} A\nPotencia calculada: ${potencia.toFixed(2)} W\nEstado: Memoria generada correctamente.`;
+            out.style.display = 'block';
+            showToast('Memoria generada');
+            renderMemorias();
+            updateDashboard();
+        });
 
-            document.getElementById('resultado').classList.add('show');
+        function renderMemorias() {
+            const container = document.getElementById('memoriasList');
+            if (!state.memorias.length) {
+                container.innerHTML = '<p style="color:#94a3b8;">Sin memorias aún.</p>';
+                return;
+            }
+            container.innerHTML = state.memorias.slice().reverse().map(m => `
+                <div class="card">
+                    <strong>${m.normativa}</strong>
+                    <span style="color:#94a3b8;">${new Date(m.fecha).toLocaleString()}</span>
+                    <p>Voltaje: ${m.voltaje} V | Corriente: ${m.corriente} A | Potencia: ${m.potencia.toFixed(2)} W</p>
+                </div>
+            `).join('');
+        }
+
+        function updateDashboard() {
+            document.getElementById('dashConsultas').textContent = new Set(state.memorias.map(x => x.normativa)).size || 0;
+            document.getElementById('dashMemorias').textContent = state.memorias.length;
+        }
+
+        function initDashboard() {
+            updateDashboard();
+            renderMemorias();
+
+            new Chart(document.getElementById('activityChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'],
+                    datasets: [{
+                        label: 'Consultas',
+                        data: [4,7,5,9,6,8,3],
+                        borderColor: '#00e0ff',
+                        backgroundColor: 'rgba(0,224,255,0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { labels: { color: '#e0f2fe' } } },
+                    scales: {
+                        x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.1)' } },
+                        y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.1)' } }
+                    }
+                }
+            });
+
+            new Chart(document.getElementById('usageChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['NOM-001','NOM-002','NOM-003','NOM-019'],
+                    datasets: [{
+                        label: 'Consultas',
+                        data: [12,8,5,4],
+                        backgroundColor: 'rgba(0,224,255,0.6)',
+                        borderColor: '#00e0ff',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { labels: { color: '#e0f2fe' } } },
+                    scales: {
+                        x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.1)' } },
+                        y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.1)' } }
+                    }
+                }
+            });
         }
     </script>
 </body>
