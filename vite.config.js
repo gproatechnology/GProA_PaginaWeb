@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  publicDir: 'assets',
+  publicDir: ['assets', 'proyectos'],
   server: {
     port: 5173,
     open: true

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GECRAI 1.1 - Demo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0f1c 0%, #1a2332 100%);
+            color: #e0f2fe;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(20, 30, 50, 0.95);
+            border: 1px solid rgba(0, 224, 255, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(0, 224, 255, 0.15);
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: #00e0ff;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 30px;
+        }
+        .demo-area {
+            background: rgba(5, 10, 20, 0.8);
+            border: 1px solid rgba(0, 224, 255, 0.15);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00e0ff;
+            font-weight: 600;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(10, 15, 28, 0.9);
+            border: 1px solid rgba(0, 224, 255, 0.3);
+            border-radius: 8px;
+            color: #e0f2fe;
+            font-size: 1rem;
+        }
+        button {
+            background: linear-gradient(135deg, #0066ff, #00e0ff);
+            color: #0a0f1c;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 224, 255, 0.4);
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            display: none;
+        }
+        .result.show {
+            display: block;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(0, 224, 255, 0.2);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>GECRAI 1.1</h1>
+        <p class="subtitle">Generador de Consultas Regulatorias con Asistencia Inteligente</p>
+
+        <div class="demo-area">
+            <span class="badge">Demo interactiva</span>
+            <h2 style="color: #00e0ff; margin-bottom: 20px;">Consulta de Normativa</h2>
+
+            <div class="form-group">
+                <label for="normativa">Normativa a consultar</label>
+                <select id="normativa">
+                    <option value="">Selecciona una normativa</option>
+                    <option value="NOM-001-SEDE-2012">NOM-001-SEDE-2012</option>
+                    <option value="NOM-002-SEDE-2010">NOM-002-SEDE-2010</option>
+                    <option value="NOM-003-SEDE-2005">NOM-003-SEDE-2005</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="voltaje">Voltaje (V)</label>
+                <input type="number" id="voltaje" placeholder="Ej: 220" min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="corriente">Corriente (A)</label>
+                <input type="number" id="corriente" placeholder="Ej: 10" min="0">
+            </div>
+
+            <button onclick="generarMemoria()">Generar Memoria de Cálculo</button>
+
+            <div id="resultado" class="result">
+                <h3 style="color: #10b981; margin-bottom: 10px;">✓ Memoria generada</h3>
+                <p><strong>Normativa:</strong> <span id="resNormativa"></span></p>
+                <p><strong>Voltaje:</strong> <span id="resVoltaje"></span> V</p>
+                <p><strong>Corriente:</strong> <span id="resCorriente"></span> A</p>
+                <p><strong>Potencia calculada:</strong> <span id="resPotencia"></span> W</p>
+                <p style="margin-top: 10px; color: #94a3b8;">Esta es una demo simplificada. En la versión completa se genera el documento PDF automáticamente.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generarMemoria() {
+            const normativa = document.getElementById('normativa').value;
+            const voltaje = parseFloat(document.getElementById('voltaje').value) || 0;
+            const corriente = parseFloat(document.getElementById('corriente').value) || 0;
+
+            if (!normativa || !voltaje || !corriente) {
+                alert('Completa todos los campos');
+                return;
+            }
+
+            const potencia = voltaje * corriente;
+
+            document.getElementById('resNormativa').textContent = normativa;
+            document.getElementById('resVoltaje').textContent = voltaje;
+            document.getElementById('resCorriente').textContent = corriente;
+            document.getElementById('resPotencia').textContent = potencia.toFixed(2);
+
+            document.getElementById('resultado').classList.add('show');
+        }
+    </script>
+</body>
+</html>

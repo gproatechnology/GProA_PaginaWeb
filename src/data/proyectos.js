@@ -11,7 +11,9 @@ export default [
       "Cálculo de Arc Flash IEEE 1584"
     ],
     "icon": "fa-file-alt",
-    "acronym": "GECRAI"
+    "acronym": "GECRAI",
+    "demoUrl": "./proyectos/gecrai/demo/",
+    "pdfUrl": "./proyectos/gecrai/docs/manual-usuario.pdf"
   },
   {
     "id": "giacelia",
