@@ -8,7 +8,7 @@
 
 ```bash
 # 1. Entrar al directorio
-cd web_GProA/web_GProA_v3
+cd Pagina_web
 
 # 2. Instalar dependencias
 npm install
@@ -50,15 +50,24 @@ start index.html
 ## 📁 Estructura del Proyecto
 
 ```
-web_GProA_v3/
-├── index.html          # Página principal
-├── package.json        # Configuración npm/Vite
+Pagina_web/
+├── index.html
+├── package.json
+├── vite.config.js
+├── src/
+│   ├── css/
+│   │   ├── styles.css
+│   │   └── modules/
+│   ├── js/
+│   │   ├── main.js
+│   │   └── modules/
+│   └── data/
+│       └── proyectos.js
 ├── assets/
-│   └── images/        # Imágenes y logos
-├── css/
-│   └── styles.css    # Estilos principales
-└── js/
-    └── main.js       # JavaScript principal
+│   ├── images/
+│   ├── video/
+│   └── fonts/
+└── ...
 ```
 
 ## 🎨 Características

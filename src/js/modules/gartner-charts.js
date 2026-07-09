@@ -3,23 +3,16 @@
  * Handles Chart.js visualizations for metrics section
  */
 
-// Make functions globally available for onclick handlers
-window.showGartnerView = showGartnerView;
-window.showGartnerInitial = showGartnerInitial;
-
 function showGartnerView(type) {
     const initialView = document.getElementById('gartnerInitialView');
     const detailedView = document.getElementById('gartnerDetailedView');
     const title = document.getElementById('gartnerTitle');
 
-    // Hide all views
     document.querySelectorAll('.gartner-view').forEach(v => v.style.display = 'none');
 
-    // Show detailed view
     initialView.style.display = 'none';
     detailedView.style.display = 'block';
 
-    // Set title
     const titles = {
         'quadrant': 'Cuadrante Mágico',
         'evolution': 'Evolución de Capacidades',
@@ -28,13 +21,11 @@ function showGartnerView(type) {
     };
     title.textContent = titles[type] || 'Métricas';
 
-    // Show selected view
     const view = document.getElementById(`${type}View`);
     if (view) {
         view.style.display = 'block';
     }
 
-    // Initialize chart
     setTimeout(() => initGartnerChart(type), 100);
 }
 
@@ -197,4 +188,16 @@ function initGartnerChart(type) {
     }
 }
 
-export { showGartnerView, showGartnerInitial };
+export function initGartnerCharts() {
+    document.querySelectorAll('.metric-category-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const type = btn.dataset.view;
+            if (type) showGartnerView(type);
+        });
+    });
+
+    const backBtn = document.querySelector('.back-btn');
+    if (backBtn) {
+        backBtn.addEventListener('click', showGartnerInitial);
+    }
+}

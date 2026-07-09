@@ -7,8 +7,10 @@
     <title>GProA Technology | Artificial Intelligence & Industrial Automation Solutions</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="GProA Technology develops advanced artificial intelligence, industrial automation, and intelligent engineering software solutions for modern industries.">
-    <meta name="keywords" content="Artificial Intelligence, Industrial Automation, AI Engineering, Machine Learning, Smart Engineering Software, Mexico Technology Company">
+    <meta name="description"
+        content="GProA Technology develops advanced artificial intelligence, industrial automation, and intelligent engineering software solutions for modern industries.">
+    <meta name="keywords"
+        content="Artificial Intelligence, Industrial Automation, AI Engineering, Machine Learning, Smart Engineering Software, Mexico Technology Company">
     <meta name="author" content="GProA Technology">
     <link rel="canonical" href="https://gproatechnology.com/">
 
@@ -16,18 +18,18 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="GProA Technology">
     <meta property="og:description" content="AI, automation, and engineering software solutions.">
-    <meta property="og:image" content="./assets/images/logoweb.png">
+    <meta property="og:image" content="./assets/images/logoweb.webp">
     <meta property="og:url" content="https://gproatechnology.com">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="GProA Technology">
     <meta name="twitter:description" content="Innovación en automatización industrial con IA">
-    <meta name="twitter:image" content="./assets/images/logoweb.png">
+    <meta name="twitter:image" content="./assets/images/logoweb.webp">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon.png">
-    <link rel="apple-touch-icon" href="./assets/images/logoweb.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon.webp">
+    <link rel="apple-touch-icon" href="./assets/images/logoweb.webp">
     <meta name="theme-color" content="#00e0ff">
 
     <!-- Preconnect para performance -->
@@ -47,7 +49,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./src/css/styles.css">
 
     <!-- Structured Data for SEO -->
     <script type="application/ld+json">
@@ -56,7 +58,7 @@
       "@type": "Organization",
       "name": "GProA Technology",
       "url": "https://gproatechnology.com",
-      "logo": "https://gproatechnology.com/assets/images/logoweb.png",
+      "logo": "https://gproatechnology.com/assets/images/logoweb.webp",
       "description": "Líderes en automatización inteligente y desarrollo de software con IA",
       "foundingDate": "2023",
       "address": {
@@ -78,9 +80,22 @@
       ]
     }
     </script>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-P9MSFN8L');</script>
+    <!-- End Google Tag Manager -->
 </head>
 
 <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P9MSFN8L"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
     <!-- Skip Link for Accessibility -->
     <a href="#inicio" class="skip-link">Saltar al contenido principal</a>
 
@@ -117,12 +132,12 @@
     <section class="hero" id="inicio">
         <!-- Video de fondo (reemplaza el canvas) -->
         <div class="hero-video-container">
-            <video class="hero-video" autoplay muted loop playsinline poster="./assets/images/logoweb2.png">
-                <source src="./assets/video/hero-background.mp4" type="video/mp4">
+            <video class="hero-video" autoplay muted loop playsinline poster="./assets/images/logoweb2.webp">
+                <source src="./assets/video/hero-background.webm" type="video/webm">
             </video>
             <div class="hero-overlay"></div>
         </div>
-        
+
         <!-- Canvas original (como fallback) -->
         <canvas id="heroCanvas" aria-hidden="true"></canvas>
 
@@ -181,185 +196,8 @@
             </div>
 
             <div class="noticias-carousel">
-                <div class="noticias-track" id="noticiasTrack">
-                    <!-- Noticia 1 - IA Generativa -->
-                    <article class="noticia-card" data-category="ia-generativa" tabindex="0" role="button" aria-label="Ver noticia: GPT-5 Nueva Era en IA" onclick="window.open('https://news.google.com/search?q=GPT-5%20OpenAI%20inteligencia%20artificial', '_blank')" onkeydown="if(event.key==='Enter') window.open('https://news.google.com/search?q=GPT-5%20OpenAI%20inteligencia%20artificial', '_blank')">
-                        <div class="noticia-icon">
-                            <i class="fas fa-brain"></i>
-                        </div>
-                        <div class="noticia-content">
-                            <span class="noticia-category">IA Generativa</span>
-                            <h3>GPT-5: Nueva Era en IA</h3>
-                            <p>OpenAI lanza GPT-5 con capacidades de razonamiento avanzado, revolucionando la interacción humano-máquina.</p>
-                            <span class="noticia-date"><i class="fas fa-calendar"></i> Feb 2025</span>
-                            <span class="noticia-link"><i class="fas fa-external-link-alt"></i> Ver en Google News</span>
-                        </div>
-                    </article>
+                <div class="noticias-track" id="noticiasTrack"></div>
 
-                    <!-- Noticia 2 - Hardware -->
-                    <article class="noticia-card" data-category="hardware" tabindex="0" role="button" aria-label="Ver noticia: Chips Especializados IA" onclick="window.open('https://news.google.com/search?q=NVIDIA%20chips%20IA%20generativa', '_blank')" onkeydown="if(event.key==='Enter') window.open('https://news.google.com/search?q=NVIDIA%20chips%20IA%20generativa', '_blank')">
-                        <div class="noticia-icon">
-                            <i class="fas fa-microchip"></i>
-                        </div>
-                        <div class="noticia-content">
-                            <span class="noticia-category">Hardware</span>
-                            <h3>Chips Especializados IA</h3>
-                            <p>NVIDIA presenta nuevos chips especializados para IA generativa con 10x más rendimiento.</p>
-                            <span class="noticia-date"><i class="fas fa-calendar"></i> Ene 2025</span>
-                            <span class="noticia-link"><i class="fas fa-external-link-alt"></i> Ver en Google News</span>
-                        </div>
-                    </article>
-
-                    <!-- Noticia 3 - Industria -->
-                    <article class="noticia-card" data-category="industria" tabindex="0" role="button" aria-label="Ver noticia: Automatización Industrial" onclick="window.open('https://news.google.com/search?q=automatizaci%C3%B3n%20industrial%20inteligencia%20artificial', '_blank')" onkeydown="if(event.key==='Enter') window.open('https://news.google.com/search?q=automatizaci%C3%B3n%20industrial%20inteligencia%20artificial', '_blank')">
-                        <div class="noticia-icon">
-                            <i class="fas fa-industry"></i>
-                        </div>
-                        <div class="noticia-content">
-                            <span class="noticia-category">Industria</span>
-                            <h3>Automatización Industrial</h3>
-                            <p>La automatización industrial reduce costos en un 40% con implementación de IA.</p>
-                            <span class="noticia-date"><i class="fas fa-calendar"></i> Ene 2025</span>
-                            <span class="noticia-link"><i class="fas fa-external-link-alt"></i> Ver en Google News</span>
-                        </div>
-                    </article>
-
-                    <!-- Noticia 4 - Mercado -->
-                    <article class="noticia-card" data-category="mercado" tabindex="0" role="button" aria-label="Ver noticia: Mercado de IA" onclick="window.open('https://news.google.com/search?q=mercado%20inteligencia%20artificial%202025', '_blank')" onkeydown="if(event.key==='Enter') window.open('https://news.google.com/search?q=mercado%20inteligencia%20artificial%202025', '_blank')">
-                        <div class="noticia-icon">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <div class="noticia-content">
-                            <span class="noticia-category">Mercado</span>
-                            <h3>Mercado de IA</h3>
-                            <p>El mercado de IA alcanzará $500 mil millones en 2025, según nuevos estudios.</p>
-                            <span class="noticia-date"><i class="fas fa-calendar"></i> Dic 2024</span>
-                            <span class="noticia-link"><i class="fas fa-external-link-alt"></i> Ver en Google News</span>
-                        </div>
-                    </article>
-
-                    <!-- Noticia 5 - Industria -->
-                    <article class="noticia-card" data-category="industria">
-                        <div class="noticia-icon">
-                            <i class="fas fa-cogs"></i>
-                        </div>
-                        <div class="noticia-content">
-                            <span class="noticia-category">Industria</span>
-                            <h3>Gemelos Digitales</h3>
-                            <p>Los gemelos digitales transforman la manufactura inteligente con simulación en tiempo real.</p>
-                            <span class="noticia-date"><i class="fas fa-calendar"></i> Dic 2024</span>
-                        </div>
-                    </article>
-
-                    <!-- Noticia 6 - Ética -->
-                    <article class="noticia-card" data-category="etica">
-                        <div class="noticia-icon">
-                            <i class="fas fa-balance-scale"></i>
-                        </div>
-                        <div class="noticia-content">
-                            <span class="noticia-category">Ética</span>
-                            <h3>Ética en IA</h3>
-                            <p>Nueva normativa de ética en IA implementada globalmente para uso responsable.</p>
-                            <span class="noticia-date"><i class="fas fa-calendar"></i> Nov 2024</span>
-                        </div>
-                    </article>
-
-                    <!-- Noticia 7 - IA Generativa -->
-                    <article class="noticia-card" data-category="ia-generativa">
-                        <div class="noticia-icon">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <div class="noticia-content">
-                            <span class="noticia-category">IA Generativa</span>
-                            <h3>Claude 4 de Anthropic</h3>
-                            <p>Anthropic lanza Claude 4 con capacidades de razonamiento mejoradas y contexto extendido.</p>
-                            <span class="noticia-date"><i class="fas fa-calendar"></i> Nov 2024</span>
-                        </div>
-                    </article>
-
-                    <!-- Noticia 8 - Hardware -->
-                    <article class="noticia-card" data-category="hardware">
-                        <div class="noticia-icon">
-                            <i class="fas fa-server"></i>
-                        </div>
-                        <div class="noticia-content">
-                            <span class="noticia-category">Hardware</span>
-                            <h3>TPU v5 de Google</h3>
-                            <p>Google presenta TPU v5 con rendimiento 4x superior para entrenamiento de modelos grandes.</p>
-                            <span class="noticia-date"><i class="fas fa-calendar"></i> Oct 2024</span>
-                        </div>
-                    </article>
-
-                    <!-- Noticia 9 - Mercado -->
-                    <article class="noticia-card" data-category="mercado">
-                        <div class="noticia-icon">
-                            <i class="fas fa-coins"></i>
-                        </div>
-                        <div class="noticia-content">
-                            <span class="noticia-category">Mercado</span>
-                            <h3>Inversión en Startups IA</h3>
-                            <p>Las startups de IA recaudan $100 mil millones en 2024, récord histórico de inversión.</p>
-                            <span class="noticia-date"><i class="fas fa-calendar"></i> Oct 2024</span>
-                        </div>
-                    </article>
-
-                    <!-- Noticia 10 - Industria -->
-                    <article class="noticia-card" data-category="industria">
-                        <div class="noticia-icon">
-                            <i class="fas fa-warehouse"></i>
-                        </div>
-                        <div class="noticia-content">
-                            <span class="noticia-category">Industria</span>
-                            <h3>Robótica Inteligente</h3>
-                            <p>Nueva generación de robots colaborativos con IA integrada para fábricas del futuro.</p>
-                            <span class="noticia-date"><i class="fas fa-calendar"></i> Sep 2024</span>
-                        </div>
-                    </article>
-
-                    <!-- Noticia 11 - Ética -->
-                    <article class="noticia-card" data-category="etica">
-                        <div class="noticia-icon">
-                            <i class="fas fa-user-shield"></i>
-                        </div>
-                        <div class="noticia-content">
-                            <span class="noticia-category">Ética</span>
-                            <h3>Privacidad en IA</h3>
-                            <p>UE aprueba nuevas regulaciones de privacidad para sistemas de IA empresariales.</p>
-                            <span class="noticia-date"><i class="fas fa-calendar"></i> Sep 2024</span>
-                        </div>
-                    </article>
-
-                    <!-- Noticia 12 - IA Generativa -->
-                    <article class="noticia-card" data-category="ia-generativa">
-                        <div class="noticia-icon">
-                            <i class="fas fa-image"></i>
-                        </div>
-                        <div class="noticia-content">
-                            <span class="noticia-category">IA Generativa</span>
-                            <h3>DALL-E 4 y Midjourney v7</h3>
-                            <p>Nueva generación de generadores de imágenes con fotorrealismo sin precedentes.</p>
-                            <span class="noticia-date"><i class="fas fa-calendar"></i> Ago 2024</span>
-                        </div>
-                    </article>
-                </div>
-
-                <!-- Navegación por puntos -->
-                <div class="noticias-dots" id="noticiasDots">
-                    <button class="noticia-dot active" data-index="0" aria-label="Ver noticia 1"></button>
-                    <button class="noticia-dot" data-index="1" aria-label="Ver noticia 2"></button>
-                    <button class="noticia-dot" data-index="2" aria-label="Ver noticia 3"></button>
-                    <button class="noticia-dot" data-index="3" aria-label="Ver noticia 4"></button>
-                    <button class="noticia-dot" data-index="4" aria-label="Ver noticia 5"></button>
-                    <button class="noticia-dot" data-index="5" aria-label="Ver noticia 6"></button>
-                    <button class="noticia-dot" data-index="6" aria-label="Ver noticia 7"></button>
-                    <button class="noticia-dot" data-index="7" aria-label="Ver noticia 8"></button>
-                    <button class="noticia-dot" data-index="8" aria-label="Ver noticia 9"></button>
-                    <button class="noticia-dot" data-index="9" aria-label="Ver noticia 10"></button>
-                    <button class="noticia-dot" data-index="10" aria-label="Ver noticia 11"></button>
-                    <button class="noticia-dot" data-index="11" aria-label="Ver noticia 12"></button>
-                </div>
-
-                <!-- Flechas de navegación -->
                 <button class="noticias-nav noticias-prev" id="noticiasPrev" aria-label="Noticia anterior">
                     <i class="fas fa-chevron-left"></i>
                 </button>
@@ -387,7 +225,8 @@
                         </div>
                         <div class="servicio-title">
                             <h3>Automatización Cognitiva</h3>
-                            <p>Desarrollamos soluciones que combinan automatización industrial con inteligencia artificial</p>
+                            <p>Desarrollamos soluciones que combinan automatización industrial con inteligencia
+                                artificial</p>
                         </div>
                         <button class="servicio-toggle" aria-label="Expandir servicio" aria-expanded="false">
                             <i class="fas fa-chevron-down"></i>
@@ -402,8 +241,10 @@
                         </ul>
                         <div class="servicio-detalle">
                             <h4>¿Qué ofrecemos?</h4>
-                            <p>Nuestras soluciones de automatización cognitiva integran sistemas de IA que pueden aprender, adaptarse y tomar decisiones en tiempo real. Combinamos robótica avanzada con algoritmos de machine learning para crear líneas de producción inteligentes.</p>
-                            
+                            <p>Nuestras soluciones de automatización cognitiva integran sistemas de IA que pueden
+                                aprender, adaptarse y tomar decisiones en tiempo real. Combinamos robótica avanzada con
+                                algoritmos de machine learning para crear líneas de producción inteligentes.</p>
+
                             <h4>Beneficios</h4>
                             <ul class="beneficios-list">
                                 <li><i class="fas fa-chart-line"></i> Reducción de costos operativos hasta 40%</li>
@@ -411,7 +252,7 @@
                                 <li><i class="fas fa-shield-alt"></i> Mayor precisión y seguridad</li>
                                 <li><i class="fas fa-sync"></i> Adaptación continua a cambios</li>
                             </ul>
-                            
+
                             <h4>Casos de Uso</h4>
                             <div class="casos-uso">
                                 <div class="caso">
@@ -453,8 +294,10 @@
                         </ul>
                         <div class="servicio-detalle">
                             <h4>¿Qué ofrecemos?</h4>
-                            <p>Implementamos modelos de IA generativa (GPT, LLMs, Diffusion Models) adaptados a necesidades específicas de cada industria. Desde generación de documentación técnica hasta diseño de componentes industriales.</p>
-                            
+                            <p>Implementamos modelos de IA generativa (GPT, LLMs, Diffusion Models) adaptados a
+                                necesidades específicas de cada industria. Desde generación de documentación técnica
+                                hasta diseño de componentes industriales.</p>
+
                             <h4>Beneficios</h4>
                             <ul class="beneficios-list">
                                 <li><i class="fas fa-bolt"></i> Aceleración de procesos de diseño</li>
@@ -462,7 +305,7 @@
                                 <li><i class="fas fa-file-alt"></i> Documentación automática</li>
                                 <li><i class="fas fa-user-md"></i> Soluciones médicas personalizadas</li>
                             </ul>
-                            
+
                             <h4>Casos de Uso</h4>
                             <div class="casos-uso">
                                 <div class="caso">
@@ -504,8 +347,10 @@
                         </ul>
                         <div class="servicio-detalle">
                             <h4>¿Qué ofrecemos?</h4>
-                            <p>Desarrollamos sistemas inteligentes capaces de operar de forma autónoma, aprender de su entorno y optimizar sus procesos sin intervención humana constante. Incluye gemelos digitales y sistemas multiagente.</p>
-                            
+                            <p>Desarrollamos sistemas inteligentes capaces de operar de forma autónoma, aprender de su
+                                entorno y optimizar sus procesos sin intervención humana constante. Incluye gemelos
+                                digitales y sistemas multiagente.</p>
+
                             <h4>Beneficios</h4>
                             <ul class="beneficios-list">
                                 <li><i class="fas fa-brain"></i> Autoaprendizaje continuo</li>
@@ -513,7 +358,7 @@
                                 <li><i class="fas fa-tools"></i> Mantenimiento predictivo</li>
                                 <li><i class="fas fa-network-wired"></i> Sistemas distribuidos inteligentes</li>
                             </ul>
-                            
+
                             <h4>Casos de Uso</h4>
                             <div class="casos-uso">
                                 <div class="caso">
@@ -560,7 +405,7 @@
                 </div>
 
                 <div class="tech-card">
-                    <i class="fas fa-github"></i>
+                    <i class="fab fa-github"></i>
                     <h3>GitHub & CI/CD</h3>
                     <p>Gestión de versiones, despliegue automatizado con Vercel y GitHub Actions.</p>
                 </div>
@@ -601,110 +446,7 @@
                 <button class="proyecto-tab" data-proyecto="saiydd">SAIyDD</button>
             </div>
 
-            <div class="proyectos-content">
-                <!-- GECRAI -->
-                <article class="proyecto-card active" id="proyecto-gecrai">
-                    <div class="proyecto-info">
-                        <h3>GECRAI 1.1</h3>
-                        <p class="proyecto-desc">Generador de Consultas Regulatorias con Asistencia Inteligente</p>
-                        <p>Asistente virtual para consulta de normativas eléctricas con procesamiento de lenguaje
-                            natural avanzado.</p>
-                        <ul class="proyecto-features">
-                            <li><i class="fas fa-check"></i> Generación automática de memorias de cálculo</li>
-                            <li><i class="fas fa-check"></i> Validación NOM-001-SEDE-2012</li>
-                            <li><i class="fas fa-check"></i> Integración con AutoCAD/Revit</li>
-                            <li><i class="fas fa-check"></i> Cálculo de Arc Flash IEEE 1584</li>
-                        </ul>
-                        <div class="proyecto-links">
-                            <button type="button" class="btn btn-primary" aria-disabled="true" aria-label="Demo no disponible aún">Ver Demo</button>
-                            <button type="button" class="btn btn-outline" aria-disabled="true" aria-label="PDF no disponible aún">Descargar PDF</button>
-                        </div>
-                    </div>
-                    <div class="proyecto-image">
-                        <div class="proyecto-placeholder">
-                            <i class="fas fa-file-alt"></i>
-                            <span>GECRAI</span>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- GIACELIA -->
-                <article class="proyecto-card" id="proyecto-giacelia">
-                    <div class="proyecto-info">
-                        <h3>GIACELIA 1.1</h3>
-                        <p class="proyecto-desc">Plataforma de Ingeniería Automatizada</p>
-                        <p>Solución impulsada por IA que automatiza el diseño, simulación y validación de sistemas de
-                            control.</p>
-                        <ul class="proyecto-features">
-                            <li><i class="fas fa-check"></i> Generación automática de ingenierías</li>
-                            <li><i class="fas fa-check"></i> Simulación de escenarios dinámicos</li>
-                            <li><i class="fas fa-check"></i> Optimización con IA</li>
-                            <li><i class="fas fa-check"></i> Integración con CAD/CAE</li>
-                        </ul>
-                        <div class="proyecto-links">
-                            <button type="button" class="btn btn-primary" aria-disabled="true" aria-label="Demo no disponible aún">Ver Demo</button>
-                            <button type="button" class="btn btn-outline" aria-disabled="true" aria-label="PDF no disponible aún">Descargar PDF</button>
-                        </div>
-                    </div>
-                    <div class="proyecto-image">
-                        <div class="proyecto-placeholder">
-                            <i class="fas fa-cogs"></i>
-                            <span>GIACELIA</span>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- GlucAI -->
-                <article class="proyecto-card" id="proyecto-glucai">
-                    <div class="proyecto-info">
-                        <h3>GlucAI 1.5</h3>
-                        <p class="proyecto-desc">Inteligencia Artificial para Gestión de Diabetes</p>
-                        <p>Sistema especializado en diagnóstico predictivo, monitoreo continuo y recomendaciones
-                            personalizadas.</p>
-                        <ul class="proyecto-features">
-                            <li><i class="fas fa-check"></i> Predicción de hipo/hiperglucemia</li>
-                            <li><i class="fas fa-check"></i> Integración con wearables</li>
-                            <li><i class="fas fa-check"></i> Reportes clínicos automáticos</li>
-                            <li><i class="fas fa-check"></i> Recomendaciones personalizadas</li>
-                        </ul>
-                        <div class="proyecto-links">
-                            <button type="button" class="btn btn-primary" aria-disabled="true" aria-label="Demo no disponible aún">Ver Demo</button>
-                            <button type="button" class="btn btn-outline" aria-disabled="true" aria-label="PDF no disponible aún">Descargar PDF</button>
-                        </div>
-                    </div>
-                    <div class="proyecto-image">
-                        <div class="proyecto-placeholder">
-                            <i class="fas fa-heartbeat"></i>
-                            <span>GlucAI</span>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- SAIyDD -->
-                <article class="proyecto-card" id="proyecto-saiydd">
-                    <div class="proyecto-info">
-                        <h3>SAIyDD 1.1</h3>
-                        <p class="proyecto-desc">Sistema de Aprendizaje Inclusivo</p>
-                        <p>Plataforma educativa especializada en aprendizaje adaptativo para niños con diversidad
-                            cognitiva.</p>
-                        <ul class="proyecto-features">
-                            <li><i class="fas fa-check"></i> Perfiles personalizados</li>
-                            <li><i class="fas fa-check"></i> Desarrollo socioemocional</li>
-                            <li><i class="fas fa-check"></i> Interfaces adaptativas</li>
-                            <li><i class="fas fa-check"></i> Herramientas para terapeutas</li>
-                        </ul>
-                        <div class="proyecto-links">
-                            <button type="button" class="btn btn-primary" aria-disabled="true" aria-label="Demo no disponible aún">Ver Demo</button>
-                            <button type="button" class="btn btn-outline" aria-disabled="true" aria-label="PDF no disponible aún">Descargar PDF</button>
-                        </div>
-                    </div>
-                    <div class="proyecto-image">
-                        <div class="proyecto-placeholder">
-                            <i class="fas fa-graduation-cap"></i>
-                            <span>SAIyDD</span>
-                        </div>
-                    </div>
-                </article>
+            <div class="proyectos-content" id="proyectosContainer">
             </div>
         </div>
     </section>
@@ -721,7 +463,8 @@
             <div class="gartner-container">
                 <div class="gartner-initial-view" id="gartnerInitialView">
                     <div class="metric-categories">
-                        <button class="metric-category-btn" onclick="showGartnerView('quadrant')" aria-label="Ver Cuadrante Mágico - Posicionamiento competitivo">
+                        <button class="metric-category-btn" data-view="quadrant"
+                            aria-label="Ver Cuadrante Mágico - Posicionamiento competitivo">
                             <div class="metric-icon">
                                 <i class="fas fa-crosshairs"></i>
                             </div>
@@ -731,7 +474,8 @@
                             </div>
                         </button>
 
-                        <button class="metric-category-btn" onclick="showGartnerView('evolution')" aria-label="Ver Evolución - Crecimiento en IA">
+                        <button class="metric-category-btn" data-view="evolution"
+                            aria-label="Ver Evolución - Crecimiento en IA">
                             <div class="metric-icon">
                                 <i class="fas fa-trending-up"></i>
                             </div>
@@ -741,7 +485,8 @@
                             </div>
                         </button>
 
-                        <button class="metric-category-btn" onclick="showGartnerView('solutions')" aria-label="Ver Comparativa - Análisis competitivo">
+                        <button class="metric-category-btn" data-view="solutions"
+                            aria-label="Ver Comparativa - Análisis competitivo">
                             <div class="metric-icon">
                                 <i class="fas fa-balance-scale"></i>
                             </div>
@@ -751,7 +496,8 @@
                             </div>
                         </button>
 
-                        <button class="metric-category-btn" onclick="showGartnerView('market')" aria-label="Ver Proyección - Mercado 2025-2027">
+                        <button class="metric-category-btn" data-view="market"
+                            aria-label="Ver Proyección - Mercado 2025-2027">
                             <div class="metric-icon">
                                 <i class="fas fa-rocket"></i>
                             </div>
@@ -765,9 +511,7 @@
 
                 <div class="gartner-detailed-view" id="gartnerDetailedView" style="display: none;">
                     <div class="detailed-header">
-                        <button class="back-btn" onclick="showGartnerInitial()">
-                            <i class="fas fa-arrow-left"></i> Volver
-                        </button>
+                        <button class="back-btn" aria-label="Volver"><i class="fas fa-arrow-left"></i> Volver</button>
                         <h3 id="gartnerTitle">Métricas</h3>
                     </div>
 
@@ -809,9 +553,10 @@
 
             <div class="org-chart-container">
                 <div class="executive-buttons">
-                    <button class="executive-btn" onclick="showOrgModal('CEO')">
+                    <button class="executive-btn" data-type="CEO">
                         <div class="executive-image">
-                            <img src="./assets/images/CEO.png" alt="Abdel Lugo Trejo - CEO" class="executive-photo" loading="lazy" decoding="async">
+                                <img src="./assets/images/CEO.webp" alt="Abdel Lugo Trejo - CEO" class="executive-photo"
+                                loading="lazy" decoding="async">
                         </div>
                         <div class="executive-info">
                             <h3>CEO</h3>
@@ -820,9 +565,9 @@
                         </div>
                     </button>
 
-                    <button class="executive-btn" onclick="showOrgModal('COO')">
+                    <button class="executive-btn" data-type="COO">
                         <div class="executive-image">
-                            <img src="./assets/images/COO.png" alt="Israel Reséndiz Gálvez - COO"
+                                <img src="./assets/images/COO.webp" alt="Israel Reséndiz Gálvez - COO"
                                 class="executive-photo" loading="lazy" decoding="async">
                         </div>
                         <div class="executive-info">
@@ -852,16 +597,18 @@
                         <i class="fas fa-map-marker-alt"></i>
                         <div>
                             <h4>Ubicación</h4>
-                            <p>Calle Libramiento Norte No. 30<br>San José Iturbide, Guanajuato, México<br>C.P. 37980</p>
+                            <p><a href="https://maps.app.goo.gl/s8s8wJqfXV3nGFju8" target="_blank"
+                                    rel="noopener noreferrer">Calle Libramiento Norte No. 30<br>San José Iturbide,
+                                    Guanajuato, México<br>C.P. 37980</a></p>
                         </div>
                     </div>
 
                     <div class="contacto-item">
                         <i class="fas fa-user-tie"></i>
                         <div>
-                            <p><a href="mailto:admin@gproatechnology.com">admin@gproatechnology.com</a></p>
-                            <p><a href="tel:+5214191296200">+52 1 419 129 6200</a></p>
-                            <p><a href="tel:+5214681208570">+52 1 468 120 8570</a></p>
+                            <h4>Teléfonos</h4>
+                            <p><a href="tel:+5214191296200">Israel Aldair Reséndiz Gálvez</a></p>
+                            <p><a href="tel:+5214681208570">Juan Abdel Lugo Trejo</a></p>
                         </div>
                     </div>
 
@@ -869,14 +616,16 @@
                         <i class="fas fa-envelope"></i>
                         <div>
                             <h4>Email</h4>
-                            <p>admin@gproatechnology.com</p>
+                            <p><a href="mailto:admin@gproatechnology.com">admin@gproatechnology.com</a></p>
+                            <p><a href="mailto:aldaz.rega@gproatechnology.com">aldaz.rega@gproatechnology.com</a></p>
+                            <p><a href="mailto:trejulua@gproatechnology.com">trejulu@gproatechnology.com</a></p>
                         </div>
                     </div>
 
                     <div class="contacto-social">
                         <a href="https://www.linkedin.com/company/gproa-technology/" aria-label="LinkedIn"
                             target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="https://wa.me/5214681208570" aria-label="WhatsApp" target="_blank"><i
+                        <a href="https://wa.me/5214191296200" aria-label="WhatsApp" target="_blank"><i
                                 class="fab fa-whatsapp"></i></a>
                         <a href="mailto:admin@gproatechnology.com" aria-label="Email"><i
                                 class="fas fa-envelope"></i></a>
@@ -886,25 +635,29 @@
                 <form class="contacto-form" id="contactForm" action="https://formspree.io/f/mdklrzab" method="POST">
                     <div class="form-group">
                         <label for="name">Nombre</label>
-                        <input type="text" id="name" name="name" autocomplete="name" required minlength="2" maxlength="100" placeholder="Tu nombre completo">
+                        <input type="text" id="name" name="name" autocomplete="name" required minlength="2"
+                            maxlength="100" placeholder="Tu nombre completo">
                         <span class="form-error" id="nameError"></span>
                     </div>
 
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" autocomplete="email" required placeholder="tu@email.com">
+                        <input type="email" id="email" name="email" autocomplete="email" required
+                            placeholder="tu@email.com">
                         <span class="form-error" id="emailError"></span>
                     </div>
 
                     <div class="form-group">
                         <label for="subject">Asunto</label>
-                        <input type="text" id="subject" name="subject" autocomplete="off" required minlength="5" maxlength="200" placeholder="¿En qué podemos ayudarte?">
+                        <input type="text" id="subject" name="subject" autocomplete="off" required minlength="5"
+                            maxlength="200" placeholder="¿En qué podemos ayudarte?">
                         <span class="form-error" id="subjectError"></span>
                     </div>
 
                     <div class="form-group">
                         <label for="message">Mensaje</label>
-                        <textarea id="message" name="message" autocomplete="off" rows="5" required minlength="10" maxlength="2000" placeholder="Describe tu proyecto o consulta..."></textarea>
+                        <textarea id="message" name="message" autocomplete="off" rows="5" required minlength="10"
+                            maxlength="2000" placeholder="Describe tu proyecto o consulta..."></textarea>
                         <span class="form-error" id="messageError"></span>
                     </div>
 
@@ -928,31 +681,26 @@
             <div class="footer-grid">
                 <div class="footer-brand">
                     <a href="./index.html" class="footer-logo">
-                        GProA<span>Technology</span>
+                        GProA<span> Technology</span>
                     </a>
                     <p>Líderes en implementación de tecnologías emergentes para la automatización industrial
                         inteligente.</p>
                 </div>
 
                 <div class="footer-links">
-                    <h4>Áreas de Innovación</h4>
+                    <h4>Marcos del sitio</h4>
                     <ul>
-                        <li><a href="#servicios">Automatización Cognitiva</a></li>
-                        <li><a href="#servicios">IA Generativa</a></li>
-                        <li><a href="#proyectos">Proyectos Destacados</a></li>
+                        <li><a href="#inicio">Inicio</a></li>
+                        <li><a href="#servicios">Servicios</a></li>
+                        <li><a href="#proyectos">Proyectos</a></li>
+                        <li><a href="#equipo">Equipo</a></li>
+                        <li><a href="#contacto">Contacto</a></li>
                     </ul>
-                </div>
-
-                <div class="footer-contact">
-                    <h4>Contacto</h4>
-                    <p>admin@gproatechnology.com</p>
-                    <p>+52 1 419 129 6200</p>
-                    <p>+52 1 468 120 8570</p>
                 </div>
             </div>
 
             <div class="footer-bottom">
-                <p>&copy; 2025 GPROA Technology. Todos los derechos reservados.</p>
+                <p>&copy; 2026 GProA Technology S. de R.L. de C.V. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
@@ -965,22 +713,47 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title" id="modalTitle">Información</h2>
-                <button class="modal-close" onclick="closeOrgModal()">&times;</button>
+                <button class="modal-close" aria-label="Cerrar información">&times;</button>
             </div>
             <div class="modal-body" id="modalBody">
             </div>
         </div>
     </div>
 
+    <!-- Servicio Modal -->
+    <div class="servicio-modal" id="servicioModal" role="dialog" aria-modal="true" aria-labelledby="servicioModalTitle">
+        <div class="servicio-modal-backdrop" id="servicioModalBackdrop"></div>
+        <div class="servicio-modal-content">
+            <div class="servicio-modal-header">
+                <h2 class="servicio-modal-title" id="servicioModalTitle">Servicio</h2>
+                <button class="servicio-modal-close" id="servicioModalClose"
+                    aria-label="Cerrar detalle de servicio">&times;</button>
+            </div>
+            <div class="servicio-modal-body" id="servicioModalBody">
+            </div>
+        </div>
+    </div>
+
+    <!-- Tecnología Modal -->
+    <div class="tech-modal" id="techModal" role="dialog" aria-modal="true" aria-labelledby="techModalTitle">
+        <div class="tech-modal-backdrop" id="techModalBackdrop"></div>
+        <div class="tech-modal-content">
+            <div class="tech-modal-header">
+                <h2 class="tech-modal-title" id="techModalTitle">Tecnología</h2>
+                <button class="tech-modal-close" id="techModalClose"
+                    aria-label="Cerrar detalle de tecnología">&times;</button>
+            </div>
+            <div class="tech-modal-body" id="techModalBody">
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
-    <script type="module" src="./js/main.js"></script>
+    <script type="module" src="./src/js/main.js"></script>
     <!-- Botón flotante de WhatsApp -->
     <div class="whatsapp-float" id="whatsappFloat">
-        <a href="https://wa.me/524681208570?text=Hola%20GProA%20Technology,%20deseo%20más%20información..." 
-           target="_blank" 
-           rel="noopener noreferrer"
-           class="whatsapp-btn"
-           aria-label="Contactar por WhatsApp">
+        <a href="https://wa.me/5214191296200?text=Hola%20GProA%20Technology,%20deseo%20más%20información..."
+            target="_blank" rel="noopener noreferrer" class="whatsapp-btn" aria-label="Contactar por WhatsApp">
             <i class="fab fa-whatsapp"></i>
         </a>
         <span class="whatsapp-tooltip">¡Escríbenos!</span>

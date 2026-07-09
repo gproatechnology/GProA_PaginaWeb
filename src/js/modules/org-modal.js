@@ -4,12 +4,7 @@
  * Includes focus trap for accessibility (WCAG 2.2.2)
  */
 
-// Make functions globally available for onclick handlers
-window.showOrgModal = showOrgModal;
-window.closeOrgModal = closeOrgModal;
-
-// Store previously focused element for focus restoration
-let previouslyFocused = null;
+import { trapFocus } from '../utils/focus-trap.js';
 
 const orgData = {
     'CEO': {
@@ -55,9 +50,6 @@ function showOrgModal(type) {
     const title = document.getElementById('modalTitle');
     const body = document.getElementById('modalBody');
 
-    // Save currently focused element
-    previouslyFocused = document.activeElement;
-
     const info = orgData[type];
     if (info) {
         title.textContent = info.title;
@@ -66,69 +58,30 @@ function showOrgModal(type) {
 
     modal.classList.add('show');
 
-    // Focus first focusable element in modal
-    setTimeout(() => {
-        const closeBtn = modal.querySelector('.modal-close');
-        if (closeBtn) closeBtn.focus();
-    }, 100);
-
-    // Close on background click
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeOrgModal();
-        }
+    trapFocus({
+        modal,
+        onClose: closeOrgModal,
+        restoreSelector: '.executive-btn'
     });
-
-    // Handle keyboard navigation (focus trap)
-    modal.addEventListener('keydown', handleFocusTrap);
-}
-
-function handleFocusTrap(e) {
-    const modal = document.getElementById('orgModal');
-    if (!modal.classList.contains('show')) return;
-
-    // Get all focusable elements in modal
-    const focusableElements = modal.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
-    const firstElement = focusableElements[0];
-    const lastElement = focusableElements[focusableElements.length - 1];
-
-    // Handle Tab key
-    if (e.key === 'Tab') {
-        if (e.shiftKey) {
-            // Shift + Tab
-            if (document.activeElement === firstElement) {
-                e.preventDefault();
-                lastElement.focus();
-            }
-        } else {
-            // Tab
-            if (document.activeElement === lastElement) {
-                e.preventDefault();
-                firstElement.focus();
-            }
-        }
-    }
-
-    // Close on Escape key
-    if (e.key === 'Escape') {
-        closeOrgModal();
-    }
 }
 
 function closeOrgModal() {
     const modal = document.getElementById('orgModal');
     modal.classList.remove('show');
-
-    // Remove focus trap listener
-    modal.removeEventListener('keydown', handleFocusTrap);
-
-    // Restore focus to previously focused element
-    if (previouslyFocused) {
-        previouslyFocused.focus();
-        previouslyFocused = null;
-    }
 }
 
 export { showOrgModal, closeOrgModal };
+
+export function initOrgModal() {
+    document.querySelectorAll('.executive-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const type = btn.dataset.type;
+            if (type) showOrgModal(type);
+        });
+    });
+
+    const modal = document.getElementById('orgModal');
+    const closeBtn = modal?.querySelector('.modal-close');
+
+    closeBtn?.addEventListener('click', closeOrgModal);
+}

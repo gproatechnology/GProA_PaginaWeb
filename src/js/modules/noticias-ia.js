@@ -1,20 +1,22 @@
 /**
  * Noticias IA Carousel Module
- * Navegación estilo Windows Explorer con puntos y filtros
+ * Renderizado dinámico desde datos y navegación por filtros y swipe.
  */
+
+import { NOTICIAS } from '../../data/noticias.js';
 
 export function initNoticiasIA() {
     const track = document.getElementById('noticiasTrack');
-    const dots = document.querySelectorAll('.noticia-dot');
     const prevBtn = document.getElementById('noticiasPrev');
     const nextBtn = document.getElementById('noticiasNext');
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    
+    const filterBtns = document.querySelectorAll('#noticiasFilters .filter-btn');
+
     if (!track) return;
 
-    let currentIndex = 0;
     let currentFilter = 'todas';
+    let currentIndex = 0;
     let cardsPerView = getCardsPerView();
+    let allCards = [];
 
     function getCardsPerView() {
         if (window.innerWidth <= 768) return 1;
@@ -23,41 +25,71 @@ export function initNoticiasIA() {
     }
 
     function getVisibleCards() {
-        const allCards = Array.from(track.querySelectorAll('.noticia-card'));
         if (currentFilter === 'todas') {
             return allCards.filter(card => !card.classList.contains('hidden'));
         }
         return allCards.filter(card => card.dataset.category === currentFilter && !card.classList.contains('hidden'));
     }
 
-    function updateDots() {
-        const visibleCards = getVisibleCards();
-        const maxIndex = Math.max(0, visibleCards.length - cardsPerView);
-        
-        // Update dots visibility
-        dots.forEach((dot, index) => {
-            dot.style.display = index < visibleCards.length ? 'block' : 'none';
-            dot.classList.toggle('active', index === currentIndex);
+    function renderCards() {
+        track.innerHTML = '';
+        allCards = NOTICIAS.map((noticia) => {
+            const article = document.createElement('article');
+            article.className = 'noticia-card';
+            article.dataset.category = noticia.category;
+            article.dataset.id = noticia.id;
+            article.tabIndex = 0;
+            article.setAttribute('role', 'button');
+            article.setAttribute('aria-label', `Ver noticia: ${noticia.title}`);
+
+            const linkHtml = noticia.url
+                ? `<span class="noticia-link"><i class="fas fa-external-link-alt"></i> Ver más</span>`
+                : '';
+
+            article.innerHTML = `
+                <div class="noticia-icon">
+                    <i class="fas ${noticia.icon}"></i>
+                </div>
+                <div class="noticia-content">
+                    <span class="noticia-category">${capitalize(noticia.category.replace('-', ' '))}</span>
+                    <h3>${noticia.title}</h3>
+                    <p>${noticia.summary}</p>
+                    <span class="noticia-date"><i class="fas fa-calendar"></i> ${noticia.date}</span>
+                    ${linkHtml}
+                </div>
+            `;
+
+            if (noticia.url) {
+                const url = noticia.url;
+                article.addEventListener('click', () => {
+                    if (url) window.open(url, '_blank');
+                });
+                article.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && url) window.open(url, '_blank');
+                });
+            }
+
+            track.appendChild(article);
+            return article;
         });
+    }
+
+    function capitalize(text) {
+        return text
+            .replace(/\b\w/g, (c) => c.toUpperCase())
+            .replace('Ia', 'IA');
     }
 
     function updateCarousel() {
         const visibleCards = getVisibleCards();
         const maxIndex = Math.max(0, visibleCards.length - cardsPerView);
-        
-        // Ensure currentIndex is within bounds
         currentIndex = Math.max(0, Math.min(currentIndex, maxIndex));
 
         if (visibleCards.length > 0) {
-            const cardWidth = visibleCards[0].offsetWidth + 30; // width + gap
-            const offset = currentIndex * cardWidth;
-            track.style.transform = `translateX(-${offset}px)`;
+            const slideWidth = visibleCards[0].offsetWidth + 30;
+            track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
         }
 
-        // Update dots
-        updateDots();
-
-        // Update button states
         if (prevBtn) {
             prevBtn.style.opacity = currentIndex === 0 ? '0.5' : '1';
             prevBtn.style.pointerEvents = currentIndex === 0 ? 'none' : 'auto';
@@ -71,33 +103,23 @@ export function initNoticiasIA() {
     function filterCards(category) {
         currentFilter = category;
         currentIndex = 0;
-        
-        const allCards = track.querySelectorAll('.noticia-card');
-        
-        allCards.forEach((card, index) => {
-            if (category === 'todas' || card.dataset.category === category) {
-                card.classList.remove('hidden');
-                // Reset animation
-                card.style.animation = 'none';
-                card.offsetHeight; // Trigger reflow
-                card.style.animation = `fadeInUp 0.6s ease forwards ${index * 0.05}s`;
-            } else {
-                card.classList.add('hidden');
-            }
+
+        allCards.forEach((card) => {
+            const match = category === 'todas' || card.dataset.category === category;
+            card.classList.toggle('hidden', !match);
         });
 
-        // Small delay to allow cards to be filtered before updating carousel
-        setTimeout(updateCarousel, 50);
+        updateCarousel();
     }
 
     function goToSlide(index) {
         const visibleCards = getVisibleCards();
+        if (!visibleCards.length) return;
         const maxIndex = Math.max(0, visibleCards.length - cardsPerView);
         currentIndex = Math.max(0, Math.min(index, maxIndex));
         updateCarousel();
     }
 
-    // Filter buttons
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             filterBtns.forEach(b => b.classList.remove('active'));
@@ -106,27 +128,18 @@ export function initNoticiasIA() {
         });
     });
 
-    // Dot navigation
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-            goToSlide(index);
-        });
-    });
-
-    // Arrow navigation
     if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-            goToSlide(currentIndex - 1);
-        });
+        prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
     }
 
     if (nextBtn) {
         nextBtn.addEventListener('click', () => {
+            const visibleCards = getVisibleCards();
+            const maxIndex = Math.max(0, visibleCards.length - cardsPerView);
             goToSlide(currentIndex + 1);
         });
     }
 
-    // Touch/Swipe support
     let touchStartX = 0;
     let touchEndX = 0;
 
@@ -140,25 +153,22 @@ export function initNoticiasIA() {
     }, { passive: true });
 
     function handleSwipe() {
-        const swipeThreshold = 50;
         const diff = touchStartX - touchEndX;
+        const swipeThreshold = 50;
 
         if (Math.abs(diff) > swipeThreshold) {
             if (diff > 0) {
-                // Swipe left - next
                 goToSlide(currentIndex + 1);
             } else {
-                // Swipe right - prev
                 goToSlide(currentIndex - 1);
             }
         }
     }
 
-    // Keyboard navigation
     document.addEventListener('keydown', (e) => {
         const section = document.getElementById('noticias');
         const rect = section?.getBoundingClientRect();
-        
+
         if (rect && rect.top < window.innerHeight && rect.bottom > 0) {
             if (e.key === 'ArrowLeft') {
                 goToSlide(currentIndex - 1);
@@ -168,7 +178,6 @@ export function initNoticiasIA() {
         }
     });
 
-    // Handle resize
     let resizeTimeout;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimeout);
@@ -176,11 +185,11 @@ export function initNoticiasIA() {
             const newCardsPerView = getCardsPerView();
             if (newCardsPerView !== cardsPerView) {
                 cardsPerView = newCardsPerView;
-                updateCarousel();
+                goToSlide(currentIndex);
             }
         }, 250);
     });
 
-    // Initial update
+    renderCards();
     updateCarousel();
 }

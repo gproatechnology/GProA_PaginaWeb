@@ -1,0 +1,197 @@
+/* ============================================
+   Tecnologías Section Styles
+   ============================================ */
+
+.tecnologias {
+    padding: var(--section-padding);
+    background: var(--dark-secondary);
+}
+
+.tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.tech-card {
+    background: var(--gray);
+    border-radius: var(--radius-md);
+    padding: 30px;
+    text-align: center;
+    transition: var(--transition);
+    border: 1px solid transparent;
+}
+
+.tech-card:hover {
+    border-color: rgba(0, 224, 255, 0.3);
+    transform: translateY(-5px);
+}
+
+.tech-card i {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 20px;
+}
+
+.tech-card h3 {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.tech-card p {
+    font-size: 0.9rem;
+    color: var(--light-secondary);
+}
+
+/* Tech Modal */
+.tech-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.tech-modal.open {
+    pointer-events: auto;
+    opacity: 1;
+    visibility: visible;
+}
+
+.tech-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(5, 10, 20, 0.85);
+    backdrop-filter: blur(4px);
+}
+
+.tech-modal-content {
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(145deg, rgba(20, 30, 50, 0.95), rgba(10, 20, 35, 0.98));
+    border: 1px solid rgba(0, 224, 255, 0.2);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 700px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-glow);
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.tech-modal.open .tech-modal-content {
+    transform: translateY(0);
+}
+
+.tech-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 24px 24px 20px;
+    border-bottom: 1px solid rgba(0, 224, 255, 0.15);
+}
+
+.tech-modal-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tech-modal-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: var(--radius-md);
+    color: #0a0f1c;
+    font-size: 1.4rem;
+}
+
+.tech-modal-close {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 224, 255, 0.1);
+    border: 2px solid rgba(0, 224, 255, 0.3);
+    border-radius: var(--radius-sm);
+    color: var(--primary);
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.tech-modal-close:hover {
+    background: rgba(0, 224, 255, 0.2);
+    border-color: var(--primary);
+}
+
+.tech-modal-close:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.tech-modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    color: var(--light-secondary);
+}
+
+.tech-modal-body p {
+    color: var(--light-secondary);
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.tech-modal-body .tech-list,
+.tech-modal-body .tech-tags {
+    margin-top: 16px;
+}
+
+@media (max-width: 768px) {
+    .tech-modal {
+        padding: 16px;
+        align-items: flex-end;
+    }
+
+    .tech-modal-content {
+        max-height: 90vh;
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        transform: translateY(40px);
+    }
+
+    .tech-modal.open .tech-modal-content {
+        transform: translateY(0);
+    }
+
+    .tech-modal-header {
+        padding: 20px 20px 16px;
+    }
+
+    .tech-modal-body {
+        padding: 20px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tech-modal,
+    .tech-modal-content {
+        transition: none;
+    }
+}

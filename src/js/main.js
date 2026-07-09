@@ -8,12 +8,13 @@ import { initNavigation } from './modules/navigation.js';
 import { initHeroCanvas } from './modules/hero-canvas.js';
 import { initFloatingSymbols } from './modules/floating-symbols.js';
 import { initServicios } from './modules/servicios.js';
+import { initTecnologias } from './modules/tecnologias.js';
 import { initProjectTabs } from './modules/project-tabs.js';
 import { initContactForm } from './modules/contact-form.js';
 import { initScrollEffects } from './modules/scroll-effects.js';
 import { initNoticiasIA } from './modules/noticias-ia.js';
-import './modules/gartner-charts.js';
-import './modules/org-modal.js';
+import { initGartnerCharts } from './modules/gartner-charts.js';
+import { initOrgModal } from './modules/org-modal.js';
 
 // Video fallback: show canvas only if video fails
 function initVideoFallback() {
@@ -57,9 +58,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initHeroCanvas();
     initFloatingSymbols();
     initServicios();
+    initTecnologias();
     initProjectTabs();
     initContactForm();
     initScrollEffects();
     initNoticiasIA();
+    initGartnerCharts();
+    initOrgModal();
     initVideoFallback();
 });

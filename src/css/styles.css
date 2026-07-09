@@ -1,0 +1,20 @@
+/* ============================================
+   GProA Technology - Landing Page v3
+   Main CSS Entry Point
+   ============================================ */
+
+/* Import CSS Modules */
+@import url('./modules/variables.css');
+@import url('./modules/base.css');
+@import url('./modules/navigation.css');
+@import url('./modules/hero.css');
+@import url('./modules/buttons.css');
+@import url('./modules/servicios.css');
+@import url('./modules/tecnologias.css');
+@import url('./modules/noticias-ia.css');
+@import url('./modules/proyectos.css');
+@import url('./modules/metricas.css');
+@import url('./modules/equipo.css');
+@import url('./modules/contacto.css');
+@import url('./modules/footer.css');
+@import url('./modules/components.css');

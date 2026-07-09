@@ -15,6 +15,8 @@ export function initHeroCanvas() {
     let time = 0;
 
     // Configuration
+    const mouse = { x: -9999, y: -9999, active: false };
+
     const config = {
         nodeCount: 25,
         maxConnections: 3,
@@ -33,67 +35,79 @@ export function initHeroCanvas() {
     /**
      * Node class representing AI neurons/processes
      */
-    class Node {
-        constructor() {
-            this.reset();
-            this.pulsePhase = Math.random() * Math.PI * 2;
-            this.type = Math.random() > 0.7 ? 'core' : 'process';
+        class Node {
+            constructor() {
+                this.reset();
+                this.pulsePhase = Math.random() * Math.PI * 2;
+                this.type = Math.random() > 0.7 ? 'core' : 'process';
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.3;
+                this.vy = (Math.random() - 0.5) * 0.3;
+                this.radius = config.nodeRadius.min + Math.random() * (config.nodeRadius.max - config.nodeRadius.min);
+                this.connections = [];
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.pulsePhase += config.pulseSpeed;
+
+                if (mouse.active) {
+                    const dx = this.x - mouse.x;
+                    const dy = this.y - mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const maxDist = 160;
+
+                    if (dist < maxDist && dist > 0) {
+                        const force = (1 - dist / maxDist) * 0.8;
+                        this.vx += (dx / dist) * force;
+                        this.vy += (dy / dist) * force;
+                    }
+                }
+
+                this.vx *= 0.98;
+                this.vy *= 0.98;
+
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+                this.x = Math.max(0, Math.min(canvas.width, this.x));
+                this.y = Math.max(0, Math.min(canvas.height, this.y));
+            }
+
+            draw() {
+                const pulseRadius = this.radius + Math.sin(this.pulsePhase) * 2;
+                const alpha = 0.6 + Math.sin(this.pulsePhase) * 0.3;
+
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, pulseRadius * 2, 0, Math.PI * 2);
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, pulseRadius * 2
+                );
+                gradient.addColorStop(0, `rgba(0, 224, 255, ${alpha * 0.3})`);
+                gradient.addColorStop(1, 'rgba(0, 224, 255, 0)');
+                ctx.fillStyle = gradient;
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, pulseRadius, 0, Math.PI * 2);
+                ctx.fillStyle = this.type === 'core'
+                    ? config.colors.secondary
+                    : config.colors.primary;
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(this.x - pulseRadius * 0.3, this.y - pulseRadius * 0.3, pulseRadius * 0.3, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.fill();
+            }
         }
 
-        reset() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.vx = (Math.random() - 0.5) * 0.3;
-            this.vy = (Math.random() - 0.5) * 0.3;
-            this.radius = config.nodeRadius.min + Math.random() * (config.nodeRadius.max - config.nodeRadius.min);
-            this.connections = [];
-        }
-
-        update() {
-            this.x += this.vx;
-            this.y += this.vy;
-            this.pulsePhase += config.pulseSpeed;
-
-            // Bounce off edges
-            if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-
-            // Keep in bounds
-            this.x = Math.max(0, Math.min(canvas.width, this.x));
-            this.y = Math.max(0, Math.min(canvas.height, this.y));
-        }
-
-        draw() {
-            const pulseRadius = this.radius + Math.sin(this.pulsePhase) * 2;
-            const alpha = 0.6 + Math.sin(this.pulsePhase) * 0.3;
-
-            // Outer glow
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, pulseRadius * 2, 0, Math.PI * 2);
-            const gradient = ctx.createRadialGradient(
-                this.x, this.y, 0,
-                this.x, this.y, pulseRadius * 2
-            );
-            gradient.addColorStop(0, `rgba(0, 224, 255, ${alpha * 0.3})`);
-            gradient.addColorStop(1, 'rgba(0, 224, 255, 0)');
-            ctx.fillStyle = gradient;
-            ctx.fill();
-
-            // Core node
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, pulseRadius, 0, Math.PI * 2);
-            ctx.fillStyle = this.type === 'core' 
-                ? config.colors.secondary 
-                : config.colors.primary;
-            ctx.fill();
-
-            // Inner highlight
-            ctx.beginPath();
-            ctx.arc(this.x - pulseRadius * 0.3, this.y - pulseRadius * 0.3, pulseRadius * 0.3, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-            ctx.fill();
-        }
-    }
 
     /**
      * Data particle traveling between nodes
@@ -283,5 +297,18 @@ export function initHeroCanvas() {
         } else {
             animate();
         }
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+        mouse.active = true;
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+        mouse.active = false;
+        mouse.x = -9999;
+        mouse.y = -9999;
     });
 }
