@@ -188,8 +188,11 @@ El proyecto ha sido completamente corregido. Todos los problemas críticos y med
 | 3 | 🟡 Medio | `README.md` y `AUDITORIA.md` desactualizados (rutas `css/`,`js/`, afirmaban que faltaban WebP/analytics ya hechos, y "abrir index.html" ya no funciona con módulos ES). | Actualizados a la estructura `src/` real, marcando WebP/WebM/GTM como hechos. | `README.md`, `AUDITORIA.md` |
 
 ### Pendiente conocido (fuera de este commit)
-- `index.html` y `404.html` usan `og:image` apuntando a `./assets/images/logoweb.webp`, pero Vite hashea los assets y esa ruta no existe en producción. Recomendación: usar URL absoluta al asset real o un PNG estático en `publicDir`.
-- `hero-canvas.js:51` tiene typo `this.connections` (nunca usado) y la animación sigue corriendo aunque el canvas está oculto (video visible).
+~ (sin pendientes abiertos — ver addendum 2026-07-09) ~
+
+### Resuelto en commit 2026-07-09 (babc336 + posterior)
+- `og:image`/`twitter:image`/`apple-touch-icon`/`favicon` apuntaban a `./assets/images/*.webp`, rutas que Vite hashea y no existen en producción. Ahora se copian `logoweb.webp` y `favicon.webp` con nombre estable a `dist/assets/images/` y se referencian con URL absoluta `https://gproatechnology.com/...`.
+- `hero-canvas.js`: eliminado typo `this.connections` (línea muerta) y la animación ahora se pausa cuando el canvas está oculto (`offsetParent === null`), evitando trabajo de dibujo innecesario mientras se muestra el video.
 
 ### Estado de sincronización
 - `origin` → `github.com/gproatechnology/GProA_PaginaWeb.git` (rama `main`).

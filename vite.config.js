@@ -10,7 +10,12 @@ const EXTRA_STATIC = [
   'robots.txt',
   'sitemap.xml',
   'CNAME',
-  'proyectos'
+  'proyectos',
+  // Imágenes con nombre estable para OG/Twitter/favicon/apple-touch
+  // (Vite hashea los assets referenciados en HTML, así que estas rutas
+  //  no existirían en producción si solo usáramos las hasheadas).
+  'assets/images/logoweb.webp',
+  'assets/images/favicon.webp'
 ];
 
 function copyExtraStatic() {

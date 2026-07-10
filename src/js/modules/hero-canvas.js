@@ -48,7 +48,6 @@ export function initHeroCanvas() {
                 this.vx = (Math.random() - 0.5) * 0.3;
                 this.vy = (Math.random() - 0.5) * 0.3;
                 this.radius = config.nodeRadius.min + Math.random() * (config.nodeRadius.max - config.nodeRadius.min);
-                this.connections = [];
             }
 
             update() {
@@ -251,6 +250,13 @@ export function initHeroCanvas() {
     }
 
     function animate() {
+        // Pausa el trabajo de dibujo cuando el canvas está oculto
+        // (por ejemplo, mientras se muestra el video de fondo).
+        if (canvas.offsetParent === null) {
+            animationId = requestAnimationFrame(animate);
+            return;
+        }
+
         time++;
         
         // Clear and draw background
