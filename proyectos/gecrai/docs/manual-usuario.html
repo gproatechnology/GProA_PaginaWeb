@@ -2,76 +2,339 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manual de Usuario - GECRAI 1.1</title>
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #1a1a1a; max-width: 900px; margin: 0 auto; padding: 40px 20px; }
-        h1 { border-bottom: 3px solid #0066ff; padding-bottom: 10px; color: #0a0f1c; }
-        h2 { color: #0066ff; margin-top: 30px; border-bottom: 1px solid #e5e7eb; padding-bottom: 6px; }
-        h3 { color: #0a0f1c; margin-top: 20px; }
-        .meta { color: #6b7280; font-size: 0.95rem; margin-bottom: 20px; }
-        ul { margin: 10px 0 10px 20px; }
-        li { margin-bottom: 6px; }
-        .note { background: #eef2ff; border-left: 4px solid #0066ff; padding: 10px 14px; border-radius: 4px; }
-        code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #1f2937;
+            background: #f8fafc;
+            line-height: 1.65;
+        }
+        .wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 24px 0;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 24px;
+        }
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            color: #0a0f1c;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .pill {
+            padding: 8px 14px;
+            background: #eef2ff;
+            color: #0066ff;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: .9rem;
+            border: 1px solid #c7d2fe;
+        }
+        .layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 24px;
+        }
+        .toc {
+            position: sticky;
+            top: 16px;
+            height: fit-content;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 18px;
+        }
+        .toc h4 {
+            font-size: .95rem;
+            color: #0a0f1c;
+            margin-bottom: 12px;
+        }
+        .toc a {
+            display: block;
+            padding: 8px 10px;
+            color: #374151;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        .toc a:hover {
+            background: #eff6ff;
+            color: #0066ff;
+        }
+        .doc {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 22px;
+        }
+        .doc h2 {
+            color: #0a0f1c;
+            margin-top: 28px;
+            margin-bottom: 10px;
+            font-size: 1.25rem;
+        }
+        .doc h3 {
+            color: #111827;
+            margin-top: 18px;
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+        }
+        .doc p, .doc li {
+            color: #374151;
+            margin-bottom: 10px;
+        }
+        .doc ul {
+            padding-left: 22px;
+            margin-bottom: 14px;
+        }
+        .doc li { margin-bottom: 8px; }
+        .note {
+            background: #eef2ff;
+            border-left: 4px solid #0066ff;
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin: 14px 0;
+        }
+        .grid {
+            display: grid;
+            gap: 14px;
+        }
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        .card h4 {
+            color: #0a0f1c;
+            margin-bottom: 8px;
+            font-size: .95rem;
+        }
+        .steps {
+            counter-reset: step;
+            list-style: none;
+            padding-left: 0;
+        }
+        .steps li {
+            counter-increment: step;
+            padding-left: 38px;
+            position: relative;
+            margin-bottom: 14px;
+        }
+        .steps li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: linear-gradient(135deg,#0066ff,#00e0ff);
+            color: #fff;
+            font-weight: 700;
+            font-size: .85rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #search {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            background: #ffffff;
+            color: #0a0f1c;
+        }
+        .hidden { display: none; }
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            padding: 16px 0;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 16px;
+            position: sticky;
+            top: 0;
+            background: #ffffff;
+            z-index: 5;
+        }
+        .topbar a {
+            color: #0066ff;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; }
+            .toc { position: static; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-    <h1>Manual de Usuario - GECRAI 1.1</h1>
-    <div class="meta">Generador de Consultas Regulatorias con Asistencia Inteligente</div>
+    <div class="wrap">
+        <header>
+            <div>
+                <div class="title">GECRAI 1.1</div>
+                <p style="color:#6b7280;margin-top:4px;">Manual de usuario y documentación interactiva</p>
+            </div>
+            <div class="actions">
+                <span class="pill">v1.1 Enterprise</span>
+                <a class="pill" href="#inicio">Volver al sitio</a>
+            </div>
+        </header>
 
-    <h2>1. Introducción</h2>
-    <p>GECRAI 1.1 es una plataforma diseñada para automatizar consultas regulatorias, generación de memorias de cálculo y validaciones normativas en entornos industriales.</p>
+        <div class="topbar">
+            <input id="search" type="text" placeholder="Buscar en la documentación...">
+            <a href="#inicio">Volver arriba</a>
+        </div>
 
-    <h2>2. Arquitectura</h2>
-    <ul>
-        <li>Frontend: interfaces responsivas orientadas a usuario industrial</li>
-        <li>Backend: lógica de negocio y validaciones normativas</li>
-        <li>Base de datos: almacenamiento de normativas y memorias</li>
-        <li>IA: motor de consulta y generación de documentos</li>
-    </ul>
+        <div class="layout">
+            <aside class="toc" id="toc">
+                <h4>Contenido</h4>
+                <a href="#introduccion">Introducción</a>
+                <a href="#alcance">Alcance</a>
+                <a href="#arquitectura">Arquitectura</a>
+                <a href="#modulos">Módulos</a>
+                <a href="#instalacion">Instalación</a>
+                <a href="#uso">Uso paso a paso</a>
+                <a href="#normativas">Normativas</a>
+                <a href="#qa">Preguntas frecuentes</a>
+                <a href="#soporte">Soporte</a>
+            </aside>
 
-    <h2>3. Requisitos</h2>
-    <ul>
-        <li>Navegador moderno</li>
-        <li>Conexión a internet para servicios en la nube</li>
-        <li>Permisos de administrador para instalación local</li>
-    </ul>
+            <article class="doc" id="inicio">
+                <h2 id="introduccion">Introducción</h2>
+                <p>GECRAI 1.1 es un asistente inteligente para consulta regulatoria, generación de memorias de cálculo y validaciones industriales.</p>
 
-    <h2>4. Instalación</h2>
-    <div class="note">Descargá el instalador correspondiente a tu sistema operativo y ejecutá el asistente de instalación.</div>
-    <p>Pasos básicos:</p>
-    <ul>
-        <li>Descargar el paquete de instalación</li>
-        <li>Ejecutar el instalador</li>
-        <li>Configurar credenciales iniciales</li>
-        <li>Verificar conexión con el servicio de normativas</li>
-    </ul>
+                <h2 id="alcance">Alcance</h2>
+                <ul>
+                    <li>Consultas normativas automatizadas</li>
+                    <li>Generación de memorias de cálculo</li>
+                    <li>Integración con flujos de ingeniería</li>
+                </ul>
 
-    <h2>5. Funcionalidades principales</h2>
-    <h3>5.1 Consulta de normativas</h3>
-    <p>Buscá normativas por clave, sector o alcance. El sistema sugiere documentos relacionados y versiones vigentes.</p>
+                <h2 id="arquitectura">Arquitectura</h2>
+                <div class="grid grid-3">
+                    <div class="card">
+                        <h4>Frontend</h4>
+                        <p>Interfaz web responsiva y dashboards operativos.</p>
+                    </div>
+                    <div class="card">
+                        <h4>Backend</h4>
+                        <p>Lógica de negocio, validaciones y orquestación de servicios.</p>
+                    </div>
+                    <div class="card">
+                        <h4>IA</h4>
+                        <p>Motor de consulta, normalización y generación de documentos.</p>
+                    </div>
+                </div>
 
-    <h3>5.2 Generación de memorias</h3>
-    <p>Generá memorias de cálculo automáticas a partir de parámetros de entrada como voltaje, corriente y tipo de instalación.</p>
+                <h2 id="modulos">Módulos principales</h2>
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h4>Consulta</h4>
+                        <p>Búsqueda por normativa, sector, alcance y versión.</p>
+                    </div>
+                    <div class="card">
+                        <h4>Memorias</h4>
+                        <p>Generación automática desde parámetros eléctricos.</p>
+                    </div>
+                    <div class="card">
+                        <h4>Validación</h4>
+                        <p>NOM-001-SEDE-2012, arc flash y verificación de parámetros.</p>
+                    </div>
+                    <div class="card">
+                        <h4>Reportes</h4>
+                        <p>Exportación y seguimiento por proyecto.</p>
+                    </div>
+                </div>
 
-    <h3>5.3 Validaciones</h3>
-    <ul>
-        <li>Validación NOM-001-SEDE-2012</li>
-        <li>Cálculo de Arc Flash IEEE 1584</li>
-        <li>Integración con AutoCAD / Revit</li>
-    </ul>
+                <h2 id="instalacion">Instalación</h2>
+                <ol class="steps">
+                    <li>Descargar el paquete de instalación correspondiente.</li>
+                    <li>Ejecutar el instalador y aceptar términos.</li>
+                    <li>Configurar usuario, dominio y conectividad.</li>
+                    <li>Verificar acceso al servicio de normativas.</li>
+                </ol>
+                <div class="note">Recomendación: usar credenciales provisionales en entornos de prueba.</div>
 
-    <h2>6. Uso de la demo</h2>
-    <p>La demo incluye:</p>
-    <ul>
-        <li>Simulación de inicio de sesión</li>
-        <li>Dashboard con métricas</li>
-        <li>Formulario de consulta regulatoria</li>
-        <li>Resultado de memoria de cálculo</li>
-        <li>Historial local de consultas</li>
-    </ul>
+                <h2 id="uso">Uso paso a paso</h2>
+                <h3>1. Inicio de sesión</h3>
+                <p>Ingresá con tu usuario y contraseña institucional.</p>
 
-    <h2>7. Soporte</h2>
-    <p>Para soporte técnico, contactá a <strong>admin@gproatechnology.com</strong> o llamá al <strong>+52 1 419 129 6200</strong>.</p>
+                <h3>2. Nueva consulta</h3>
+                <p>Seleccioná la normativa y parámetros del sistema eléctrico.</p>
+
+                <h3>3. Generar memoria</h3>
+                <p>El sistema devuelve el documento estructurado para revisión y exportación.</p>
+
+                <h3>4. Guardar y compartir</h3>
+                <p>Podés guardar la memoria en el historial y compartir el enlace.</p>
+
+                <h2 id="normativas">Normativas soportadas</h2>
+                <ul>
+                    <li>NOM-001-SEDE-2012</li>
+                    <li>NOM-002-SEDE-2010</li>
+                    <li>NOM-003-SEDE-2005</li>
+                    <li>IEEE 1584</li>
+                </ul>
+
+                <h2 id="qa">Preguntas frecuentes</h2>
+                <details style="margin-bottom:10px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:10px;">
+                    <summary style="font-weight:700;color:#0a0f1c;cursor:pointer;">¿La demo reemplaza el producto real?</summary>
+                    <p style="margin-top:8px;color:#374151;">No. La demo es una guía funcional; la versión productiva puede variar.</p>
+                </details>
+                <details style="margin-bottom:10px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:10px;">
+                    <summary style="font-weight:700;color:#0a0f1c;cursor:pointer;">¿Dónde se almacenan las memorias?</summary>
+                    <p style="margin-top:8px;color:#374151;">En esta demo se guardan localmente en el navegador. En producción se almacenan en tu repositorio seguro.</p>
+                </details>
+                <details style="margin-bottom:10px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:10px;">
+                    <summary style="font-weight:700;color:#0a0f1c;cursor:pointer;">¿Puedo importar datos de otras herramientas?</summary>
+                    <p style="margin-top:8px;color:#374151;">Sí, se admiten exportaciones compatibles con AutoCAD/Revit en la versión completa.</p>
+                </details>
+
+                <h2 id="soporte">Soporte</h2>
+                <p>Para soporte técnico, contactá a <strong>admin@gproatechnology.com</strong> o llamá al <strong>+52 1 419 129 6200</strong>.</p>
+            </article>
+        </div>
+    </div>
+
+    <script>
+        const search = document.getElementById('search');
+        const sections = document.querySelectorAll('.doc h2, .doc h3, .doc p, .doc li, .details');
+        const tocLinks = document.querySelectorAll('.toc a');
+
+        search?.addEventListener('input', (e) => {
+            const q = e.target.value.trim().toLowerCase();
+            document.querySelectorAll('.doc details').forEach(el => {
+                const text = el.textContent.toLowerCase();
+                const match = !q || text.includes(q);
+                el.classList.toggle('hidden', !match);
+            });
+        });
+    </script>
 </body>
 </html>
