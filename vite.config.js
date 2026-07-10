@@ -1,7 +1,36 @@
 import { defineConfig } from 'vite';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const rootDir = path.dirname(fileURLToPath(import.meta.url));
+
+const EXTRA_STATIC = [
+  '404.html',
+  'robots.txt',
+  'sitemap.xml',
+  'CNAME',
+  'proyectos'
+];
+
+function copyExtraStatic() {
+  return {
+    name: 'copy-extra-static',
+    apply: 'build',
+    closeBundle() {
+      for (const entry of EXTRA_STATIC) {
+        const src = path.join(rootDir, entry);
+        if (!fs.existsSync(src)) continue;
+        const dest = path.join(rootDir, 'dist', entry);
+        fs.cpSync(src, dest, { recursive: true });
+      }
+    }
+  };
+}
 
 export default defineConfig({
-  publicDir: ['assets', 'proyectos'],
+  publicDir: false,
+  plugins: [copyExtraStatic()],
   server: {
     port: 5173,
     open: true

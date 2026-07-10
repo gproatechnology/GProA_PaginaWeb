@@ -113,6 +113,11 @@
             background: var(--accent-soft);
             color: var(--accent);
         }
+        .toc a.active {
+            background: var(--accent-soft);
+            color: var(--accent);
+            border-left: 3px solid var(--accent);
+        }
         .doc {
             background: var(--bg-surface);
             border: 1px solid var(--border-subtle);
@@ -237,8 +242,52 @@
             transform: translateY(-1px);
             box-shadow: 0 10px 25px rgba(0,224,255,0.35);
         }
-        body, .wrap, header, .topbar, .toc, .doc, .card {
-            transition: background-color .3s ease, color .3s ease, border-color .3s ease;
+
+        details {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        summary {
+            font-weight: 700;
+            color: var(--text-primary);
+            cursor: pointer;
+            list-style: none;
+        }
+        summary::after {
+            content: ' ▸';
+            color: var(--accent);
+        }
+        details[open] summary::after {
+            content: ' ▾';
+        }
+        details p {
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        @media print {
+            body, .wrap, header, .topbar, .toc, .doc, .card, details, summary {
+                background: #fff !important;
+                color: #000 !important;
+                border-color: #e5e7eb !important;
+            }
+            body * { visibility: hidden; }
+            #inicio, #inicio * { visibility: visible; }
+            #inicio {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 40px;
+                background: #fff;
+                color: #000;
+            }
+            .theme-toggle, .topbar, .toc, #search, .no-print {
+                display: none !important;
+            }
         }
         @media (max-width: 900px) {
             .layout { grid-template-columns: 1fr; }
@@ -269,118 +318,24 @@
         <div class="layout">
             <aside class="toc" id="toc">
                 <h4>Contenido</h4>
-                <a href="#introduccion">Introducción</a>
-                <a href="#alcance">Alcance</a>
-                <a href="#arquitectura">Arquitectura</a>
-                <a href="#modulos">Módulos</a>
-                <a href="#instalacion">Instalación</a>
-                <a href="#uso">Uso paso a paso</a>
-                <a href="#normativas">Normativas</a>
-                <a href="#qa">Preguntas frecuentes</a>
-                <a href="#soporte">Soporte</a>
             </aside>
 
             <article class="doc" id="inicio">
-                <h2 id="introduccion">Introducción</h2>
-                <p>GECRAI 1.1 es un asistente inteligente para consulta regulatoria, generación de memorias de cálculo y validaciones industriales.</p>
-
-                <h2 id="alcance">Alcance</h2>
-                <ul>
-                    <li>Consultas normativas automatizadas</li>
-                    <li>Generación de memorias de cálculo</li>
-                    <li>Integración con flujos de ingeniería</li>
-                </ul>
-
-                <h2 id="arquitectura">Arquitectura</h2>
-                <div class="grid grid-3">
-                    <div class="card">
-                        <h4>Frontend</h4>
-                        <p>Interfaz web responsiva y dashboards operativos.</p>
-                    </div>
-                    <div class="card">
-                        <h4>Backend</h4>
-                        <p>Lógica de negocio, validaciones y orquestación de servicios.</p>
-                    </div>
-                    <div class="card">
-                        <h4>IA</h4>
-                        <p>Motor de consulta, normalización y generación de documentos.</p>
-                    </div>
-                </div>
-
-                <h2 id="modulos">Módulos principales</h2>
-                <div class="grid grid-2">
-                    <div class="card">
-                        <h4>Consulta</h4>
-                        <p>Búsqueda por normativa, sector, alcance y versión.</p>
-                    </div>
-                    <div class="card">
-                        <h4>Memorias</h4>
-                        <p>Generación automática desde parámetros eléctricos.</p>
-                    </div>
-                    <div class="card">
-                        <h4>Validación</h4>
-                        <p>NOM-001-SEDE-2012, arc flash y verificación de parámetros.</p>
-                    </div>
-                    <div class="card">
-                        <h4>Reportes</h4>
-                        <p>Exportación y seguimiento por proyecto.</p>
-                    </div>
-                </div>
-
-                <h2 id="instalacion">Instalación</h2>
-                <ol class="steps">
-                    <li>Descargar el paquete de instalación correspondiente.</li>
-                    <li>Ejecutar el instalador y aceptar términos.</li>
-                    <li>Configurar usuario, dominio y conectividad.</li>
-                    <li>Verificar acceso al servicio de normativas.</li>
-                </ol>
-                <div class="note">Recomendación: usar credenciales provisionales en entornos de prueba.</div>
-
-                <h2 id="uso">Uso paso a paso</h2>
-                <h3>1. Inicio de sesión</h3>
-                <p>Ingresá con tu usuario y contraseña institucional.</p>
-
-                <h3>2. Nueva consulta</h3>
-                <p>Seleccioná la normativa y parámetros del sistema eléctrico.</p>
-
-                <h3>3. Generar memoria</h3>
-                <p>El sistema devuelve el documento estructurado para revisión y exportación.</p>
-
-                <h3>4. Guardar y compartir</h3>
-                <p>Podés guardar la memoria en el historial y compartir el enlace.</p>
-
-                <h2 id="normativas">Normativas soportadas</h2>
-                <ul>
-                    <li>NOM-001-SEDE-2012</li>
-                    <li>NOM-002-SEDE-2010</li>
-                    <li>NOM-003-SEDE-2005</li>
-                    <li>IEEE 1584</li>
-                </ul>
-
-                <h2 id="qa">Preguntas frecuentes</h2>
-                <details style="margin-bottom:10px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:10px;">
-                    <summary style="font-weight:700;color:#0a0f1c;cursor:pointer;">¿La demo reemplaza el producto real?</summary>
-                    <p style="margin-top:8px;color:#374151;">No. La demo es una guía funcional; la versión productiva puede variar.</p>
-                </details>
-                <details style="margin-bottom:10px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:10px;">
-                    <summary style="font-weight:700;color:#0a0f1c;cursor:pointer;">¿Dónde se almacenan las memorias?</summary>
-                    <p style="margin-top:8px;color:#374151;">En esta demo se guardan localmente en el navegador. En producción se almacenan en tu repositorio seguro.</p>
-                </details>
-                <details style="margin-bottom:10px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:10px;">
-                    <summary style="font-weight:700;color:#0a0f1c;cursor:pointer;">¿Puedo importar datos de otras herramientas?</summary>
-                    <p style="margin-top:8px;color:#374151;">Sí, se admiten exportaciones compatibles con AutoCAD/Revit en la versión completa.</p>
-                </details>
-
-                <h2 id="soporte">Soporte</h2>
-                <p>Para soporte técnico, contactá a <strong>admin@gproatechnology.com</strong> o llamá al <strong>+52 1 419 129 6200</strong>.</p>
+                <div id="docLoader" style="color:var(--text-muted);">Cargando documentación...</div>
             </article>
+            <div id="noResults" class="note hidden">No se encontraron resultados para tu búsqueda.</div>
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { buildDocSections, buildToc } from './data.js';
+
         const search = document.getElementById('search');
-        const sections = document.querySelectorAll('.doc h2, .doc h3, .doc p, .doc li, .details');
-        const tocLinks = document.querySelectorAll('.toc a');
+        const noResults = document.getElementById('noResults');
+        const tocLinks = () => Array.from(document.querySelectorAll('#toc a'));
+
+        buildDocSections();
+        buildToc();
 
         document.getElementById('themeToggle')?.addEventListener('click', () => {
             const isLight = document.body.classList.toggle('light-theme');
@@ -411,25 +366,39 @@
 
         function filterDoc(query) {
             const q = (query || '').trim().toLowerCase();
-            const items = document.querySelectorAll('.doc h2, .doc h3, .doc p, .doc li');
+            const sections = document.querySelectorAll('.doc-section');
             let visibleCount = 0;
 
-            items.forEach((el) => {
-                const text = el.textContent.toLowerCase();
-                const match = !q || text.includes(q);
-                el.style.display = match ? '' : 'none';
+            sections.forEach((section) => {
+                const match = !q || (section.dataset.search || '').includes(q);
+                section.style.display = match ? '' : 'none';
                 if (match) visibleCount++;
             });
 
-            const doc = document.querySelector('.doc');
-            if (doc) {
-                doc.style.display = visibleCount ? '' : 'none';
-            }
+            if (noResults) noResults.classList.toggle('hidden', visibleCount > 0);
         }
 
         search?.addEventListener('input', (e) => {
             filterDoc(e.target.value);
         });
+
+        function initScrollspy() {
+            const links = tocLinks();
+            if (!links.length || !('IntersectionObserver' in window)) return;
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    links.forEach((link) => {
+                        link.classList.toggle('active', link.dataset.target === entry.target.id);
+                    });
+                });
+            }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+
+            document.querySelectorAll('.doc-section').forEach((section) => observer.observe(section));
+        }
+
+        initScrollspy();
     </script>
 </body>
 </html>
