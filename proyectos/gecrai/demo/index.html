@@ -265,22 +265,26 @@
                             <div class="card">
                                 <h3>Consultas del mes</h3>
                                 <div class="metric" id="dashConsultas">0</div>
-                                <p style="color:#94a3b8;margin-top:8px;">+12% vs mes anterior</p>
+                                <p style="color:#94a3b8;margin-top:8px;">Última actualización: <span id="dashTime">--</span></p>
                             </div>
                             <div class="card">
                                 <h3>Memorias generadas</h3>
                                 <div class="metric" id="dashMemorias">0</div>
-                                <p style="color:#94a3b8;margin-top:8px;">Tiempo ahorrado: 34h</p>
+                                <p style="color:#94a3b8;margin-top:8px;">En esta sesión</p>
                             </div>
                             <div class="card">
-                                <h3>Precisión normativa</h3>
-                                <div class="metric">98.4%</div>
-                                <p style="color:#94a3b8;margin-top:8px;">Validación automática</p>
+                                <h3>Normativa principal</h3>
+                                <div class="metric" id="dashTopNorm">--</div>
+                                <p style="color:#94a3b8;margin-top:8px;">Más usada</p>
                             </div>
                         </div>
                         <div class="card" style="margin-top:18px;">
                             <h3>Actividad reciente</h3>
                             <canvas id="activityChart" height="120"></canvas>
+                        </div>
+                        <div class="card" style="margin-top:18px;">
+                            <h3>Uso por normativa</h3>
+                            <canvas id="usageChart" height="140"></canvas>
                         </div>
                     </section>
 
@@ -508,11 +512,92 @@
             result: null
         };
 
+        let activityChartInstance = null;
+        let usageChartInstance = null;
+
         function showToast(msg) {
             const t = document.getElementById('toast');
             t.textContent = msg;
             t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), 2200);
+        }
+
+        function updateDashboardMetrics() {
+            const metrics = getDashboardMetrics();
+            document.getElementById('dashConsultas').textContent = metrics.dashConsultas;
+            document.getElementById('dashMemorias').textContent = metrics.dashMemorias;
+
+            const memorias = getMemories();
+            const last = memorias[0];
+            document.getElementById('dashTime').textContent = last ? new Date(last.fecha).toLocaleString() : '--';
+
+            const usage = getUsageByNorm();
+            const top = usage[0];
+            document.getElementById('dashTopNorm').textContent = top ? top.label : '--';
+        }
+
+        function refreshDashboardCharts() {
+            const activityCtx = document.getElementById('activityChart').getContext('2d');
+            const usageCtx = document.getElementById('usageChart').getContext('2d');
+
+            if (activityChartInstance) {
+                activityChartInstance.destroy();
+            }
+            if (usageChartInstance) {
+                usageChartInstance.destroy();
+            }
+
+            activityChartInstance = new Chart(activityCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'],
+                    datasets: [{
+                        label: 'Consultas',
+                        data: getRecentActivity().map((item) => item.value),
+                        borderColor: '#00e0ff',
+                        backgroundColor: 'rgba(0,224,255,0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { labels: { color: '#e0f2fe' } } },
+                    scales: {
+                        x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.1)' } },
+                        y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.1)' } }
+                    }
+                }
+            });
+
+            const usage = getUsageByNorm();
+            usageChartInstance = new Chart(usageCtx, {
+                type: 'bar',
+                data: {
+                    labels: usage.map((item) => item.label),
+                    datasets: [{
+                        label: 'Consultas',
+                        data: usage.map((item) => item.value),
+                        backgroundColor: 'rgba(0,224,255,0.6)',
+                        borderColor: '#00e0ff',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { labels: { color: '#e0f2fe' } } },
+                    scales: {
+                        x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.1)' } },
+                        y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.1)' } }
+                    }
+                }
+            });
+        }
+
+        function initDashboard() {
+            updateDashboardMetrics();
+            renderMemorias();
+            refreshDashboardCharts();
         }
 
         function setWizardStep(step) {
@@ -632,7 +717,6 @@ Estado: ${result.aprobado ? 'Aprobado' : 'Revisar'}`;
 
             showToast('Memoria guardada');
             renderMemorias();
-            updateDashboard();
         }
 
         document.getElementById('loginForm').addEventListener('submit', (e) => {
@@ -700,6 +784,8 @@ Estado: ${result.aprobado ? 'Aprobado' : 'Revisar'}`;
             const memorias = getMemories();
             if (!memorias.length) {
                 container.innerHTML = '<p style="color:#94a3b8;">Sin memorias aún.</p>';
+                updateDashboardMetrics();
+                refreshDashboardCharts();
                 return;
             }
             container.innerHTML = memorias.map(m => {
@@ -712,63 +798,14 @@ Estado: ${result.aprobado ? 'Aprobado' : 'Revisar'}`;
                 </div>
             `;
             }).join('');
-        }
-
-        function updateDashboard() {
-            const metrics = getDashboardMetrics();
-            document.getElementById('dashConsultas').textContent = metrics.dashConsultas;
-            document.getElementById('dashMemorias').textContent = metrics.dashMemorias;
+            updateDashboardMetrics();
+            refreshDashboardCharts();
         }
 
         function initDashboard() {
-            updateDashboard();
+            updateDashboardMetrics();
             renderMemorias();
-
-            new Chart(document.getElementById('activityChart'), {
-                type: 'line',
-                data: {
-                    labels: ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'],
-                    datasets: [{
-                        label: 'Consultas',
-                        data: getRecentActivity().map((item) => item.value),
-                        borderColor: '#00e0ff',
-                        backgroundColor: 'rgba(0,224,255,0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { labels: { color: '#e0f2fe' } } },
-                    scales: {
-                        x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.1)' } },
-                        y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.1)' } }
-                    }
-                }
-            });
-
-            const usage = getUsageByNorm();
-            new Chart(document.getElementById('usageChart'), {
-                type: 'bar',
-                data: {
-                    labels: usage.map((item) => item.label),
-                    datasets: [{
-                        label: 'Consultas',
-                        data: usage.map((item) => item.value),
-                        backgroundColor: 'rgba(0,224,255,0.6)',
-                        borderColor: '#00e0ff',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { labels: { color: '#e0f2fe' } } },
-                    scales: {
-                        x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.1)' } },
-                        y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.1)' } }
-                    }
-                }
-            });
+            refreshDashboardCharts();
         }
     </script>
 </body>
