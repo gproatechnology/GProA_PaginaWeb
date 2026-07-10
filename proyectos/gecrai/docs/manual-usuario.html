@@ -220,6 +220,26 @@
             font-weight: 700;
             text-decoration: none;
         }
+        .theme-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            background: linear-gradient(135deg, var(--accent), var(--accent-border));
+            color: #0a0f1c;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+        .theme-toggle:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px rgba(0,224,255,0.35);
+        }
+        body, .wrap, header, .topbar, .toc, .doc, .card {
+            transition: background-color .3s ease, color .3s ease, border-color .3s ease;
+        }
         @media (max-width: 900px) {
             .layout { grid-template-columns: 1fr; }
             .toc { position: static; }
@@ -233,10 +253,10 @@
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;">
                 <div>
                     <div class="title">GECRAI 1.1</div>
-                    <p style="color:#6b7280;margin-top:4px;">Manual de usuario y documentación interactiva</p>
+                    <p style="color:var(--text-muted);margin-top:4px;">Manual de usuario y documentación interactiva</p>
                 </div>
                 <div style="display:flex;gap:10px;align-items:center;">
-                    <button id="themeToggle" class="btn" style="background:linear-gradient(135deg,#0066ff,#00e0ff);color:#0a0f1c;border:none;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer;">Tema</button>
+                    <button id="themeToggle" class="theme-toggle">Tema</button>
                 </div>
             </div>
         </header>
@@ -365,16 +385,28 @@
         document.getElementById('themeToggle')?.addEventListener('click', () => {
             const isLight = document.body.classList.toggle('light-theme');
             localStorage.setItem('docs-theme', isLight ? 'light' : 'dark');
+            updateThemeLabel(isLight);
         });
+
+        function updateThemeLabel(isLight) {
+            const btn = document.getElementById('themeToggle');
+            if (!btn) return;
+            btn.textContent = isLight ? 'Tema claro' : 'Tema oscuro';
+        }
 
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const savedTheme = localStorage.getItem('docs-theme');
         if (savedTheme === 'light') {
             document.body.classList.add('light-theme');
+            updateThemeLabel(true);
         } else if (savedTheme === 'dark') {
             document.body.classList.remove('light-theme');
+            updateThemeLabel(false);
         } else if (!systemPrefersDark) {
             document.body.classList.add('light-theme');
+            updateThemeLabel(true);
+        } else {
+            updateThemeLabel(false);
         }
 
         function filterDoc(query) {
