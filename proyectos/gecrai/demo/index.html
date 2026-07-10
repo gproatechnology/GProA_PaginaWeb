@@ -331,9 +331,11 @@
 
     <div class="toast" id="toast"></div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
+    <script type="module">
+        import { getRecentActivity, getUsageByNorm, generateMemory, getMemories, getDashboardMetrics } from './data.js';
+
         const state = {
-            memorias: JSON.parse(localStorage.getItem('gecrai_memorias') || '[]')
+            memorias: getMemories()
         };
 
         function showToast(msg) {
@@ -376,19 +378,8 @@
                 return;
             }
 
-            const potencia = voltaje * corriente;
-            const memoria = {
-                id: Date.now(),
-                normativa,
-                voltaje,
-                corriente,
-                potencia,
-                fecha: new Date().toISOString()
-            };
-            state.memorias.push(memoria);
-            localStorage.setItem('gecrai_memorias', JSON.stringify(state.memorias));
-
-            out.value = `Normativa: ${normativa}\nVoltaje: ${voltaje} V\nCorriente: ${corriente} A\nPotencia calculada: ${potencia.toFixed(2)} W\nEstado: Memoria generada correctamente.`;
+            const memoria = generateMemory({ normativa, voltaje, corriente });
+            out.value = `Normativa: ${memoria.normativa}\nVoltaje: ${memoria.voltaje} V\nCorriente: ${memoria.corriente} A\nPotencia calculada: ${memoria.potencia.toFixed(2)} W\nEstado: Memoria generada correctamente.`;
             out.style.display = 'block';
             showToast('Memoria generada');
             renderMemorias();
@@ -397,11 +388,12 @@
 
         function renderMemorias() {
             const container = document.getElementById('memoriasList');
-            if (!state.memorias.length) {
+            const memorias = getMemories();
+            if (!memorias.length) {
                 container.innerHTML = '<p style="color:#94a3b8;">Sin memorias aún.</p>';
                 return;
             }
-            container.innerHTML = state.memorias.slice().reverse().map(m => `
+            container.innerHTML = memorias.map(m => `
                 <div class="card">
                     <strong>${m.normativa}</strong>
                     <span style="color:#94a3b8;">${new Date(m.fecha).toLocaleString()}</span>
@@ -411,8 +403,9 @@
         }
 
         function updateDashboard() {
-            document.getElementById('dashConsultas').textContent = new Set(state.memorias.map(x => x.normativa)).size || 0;
-            document.getElementById('dashMemorias').textContent = state.memorias.length;
+            const metrics = getDashboardMetrics();
+            document.getElementById('dashConsultas').textContent = metrics.dashConsultas;
+            document.getElementById('dashMemorias').textContent = metrics.dashMemorias;
         }
 
         function initDashboard() {
@@ -425,7 +418,7 @@
                     labels: ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'],
                     datasets: [{
                         label: 'Consultas',
-                        data: [4,7,5,9,6,8,3],
+                        data: getRecentActivity().map((item) => item.value),
                         borderColor: '#00e0ff',
                         backgroundColor: 'rgba(0,224,255,0.1)',
                         fill: true,
@@ -442,13 +435,14 @@
                 }
             });
 
+            const usage = getUsageByNorm();
             new Chart(document.getElementById('usageChart'), {
                 type: 'bar',
                 data: {
-                    labels: ['NOM-001','NOM-002','NOM-003','NOM-019'],
+                    labels: usage.map((item) => item.label),
                     datasets: [{
                         label: 'Consultas',
-                        data: [12,8,5,4],
+                        data: usage.map((item) => item.value),
                         backgroundColor: 'rgba(0,224,255,0.6)',
                         borderColor: '#00e0ff',
                         borderWidth: 1
