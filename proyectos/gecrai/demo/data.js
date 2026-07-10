@@ -1,24 +1,25 @@
 const MOCK_MEMORIES = [];
 
 function getRecentActivity() {
-    return [
-        { label: 'NOM-001-SEDE-2012', value: 4 },
-        { label: 'NOM-002-SEDE-2010', value: 7 },
-        { label: 'NOM-003-SEDE-2005', value: 5 },
-        { label: 'NOM-019-SCFI-2011', value: 9 }
-    ];
+    const memorias = MOCK_MEMORIES.slice().reverse();
+    const counts = {};
+    memorias.forEach(item => {
+        const key = item.normativa || 'Sin normativa';
+        counts[key] = (counts[key] || 0) + 1;
+    });
+    return Object.entries(counts).map(([label, value]) => ({ label, value }));
 }
 
 function getUsageByNorm() {
-    return [
-        { label: 'NOM-001', value: 12 },
-        { label: 'NOM-002', value: 8 },
-        { label: 'NOM-003', value: 5 },
-        { label: 'NOM-019', value: 4 }
-    ];
+    const counts = {};
+    MOCK_MEMORIES.forEach(item => {
+        const key = item.normativa || 'Sin normativa';
+        counts[key] = (counts[key] || 0) + 1;
+    });
+    return Object.entries(counts).map(([label, value]) => ({ label, value }));
 }
 
-function generateMemory({ normativa, voltaje, corriente }) {
+function generateMemory({ normativa, voltaje, corriente, proyecto = '', tag = '', resultado = null }) {
     const potencia = Number.parseFloat(voltaje || 0) * Number.parseFloat(corriente || 0);
     const memory = {
         id: Date.now(),
@@ -26,7 +27,10 @@ function generateMemory({ normativa, voltaje, corriente }) {
         voltaje: Number.parseFloat(voltaje || 0),
         corriente: Number.parseFloat(corriente || 0),
         potencia: potencia,
-        fecha: new Date().toISOString()
+        fecha: new Date().toISOString(),
+        proyecto,
+        tag,
+        resultado
     };
     MOCK_MEMORIES.push(memory);
     return memory;
@@ -37,8 +41,9 @@ function getMemories() {
 }
 
 function getDashboardMetrics() {
+    const unique = new Set(MOCK_MEMORIES.map((x) => x.normativa).filter(Boolean));
     return {
-        dashConsultas: new Set(MOCK_MEMORIES.map((x) => x.normativa).filter(Boolean)).size || 0,
+        dashConsultas: unique.size || 0,
         dashMemorias: MOCK_MEMORIES.length
     };
 }

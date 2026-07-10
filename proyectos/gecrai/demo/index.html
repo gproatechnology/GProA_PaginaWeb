@@ -203,6 +203,9 @@
             .layout { grid-template-columns: 1fr; }
             .grid-3, .grid-2 { grid-template-columns: 1fr; }
         }
+
+        .wizard-step { animation: fadeIn .4s ease; }
+        #wizardSteps .nav-item { font-size:.85rem; padding:8px 10px; }
     </style>
 </head>
 <body>
@@ -265,35 +268,177 @@
 
                     <section class="screen" id="screen-consulta">
                         <div class="card">
-                            <h3>Consulta regulatoria inteligente</h3>
-                            <div class="grid grid-2">
-                                <div>
-                                    <div class="form-group">
-                                        <label>Normativa</label>
-                                        <select id="normativa">
-                                            <option value="">Selecciona una normativa</option>
-                                            <option>NOM-001-SEDE-2012</option>
-                                            <option>NOM-002-SEDE-2010</option>
-                                            <option>NOM-003-SEDE-2005</option>
-                                            <option>NOM-019-SCFI-2011</option>
-                                        </select>
+                            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+                                <h3>Memoria de cálculo NOM-001-SEDE-2012</h3>
+                                <span class="badge" id="wizardStepBadge">Paso 1 de 6</span>
+                            </div>
+                            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;" id="wizardSteps">
+                                <button class="nav-item active" data-step="1">Antecedentes</button>
+                                <button class="nav-item" data-step="2">Ampacidad</button>
+                                <button class="nav-item" data-step="3">Caída de tensión</button>
+                                <button class="nav-item" data-step="4">Puesta a tierra</button>
+                                <button class="nav-item" data-step="5">Interruptor</button>
+                                <button class="nav-item" data-step="6">Resumen</button>
+                            </div>
+                            <form id="wizardForm" style="margin-top:18px;">
+                                <div class="wizard-step" data-step="1">
+                                    <div class="grid grid-2">
+                                        <div class="form-group">
+                                            <label>Proyecto</label>
+                                            <input type="text" id="proyecto" placeholder="Nombre del proyecto">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>TAG</label>
+                                            <input type="text" id="tag" placeholder="Ej: M-01">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Tensión alimentación (V)</label>
+                                            <input type="number" id="voltaje" placeholder="Ej: 440" min="0">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Número de fases</label>
+                                            <select id="fases">
+                                                <option value="1">Monofásico</option>
+                                                <option value="3">Trifásico</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Longitud del circuito (km)</label>
+                                            <input type="number" id="longitud" placeholder="Ej: 0.07" min="0" step="0.001">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Carga (HP)</label>
+                                            <input type="number" id="hp" placeholder="Ej: 20" min="0" step="0.1">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Temperatura ambiente (°C)</label>
+                                            <input type="number" id="temperaturaAmbiente" placeholder="Ej: 30" min="-20" max="120">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Temperatura cable (°C)</label>
+                                            <input type="number" id="temperaturaCable" value="75" min="60" max="90">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Factor de potencia (cos φ)</label>
+                                            <input type="number" id="fp" placeholder="Ej: 0.95" min="0" max="1" step="0.01">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Factor de utilización</label>
+                                            <input type="number" id="factorUtilizacion" value="1.25" min="1" max="2" step="0.05">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Canalización</label>
+                                            <select id="canalizacion">
+                                                <option value="CHAROLA">Charola</option>
+                                                <option value="TUBERIA">Tubería</option>
+                                                <option value="ENTERrado">Enterrado</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cantidad de conductores por canalización</label>
+                                            <input type="number" id="cantidadConductores" value="3" min="1" max="20">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>% Caída de tensión deseada</label>
+                                            <input type="number" id="porcentajeVcDeseado" value="3" min="1" max="10" step="0.5">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Resistencia (Ω/km)</label>
+                                            <input type="number" id="r" value="2.56" min="0" step="0.01">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Reactancia (Ω/km)</label>
+                                            <input type="number" id="xl" value="0.171" min="0" step="0.001">
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Voltaje (V)</label>
-                                        <input type="number" id="voltaje" placeholder="Ej: 220" min="0">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Corriente (A)</label>
-                                        <input type="number" id="corriente" placeholder="Ej: 10" min="0">
-                                    </div>
-                                    <button class="btn" id="btnGenerar">Generar memoria</button>
                                 </div>
-                                <div>
-                                    <div class="form-group">
-                                        <label>Resultado</label>
-                                        <textarea id="resultado" readonly rows="9" placeholder="Se mostrará el resultado aquí..."></textarea>
+                                <div class="wizard-step" data-step="2" style="display:none;">
+                                    <div class="card">
+                                        <h3>Resultados - Ampacidad</h3>
+                                        <div class="grid grid-3">
+                                            <div>
+                                                <p style="color:#94a3b8;margin-bottom:6px;">Ipc</p>
+                                                <div class="metric" id="resIpc">--</div>
+                                            </div>
+                                            <div>
+                                                <p style="color:#94a3b8;margin-bottom:6px;">Im = 125% × Ipc</p>
+                                                <div class="metric" id="resIm">--</div>
+                                            </div>
+                                            <div>
+                                                <p style="color:#94a3b8;margin-bottom:6px;">Id</p>
+                                                <div class="metric" id="resId">--</div>
+                                            </div>
+                                        </div>
+                                        <div style="margin-top:14px;color:#94a3b8;">
+                                            <p>Factor conductores: <span id="resFactorCond">--</span></p>
+                                            <p>Factor temperatura: <span id="resFactorTemp">--</span></p>
+                                            <p>Calibre por ampacidad: <span id="resCalibreAmp">--</span></p>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="wizard-step" data-step="3" style="display:none;">
+                                    <div class="card">
+                                        <h3>Resultados - Caída de tensión</h3>
+                                        <div class="grid grid-3">
+                                            <div>
+                                                <p style="color:#94a3b8;margin-bottom:6px;">Caída (V)</p>
+                                                <div class="metric" id="resCaidaV">--</div>
+                                            </div>
+                                            <div>
+                                                <p style="color:#94a3b8;margin-bottom:6px;">% Caída</p>
+                                                <div class="metric" id="resPorcentaje">--</div>
+                                            </div>
+                                            <div>
+                                                <p style="color:#94a3b8;margin-bottom:6px;">Calibre por caída</p>
+                                                <div class="metric" id="resCalibreCaida">--</div>
+                                            </div>
+                                        </div>
+                                        <div style="margin-top:14px;color:#94a3b8;">
+                                            <p>Validación: <span id="resValidacion">--</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="wizard-step" data-step="4" style="display:none;">
+                                    <div class="card">
+                                        <h3>Resultados - Puesta a tierra</h3>
+                                        <div class="grid grid-2">
+                                            <div>
+                                                <p style="color:#94a3b8;margin-bottom:6px;">Ampacidad interruptor</p>
+                                                <div class="metric" id="resIt">--</div>
+                                            </div>
+                                            <div>
+                                                <p style="color:#94a3b8;margin-bottom:6px;">Interruptor</p>
+                                                <div class="metric" id="resInterruptor">--</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="wizard-step" data-step="5" style="display:none;">
+                                    <div class="card">
+                                        <h3>Resultados - Interruptor</h3>
+                                        <div class="grid grid-2">
+                                            <div>
+                                                <p style="color:#94a3b8;margin-bottom:6px;">Calibre por interruptor</p>
+                                                <div class="metric" id="resCalibreInt">--</div>
+                                            </div>
+                                            <div>
+                                                <p style="color:#94a3b8;margin-bottom:6px;">Calibre sugerido</p>
+                                                <div class="metric" id="resSugerido">--</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="wizard-step" data-step="6" style="display:none;">
+                                    <div class="card">
+                                        <h3>Resumen de memoria</h3>
+                                        <textarea id="resumenMemoria" readonly rows="12" style="width:100%;background:rgba(5,10,20,0.9);border:1px solid rgba(0,224,255,0.3);border-radius:10px;color:#e0f2fe;padding:12px;"></textarea>
+                                    </div>
+                                </div>
+                            </form>
+                            <div style="display:flex;justify-content:space-between;margin-top:16px;flex-wrap:wrap;gap:10px;">
+                                <button type="button" class="btn btn-outline" id="wizardPrev" disabled>Anterior</button>
+                                <button type="button" class="btn" id="wizardNext">Siguiente</button>
+                                <button type="button" class="btn" id="wizardFinish" style="display:none;">Guardar memoria</button>
                             </div>
                         </div>
                     </section>
@@ -333,9 +478,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module">
         import { getRecentActivity, getUsageByNorm, generateMemory, getMemories, getDashboardMetrics } from './data.js';
+        import { calcularMemoriaCompleta } from './calculo.js';
 
         const state = {
-            memorias: getMemories()
+            memorias: getMemories(),
+            wizardStep: 1,
+            totalSteps: 6,
+            result: null
         };
 
         function showToast(msg) {
@@ -343,6 +492,126 @@
             t.textContent = msg;
             t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), 2200);
+        }
+
+        function setWizardStep(step) {
+            state.wizardStep = step;
+            document.querySelectorAll('#screen-consulta .wizard-step').forEach(el => el.style.display = 'none');
+            const target = document.querySelector(`#screen-consulta .wizard-step[data-step="${step}"]`);
+            if (target) target.style.display = 'block';
+
+            document.querySelectorAll('#wizardSteps .nav-item').forEach(btn => {
+                btn.classList.toggle('active', Number(btn.dataset.step) === step);
+            });
+
+            document.getElementById('wizardStepBadge').textContent = `Paso ${step} de ${state.totalSteps}`;
+            document.getElementById('wizardPrev').disabled = step === 1;
+            document.getElementById('wizardFinish').style.display = step === state.totalSteps ? 'inline-flex' : 'none';
+            document.getElementById('wizardNext').style.display = step === state.totalSteps ? 'none' : 'inline-flex';
+        }
+
+        function getWizardParams() {
+            return {
+                proyecto: document.getElementById('proyecto')?.value || '',
+                tag: document.getElementById('tag')?.value || '',
+                hp: document.getElementById('hp')?.value || 0,
+                voltaje: document.getElementById('voltaje')?.value || 440,
+                fases: Number.parseInt(document.getElementById('fases')?.value || '3'),
+                fp: document.getElementById('fp')?.value || 0.95,
+                longitud: document.getElementById('longitud')?.value || 0.07,
+                temperaturaAmbiente: document.getElementById('temperaturaAmbiente')?.value || 30,
+                temperaturaCable: document.getElementById('temperaturaCable')?.value || 75,
+                factorUtilizacion: document.getElementById('factorUtilizacion')?.value || 1.25,
+                canalizacion: document.getElementById('canalizacion')?.value || 'CHAROLA',
+                cantidadConductores: Number.parseInt(document.getElementById('cantidadConductores')?.value || '3'),
+                porcentajeVcDeseado: Number.parseFloat(document.getElementById('porcentajeVcDeseado')?.value || '3'),
+                r: document.getElementById('r')?.value || 2.56,
+                xl: document.getElementById('xl')?.value || 0.171,
+                eficiencia: 0.9
+            };
+        }
+
+        function validateStep(step) {
+            if (step === 1) {
+                const hp = document.getElementById('hp')?.value;
+                const voltaje = document.getElementById('voltaje')?.value;
+                const fp = document.getElementById('fp')?.value;
+                const longitud = document.getElementById('longitud')?.value;
+
+                if (!hp || !voltaje || !fp || !longitud) {
+                    showToast('Completa HP, voltaje, FP y longitud');
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function renderResults() {
+            const params = getWizardParams();
+            const result = calcularMemoriaCompleta(params);
+            state.result = result;
+
+            document.getElementById('resIpc').textContent = result.ipc + ' A';
+            document.getElementById('resIm').textContent = result.im + ' A';
+            document.getElementById('resId').textContent = result.id + ' A';
+            document.getElementById('resFactorCond').textContent = result.factorConductores;
+            document.getElementById('resFactorTemp').textContent = result.factorTemperatura;
+            document.getElementById('resCalibreAmp').textContent = result.calibreAmpacidad;
+
+            document.getElementById('resCaidaV').textContent = result.caidaV + ' V';
+            document.getElementById('resPorcentaje').textContent = result.porcentaje + ' %';
+            document.getElementById('resCalibreCaida').textContent = result.calibreCaida;
+            document.getElementById('resValidacion').textContent = result.aprobado ? 'Aprobado' : 'Revisar calibre';
+            document.getElementById('resValidacion').style.color = result.aprobado ? '#10b981' : '#ef4444';
+
+            document.getElementById('resIt').textContent = result.interruptor.amperaje + ' A';
+            document.getElementById('resInterruptor').textContent = result.interruptor.polos;
+
+            document.getElementById('resCalibreInt').textContent = result.calibreInterruptor;
+            document.getElementById('resSugerido').textContent = result.calibreSugerido;
+
+            const resumen = `Proyecto: ${params.proyecto || 'Sin nombre'}
+TAG: ${params.tag || 'N/A'}
+Normativa: NOM-001-SEDE-2012
+Tensión: ${params.voltaje} V | Fases: ${params.fases}
+Carga: ${params.hp} HP | FP: ${params.fp}
+
+Ipc: ${result.ipc} A
+Im: ${result.im} A
+Id: ${result.id} A
+Factor conductores: ${result.factorConductores}
+Factor temperatura: ${result.factorTemperatura}
+
+Caída de tensión: ${result.caidaV} V (${result.porcentaje}%)
+Calibre por ampacidad: ${result.calibreAmpacidad}
+Calibre por caída: ${result.calibreCaida}
+Interruptor: ${result.interruptor.polos}
+Calibre sugerido: ${result.calibreSugerido}
+Calibre tierra: ${result.calibreTierra}
+Estado: ${result.aprobado ? 'Aprobado' : 'Revisar'}`;
+
+            document.getElementById('resumenMemoria').value = resumen;
+        }
+
+        function finishMemory() {
+            const params = getWizardParams();
+            if (!state.result) {
+                showToast('Calculá la memoria antes de guardar');
+                return;
+            }
+
+            const memoria = generateMemory({
+                normativa: 'NOM-001-SEDE-2012',
+                voltaje: params.voltaje,
+                corriente: state.result.ipc,
+                proyecto: params.proyecto,
+                tag: params.tag,
+                resultado: state.result
+            });
+
+            showToast('Memoria guardada');
+            renderMemorias();
+            updateDashboard();
         }
 
         document.getElementById('loginForm').addEventListener('submit', (e) => {
@@ -364,27 +633,42 @@
                 btn.classList.add('active');
                 document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
                 document.getElementById('screen-' + btn.dataset.screen).classList.add('active');
+                if (btn.dataset.screen === 'consulta') {
+                    setWizardStep(1);
+                }
             });
         });
 
-        document.getElementById('btnGenerar').addEventListener('click', () => {
-            const normativa = document.getElementById('normativa').value;
-            const voltaje = parseFloat(document.getElementById('voltaje').value);
-            const corriente = parseFloat(document.getElementById('corriente').value);
-            const out = document.getElementById('resultado');
+        document.getElementById('wizardNext').addEventListener('click', () => {
+            const current = state.wizardStep;
+            if (!validateStep(current)) return;
 
-            if (!normativa || Number.isNaN(voltaje) || Number.isNaN(corriente)) {
-                showToast('Completa normativa, voltaje y corriente');
-                return;
+            if (current < state.totalSteps) {
+                setWizardStep(current + 1);
+                if (current + 1 > 1) renderResults();
             }
-
-            const memoria = generateMemory({ normativa, voltaje, corriente });
-            out.value = `Normativa: ${memoria.normativa}\nVoltaje: ${memoria.voltaje} V\nCorriente: ${memoria.corriente} A\nPotencia calculada: ${memoria.potencia.toFixed(2)} W\nEstado: Memoria generada correctamente.`;
-            out.style.display = 'block';
-            showToast('Memoria generada');
-            renderMemorias();
-            updateDashboard();
         });
+
+        document.getElementById('wizardPrev').addEventListener('click', () => {
+            const current = state.wizardStep;
+            if (current > 1) {
+                setWizardStep(current - 1);
+            }
+        });
+
+        document.getElementById('wizardFinish').addEventListener('click', finishMemory);
+
+        document.querySelectorAll('#wizardSteps .nav-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const step = Number(btn.dataset.step);
+                if (step <= state.wizardStep || validateStep(state.wizardStep)) {
+                    setWizardStep(step);
+                    if (step > 1) renderResults();
+                }
+            });
+        });
+
+        setWizardStep(1);
 
         function renderMemorias() {
             const container = document.getElementById('memoriasList');
@@ -393,13 +677,16 @@
                 container.innerHTML = '<p style="color:#94a3b8;">Sin memorias aún.</p>';
                 return;
             }
-            container.innerHTML = memorias.map(m => `
+            container.innerHTML = memorias.map(m => {
+                const extra = m.resultado ? ` | Calibre: ${m.resultado.calibreSugerido}` : '';
+                return `
                 <div class="card">
                     <strong>${m.normativa}</strong>
                     <span style="color:#94a3b8;">${new Date(m.fecha).toLocaleString()}</span>
-                    <p>Voltaje: ${m.voltaje} V | Corriente: ${m.corriente} A | Potencia: ${m.potencia.toFixed(2)} W</p>
+                    <p>Voltaje: ${m.voltaje} V | Corriente: ${m.corriente} A | Potencia: ${m.potencia.toFixed(2)} W${extra}</p>
                 </div>
-            `).join('');
+            `;
+            }).join('');
         }
 
         function updateDashboard() {
