@@ -206,6 +206,24 @@
 
         .wizard-step { animation: fadeIn .4s ease; }
         #wizardSteps .nav-item { font-size:.85rem; padding:8px 10px; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #resumenMemoria, #resumenMemoria * { visibility: visible; }
+            #resumenMemoria {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: #fff;
+                color: #000;
+                border: none;
+                padding: 40px;
+                font-family: Arial, sans-serif;
+                font-size: 12pt;
+                line-height: 1.6;
+            }
+        }
     </style>
 </head>
 <body>
@@ -433,6 +451,9 @@
                                         <h3>Resumen de memoria</h3>
                                         <textarea id="resumenMemoria" readonly rows="12" style="width:100%;background:rgba(5,10,20,0.9);border:1px solid rgba(0,224,255,0.3);border-radius:10px;color:#e0f2fe;padding:12px;"></textarea>
                                     </div>
+                                    <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+                                        <button type="button" class="btn" id="btnPrintMemory">Imprimir / Guardar PDF</button>
+                                    </div>
                                 </div>
                             </form>
                             <div style="display:flex;justify-content:space-between;margin-top:16px;flex-wrap:wrap;gap:10px;">
@@ -657,6 +678,10 @@ Estado: ${result.aprobado ? 'Aprobado' : 'Revisar'}`;
         });
 
         document.getElementById('wizardFinish').addEventListener('click', finishMemory);
+
+        document.getElementById('btnPrintMemory')?.addEventListener('click', () => {
+            window.print();
+        });
 
         document.querySelectorAll('#wizardSteps .nav-item').forEach(btn => {
             btn.addEventListener('click', () => {
