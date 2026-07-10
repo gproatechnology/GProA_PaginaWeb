@@ -79,6 +79,52 @@ export function seleccionarCalibrePorAmpacidad(id, tablaAmpacidad) {
     return 'No encontrado';
 }
 
+export function compararCalibres(params, calibreA, calibreB) {
+    const resultBase = calcularMemoriaCompleta(params);
+    const tablaAmpacidad = {
+        '14 AWG': 15,
+        '12 AWG': 20,
+        '10 AWG': 30,
+        '8 AWG': 43,
+        '6 AWG': 55,
+        '4 AWG': 70,
+        '2 AWG': 95,
+        '1/0 AWG': 125,
+        '2/0 AWG': 145,
+        '3/0 AWG': 165,
+        '4/0 AWG': 195
+    };
+
+    const getAmpacidad = (calibre) => tablaAmpacidad[calibre] || 0;
+
+    const buildComparison = (calibre) => {
+        const amp = getAmpacidad(calibre);
+        const caida = calcularCaidaTension({
+            longitud: params.longitud,
+            corriente: resultBase.ipc,
+            voltaje: params.voltaje,
+            fp: params.fp,
+            resistencia: params.r,
+            reactancia: params.xl,
+            fases: params.fases
+        });
+        const aprobado = caida.porcentaje <= params.porcentajeVcDeseado;
+        return {
+            calibre,
+            ampacidad: amp,
+            caidaV: caida.caidaV,
+            porcentaje: caida.porcentaje,
+            aprobado
+        };
+    };
+
+    return {
+        base: resultBase,
+        a: buildComparison(calibreA),
+        b: buildComparison(calibreB)
+    };
+}
+
 export function calcularCaidaTension({ longitud, corriente, voltaje, fp, resistencia, reactancia, fases }) {
     const l = Number.parseFloat(longitud) || 0;
     const i = Number.parseFloat(corriente) || 0;

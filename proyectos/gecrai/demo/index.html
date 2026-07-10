@@ -256,6 +256,7 @@
                 <aside class="sidebar">
                     <button class="nav-item active" data-screen="dashboard">Dashboard</button>
                     <button class="nav-item" data-screen="consulta">Nueva consulta</button>
+                    <button class="nav-item" data-screen="comparar">Comparar calibres</button>
                     <button class="nav-item" data-screen="memorias">Memorias</button>
                     <button class="nav-item" data-screen="reportes">Reportes</button>
                 </aside>
@@ -417,6 +418,7 @@
                                         </div>
                                         <div style="margin-top:14px;color:#94a3b8;">
                                             <p>Validación: <span id="resValidacion">--</span></p>
+                                            <div id="advancedValidation"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -465,6 +467,60 @@
                                 <button type="button" class="btn" id="wizardNext">Siguiente</button>
                                 <button type="button" class="btn" id="wizardFinish" style="display:none;">Guardar memoria</button>
                             </div>
+                        </div>
+                    </section>
+
+                    <section class="screen" id="screen-comparar">
+                        <div class="card">
+                            <h3>Comparar calibres</h3>
+                            <p style="color:#94a3b8;margin-bottom:14px;">Compará dos calibres para una misma condición de carga y normativa. El cálculo usa los mismos parámetros base del wizard.</p>
+                            <div class="grid grid-2">
+                                <div class="form-group">
+                                    <label>Base de comparación</label>
+                                    <select id="cmpBaseNorma">
+                                        <option>NOM-001-SEDE-2012</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Condición base</label>
+                                    <select id="cmpBaseScenario">
+                                        <option value="demo">Demo: 20 HP / 440 V / 3 fases / 0.07 km</option>
+                                        <option value="custom">Personalizada desde wizard</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid grid-2" style="margin-top:14px;">
+                                <div class="card">
+                                    <h4>Calibre A</h4>
+                                    <div class="form-group">
+                                        <label>Calibre</label>
+                                        <select id="cmpCalibreA">
+                                            <option>8 AWG</option>
+                                            <option>6 AWG</option>
+                                            <option>4 AWG</option>
+                                            <option>2 AWG</option>
+                                            <option>1/0 AWG</option>
+                                        </select>
+                                    </div>
+                                    <div id="cmpResultA" style="color:#94a3b8;"></div>
+                                </div>
+                                <div class="card">
+                                    <h4>Calibre B</h4>
+                                    <div class="form-group">
+                                        <label>Calibre</label>
+                                        <select id="cmpCalibreB">
+                                            <option>6 AWG</option>
+                                            <option>4 AWG</option>
+                                            <option>2 AWG</option>
+                                            <option>1/0 AWG</option>
+                                            <option>2/0 AWG</option>
+                                        </select>
+                                    </div>
+                                    <div id="cmpResultB" style="color:#94a3b8;"></div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn" id="cmpCalcular" style="margin-top:18px;">Comparar</button>
+                            <div id="cmpResumen" style="margin-top:18px;"></div>
                         </div>
                     </section>
 
@@ -652,6 +708,39 @@
             return true;
         }
 
+        function showAdvancedValidation(result) {
+            const issues = [];
+            const suggestions = [];
+
+            if (result.porcentaje > 5) {
+                issues.push(`%Vc supera el 5% recomendado.`);
+                suggestions.push('Subir calibre o reducir longitud.');
+            }
+            if (result.porcentaje > 8) {
+                issues.push(`%Vc crítico (>8%).`);
+                suggestions.push('Revisar calibre, FP y longitud.');
+            }
+            if (result.calibreCaida !== result.calibreAmpacidad) {
+                issues.push(`Calibre por caída de tensión mayor que por ampacidad.`);
+                suggestions.push(`Considerar ${result.calibreCaida} por caída.`);
+            }
+
+            const validationHtml = issues.length
+                ? `<div style="margin-top:10px;padding:10px;border-radius:10px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);">
+                    <strong style="color:#ef4444;">Validaciones avanzadas</strong>
+                    <ul style="margin-top:8px;padding-left:18px;color:#e0f2fe;">
+                        ${issues.map(i => `<li>${i}</li>`).join('')}
+                    </ul>
+                    ${suggestions.length ? `<p style="margin-top:8px;color:#94a3b8;"><strong>Sugerencias:</strong> ${suggestions.join(' ')}</p>` : ''}
+                   </div>`
+                : `<div style="margin-top:10px;padding:10px;border-radius:10px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#10b981;">
+                    <strong>Validaciones avanzadas:</strong> Sin observaciones.
+                   </div>`;
+
+            const container = document.getElementById('advancedValidation');
+            if (container) container.innerHTML = validationHtml;
+        }
+
         function renderResults() {
             const params = getWizardParams();
             const result = calcularMemoriaCompleta(params);
@@ -669,6 +758,8 @@
             document.getElementById('resCalibreCaida').textContent = result.calibreCaida;
             document.getElementById('resValidacion').textContent = result.aprobado ? 'Aprobado' : 'Revisar calibre';
             document.getElementById('resValidacion').style.color = result.aprobado ? '#10b981' : '#ef4444';
+
+            showAdvancedValidation(result);
 
             document.getElementById('resIt').textContent = result.interruptor.amperaje + ' A';
             document.getElementById('resInterruptor').textContent = result.interruptor.polos;
@@ -765,6 +856,54 @@ Estado: ${result.aprobado ? 'Aprobado' : 'Revisar'}`;
 
         document.getElementById('btnPrintMemory')?.addEventListener('click', () => {
             window.print();
+        });
+
+        document.getElementById('cmpCalcular')?.addEventListener('click', () => {
+            const calibreA = document.getElementById('cmpCalibreA')?.value;
+            const calibreB = document.getElementById('cmpCalibreB')?.value;
+            const scenario = document.getElementById('cmpBaseScenario')?.value;
+            const container = document.getElementById('cmpResumen');
+
+            if (!calibreA || !calibreB) {
+                showToast('Seleccioná ambos calibres');
+                return;
+            }
+
+            const params = scenario === 'custom' ? getWizardParams() : {
+                hp: 20,
+                voltaje: 440,
+                fases: 3,
+                fp: 0.95,
+                longitud: 0.07,
+                temperaturaAmbiente: 30,
+                temperaturaCable: 75,
+                factorUtilizacion: 1.25,
+                cantidadConductores: 3,
+                canalizacion: 'CHAROLA',
+                porcentajeVcDeseado: 3,
+                r: 2.56,
+                xl: 0.171,
+                eficiencia: 0.9
+            };
+
+            const cmp = compararCalibres(params, calibreA, calibreB);
+
+            const renderCard = (label, data) => `
+                <div style="padding:12px;border-radius:10px;background:${data.aprobado ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'};border:1px solid ${data.aprobado ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)'};">
+                    <strong>${label}: ${data.calibre}</strong>
+                    <p style="color:#94a3b8;">Ampacidad tabla: ${data.ampacidad} A</p>
+                    <p style="color:#94a3b8;">Caída: ${data.caidaV} V / ${data.porcentaje}%</p>
+                    <p style="color:${data.aprobado ? '#10b981' : '#ef4444'};">${data.aprobado ? 'Aprobado' : 'Revisar'}</p>
+                </div>
+            `;
+
+            container.innerHTML = `
+                <div class="grid grid-2">
+                    ${renderCard('Calibre A', cmp.a)}
+                    ${renderCard('Calibre B', cmp.b)}
+                </div>
+                <p style="margin-top:10px;color:#94a3b8;">Base: ${params.proyecto || 'Demo GECRAI'} | Fases: ${params.fases} | FP: ${params.fp} | Longitud: ${params.longitud} km</p>
+            `;
         });
 
         document.querySelectorAll('#wizardSteps .nav-item').forEach(btn => {

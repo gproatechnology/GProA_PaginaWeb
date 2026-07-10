@@ -191,18 +191,44 @@
             .toc { position: static; }
             .grid-2, .grid-3 { grid-template-columns: 1fr; }
         }
+
+        body.light-theme {
+            background: #ffffff;
+            color: #0a0f1c;
+        }
+        body.light-theme .doc,
+        body.light-theme .toc,
+        body.light-theme .topbar {
+            background: #ffffff;
+            border-color: #e5e7eb;
+            color: #0a0f1c;
+        }
+        body.light-theme .doc h2,
+        body.light-theme .doc h3,
+        body.light-theme .title,
+        body.light-theme .toc h4 {
+            color: #0a0f1c;
+        }
+        body.light-theme .toc a {
+            color: #374151;
+        }
+        body.light-theme .toc a:hover {
+            background: #eef2ff;
+            color: #0066ff;
+        }
     </style>
 </head>
 <body>
     <div class="wrap">
         <header>
-            <div>
-                <div class="title">GECRAI 1.1</div>
-                <p style="color:#6b7280;margin-top:4px;">Manual de usuario y documentación interactiva</p>
-            </div>
-            <div class="actions">
-                <span class="pill">v1.1 Enterprise</span>
-                <a class="pill" href="#inicio">Volver al sitio</a>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;">
+                <div>
+                    <div class="title">GECRAI 1.1</div>
+                    <p style="color:#6b7280;margin-top:4px;">Manual de usuario y documentación interactiva</p>
+                </div>
+                <div style="display:flex;gap:10px;align-items:center;">
+                    <button id="themeToggle" class="btn" style="background:linear-gradient(135deg,#0066ff,#00e0ff);color:#0a0f1c;border:none;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer;">Tema</button>
+                </div>
             </div>
         </header>
 
@@ -327,13 +353,30 @@
         const sections = document.querySelectorAll('.doc h2, .doc h3, .doc p, .doc li, .details');
         const tocLinks = document.querySelectorAll('.toc a');
 
-        search?.addEventListener('input', (e) => {
-            const q = e.target.value.trim().toLowerCase();
-            document.querySelectorAll('.doc details').forEach(el => {
+        document.getElementById('themeToggle')?.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+        });
+
+        function filterDoc(query) {
+            const q = (query || '').trim().toLowerCase();
+            const items = document.querySelectorAll('.doc h2, .doc h3, .doc p, .doc li');
+            let visibleCount = 0;
+
+            items.forEach((el) => {
                 const text = el.textContent.toLowerCase();
                 const match = !q || text.includes(q);
-                el.classList.toggle('hidden', !match);
+                el.style.display = match ? '' : 'none';
+                if (match) visibleCount++;
             });
+
+            const doc = document.querySelector('.doc');
+            if (doc) {
+                doc.style.display = visibleCount ? '' : 'none';
+            }
+        }
+
+        search?.addEventListener('input', (e) => {
+            filterDoc(e.target.value);
         });
     </script>
 </body>
