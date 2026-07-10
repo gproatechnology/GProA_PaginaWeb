@@ -5,12 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manual de Usuario - GECRAI 1.1</title>
     <style>
+        :root {
+            --bg-body: #f8fafc;
+            --bg-surface: #ffffff;
+            --border-subtle: #e5e7eb;
+            --text-primary: #0a0f1c;
+            --text-secondary: #374151;
+            --text-muted: #6b7280;
+            --accent: #0066ff;
+            --accent-soft: #eef2ff;
+            --accent-border: #c7d2fe;
+
+            --bg-body: #0b1220;
+            --bg-surface: #0e1726;
+            --border-subtle: rgba(0,224,255,0.12);
+            --text-primary: #e6f7ff;
+            --text-secondary: #bce6ff;
+            --text-muted: #7fb6d6;
+            --accent: #00e0ff;
+            --accent-soft: rgba(0,224,255,0.12);
+            --accent-border: rgba(0,224,255,0.35);
+        }
+
+        body.light-theme {
+            --bg-body: #f8fafc;
+            --bg-surface: #ffffff;
+            --border-subtle: #e5e7eb;
+            --text-primary: #0a0f1c;
+            --text-secondary: #374151;
+            --text-muted: #6b7280;
+            --accent: #0066ff;
+            --accent-soft: #eef2ff;
+            --accent-border: #c7d2fe;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #1f2937;
-            background: #f8fafc;
+            color: var(--text-secondary);
+            background: var(--bg-body);
             line-height: 1.65;
         }
         .wrap {
@@ -25,13 +59,13 @@
             gap: 20px;
             flex-wrap: wrap;
             padding: 24px 0;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--border-subtle);
             margin-bottom: 24px;
         }
         .title {
             font-family: 'Orbitron', sans-serif;
             font-size: 1.6rem;
-            color: #0a0f1c;
+            color: var(--text-primary);
         }
         .actions {
             display: flex;
@@ -40,12 +74,12 @@
         }
         .pill {
             padding: 8px 14px;
-            background: #eef2ff;
-            color: #0066ff;
+            background: var(--accent-soft);
+            color: var(--accent);
             border-radius: 999px;
             font-weight: 700;
             font-size: .9rem;
-            border: 1px solid #c7d2fe;
+            border: 1px solid var(--accent-border);
         }
         .layout {
             display: grid;
@@ -56,49 +90,49 @@
             position: sticky;
             top: 16px;
             height: fit-content;
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
             border-radius: 14px;
             padding: 18px;
         }
         .toc h4 {
             font-size: .95rem;
-            color: #0a0f1c;
+            color: var(--text-primary);
             margin-bottom: 12px;
         }
         .toc a {
             display: block;
             padding: 8px 10px;
-            color: #374151;
+            color: var(--text-secondary);
             text-decoration: none;
             border-radius: 8px;
             margin-bottom: 4px;
             font-weight: 600;
         }
         .toc a:hover {
-            background: #eff6ff;
-            color: #0066ff;
+            background: var(--accent-soft);
+            color: var(--accent);
         }
         .doc {
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
             border-radius: 14px;
             padding: 22px;
         }
         .doc h2 {
-            color: #0a0f1c;
+            color: var(--text-primary);
             margin-top: 28px;
             margin-bottom: 10px;
             font-size: 1.25rem;
         }
         .doc h3 {
-            color: #111827;
+            color: var(--text-primary);
             margin-top: 18px;
             margin-bottom: 8px;
             font-size: 1.05rem;
         }
         .doc p, .doc li {
-            color: #374151;
+            color: var(--text-secondary);
             margin-bottom: 10px;
         }
         .doc ul {
@@ -107,8 +141,8 @@
         }
         .doc li { margin-bottom: 8px; }
         .note {
-            background: #eef2ff;
-            border-left: 4px solid #0066ff;
+            background: var(--accent-soft);
+            border-left: 4px solid var(--accent);
             padding: 12px 14px;
             border-radius: 8px;
             margin: 14px 0;
@@ -120,13 +154,13 @@
         .grid-2 { grid-template-columns: repeat(2, 1fr); }
         .grid-3 { grid-template-columns: repeat(3, 1fr); }
         .card {
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
             border-radius: 10px;
             padding: 14px;
         }
         .card h4 {
-            color: #0a0f1c;
+            color: var(--text-primary);
             margin-bottom: 8px;
             font-size: .95rem;
         }
@@ -149,7 +183,7 @@
             width: 26px;
             height: 26px;
             border-radius: 50%;
-            background: linear-gradient(135deg,#0066ff,#00e0ff);
+            background: linear-gradient(135deg,var(--accent),var(--accent-border));
             color: #fff;
             font-weight: 700;
             font-size: .85rem;
@@ -160,11 +194,11 @@
         #search {
             width: 100%;
             padding: 10px 12px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--border-subtle);
             border-radius: 10px;
             margin-bottom: 16px;
-            background: #ffffff;
-            color: #0a0f1c;
+            background: var(--bg-surface);
+            color: var(--text-primary);
         }
         .hidden { display: none; }
         .topbar {
@@ -174,15 +208,15 @@
             gap: 16px;
             flex-wrap: wrap;
             padding: 16px 0;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--border-subtle);
             margin-bottom: 16px;
             position: sticky;
             top: 0;
-            background: #ffffff;
+            background: var(--bg-surface);
             z-index: 5;
         }
         .topbar a {
-            color: #0066ff;
+            color: var(--accent);
             font-weight: 700;
             text-decoration: none;
         }
@@ -190,31 +224,6 @@
             .layout { grid-template-columns: 1fr; }
             .toc { position: static; }
             .grid-2, .grid-3 { grid-template-columns: 1fr; }
-        }
-
-        body.light-theme {
-            background: #ffffff;
-            color: #0a0f1c;
-        }
-        body.light-theme .doc,
-        body.light-theme .toc,
-        body.light-theme .topbar {
-            background: #ffffff;
-            border-color: #e5e7eb;
-            color: #0a0f1c;
-        }
-        body.light-theme .doc h2,
-        body.light-theme .doc h3,
-        body.light-theme .title,
-        body.light-theme .toc h4 {
-            color: #0a0f1c;
-        }
-        body.light-theme .toc a {
-            color: #374151;
-        }
-        body.light-theme .toc a:hover {
-            background: #eef2ff;
-            color: #0066ff;
         }
     </style>
 </head>
@@ -354,8 +363,19 @@
         const tocLinks = document.querySelectorAll('.toc a');
 
         document.getElementById('themeToggle')?.addEventListener('click', () => {
-            document.body.classList.toggle('light-theme');
+            const isLight = document.body.classList.toggle('light-theme');
+            localStorage.setItem('docs-theme', isLight ? 'light' : 'dark');
         });
+
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const savedTheme = localStorage.getItem('docs-theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-theme');
+        } else if (savedTheme === 'dark') {
+            document.body.classList.remove('light-theme');
+        } else if (!systemPrefersDark) {
+            document.body.classList.add('light-theme');
+        }
 
         function filterDoc(query) {
             const q = (query || '').trim().toLowerCase();
