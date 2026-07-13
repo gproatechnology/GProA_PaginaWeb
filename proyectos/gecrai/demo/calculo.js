@@ -342,7 +342,7 @@ export function compararCalibres(params, calibreA, calibreB) {
             reactancia: params.xl,
             fases: params.fases
         });
-        const aprobado = caida.porcentaje <= params.porcentajeVcDeseado;
+        const aprobado = caida.porcentaje <= (params.porcentajeVcDeseado ?? 3);
         return {
             calibre,
             ampacidad: amp,
