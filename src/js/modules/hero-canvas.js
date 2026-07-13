@@ -250,10 +250,10 @@ export function initHeroCanvas() {
     }
 
     function animate() {
-        // Pausa el trabajo de dibujo cuando el canvas está oculto
-        // (por ejemplo, mientras se muestra el video de fondo).
-        if (canvas.offsetParent === null) {
-            animationId = requestAnimationFrame(animate);
+        // Detiene el bucle por completo cuando el canvas está oculto
+        // (p. ej. mientras se reproduce el video de fondo) para ahorrar CPU.
+        if (canvas.style.display === 'none') {
+            animationId = null;
             return;
         }
 
@@ -304,6 +304,14 @@ export function initHeroCanvas() {
             animate();
         }
     });
+
+    // Reanuda el bucle si el canvas vuelve a mostrarse (p. ej. falló el video).
+    const styleObserver = new MutationObserver(() => {
+        if (canvas.style.display !== 'none' && animationId === null) {
+            animate();
+        }
+    });
+    styleObserver.observe(canvas, { attributes: true, attributeFilter: ['style'] });
 
     canvas.addEventListener('mousemove', (e) => {
         const rect = canvas.getBoundingClientRect();

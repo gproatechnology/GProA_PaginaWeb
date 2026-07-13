@@ -315,6 +315,13 @@ noticias coinciden con categorías de datos, formulario coherente (campos+errore
 - **Motor GECRAI:** limitaciones conocidas del modelo demo se mantienen (caída con R/XL
   fijos, ampacidad hasta 4/0 AWG, factor temperatura por tramos, eficiencia 0.9 fija).
 
+### Optimizaciones de código aplicadas (sin tocar los assets)
+- `index.html`: `<script>` de Chart.js con `defer` (deja de ser bloqueante en el `<head>`).
+- `index.html`: `<video>` hero con `fetchpriority="high"` (prioriza el recurso LCP).
+- `hero-canvas.js`: el bucle de animación se **detiene por completo** cuando el canvas
+  está oculto (video reproduciéndose) vía `MutationObserver` que lo reanuda si el
+  video falla. Antes solo pausaba el dibujo pero seguía corriendo `requestAnimationFrame`.
+
 ---
 
 *Este informe fue generado como parte del proceso de auditoría de calidad del proyecto GProA Technology Landing Page.*
