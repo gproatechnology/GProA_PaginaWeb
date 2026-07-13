@@ -3,6 +3,8 @@
  * Handles Chart.js visualizations for metrics section
  */
 
+import { GARTNER_DATA } from '../../data/gartner.js';
+
 function showGartnerView(type) {
     const initialView = document.getElementById('gartnerInitialView');
     const detailedView = document.getElementById('gartnerDetailedView');
@@ -13,18 +15,14 @@ function showGartnerView(type) {
     initialView.style.display = 'none';
     detailedView.style.display = 'block';
 
-    const titles = {
-        'quadrant': 'Cuadrante Mágico',
-        'evolution': 'Evolución de Capacidades',
-        'solutions': 'Comparativa de Soluciones',
-        'market': 'Proyección de Mercado'
-    };
-    title.textContent = titles[type] || 'Métricas';
+    title.textContent = GARTNER_DATA[type]?.title || 'Métricas';
 
     const view = document.getElementById(`${type}View`);
     if (view) {
         view.style.display = 'block';
     }
+
+    renderKpis(type);
 
     setTimeout(() => initGartnerChart(type), 100);
 }
@@ -35,6 +33,63 @@ function showGartnerInitial() {
 
     initialView.style.display = 'block';
     detailedView.style.display = 'none';
+}
+
+// Calcula y muestra un resumen de KPIs derivado de los datos de cada gráfica.
+function renderKpis(type) {
+    const view = document.getElementById(`${type}View`);
+    const d = GARTNER_DATA[type];
+    if (!view || !d) return;
+
+    const cagr = (arr) => ((Math.pow(arr[arr.length - 1] / arr[0], 1 / (arr.length - 1)) - 1) * 100);
+    const avg = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
+
+    let kpis = [];
+    if (type === 'quadrant') {
+        const g = d.datasets[0].data[0];
+        const pos = g.x >= 0.5 && g.y >= 0.5 ? 'Líder'
+            : g.x >= 0.5 && g.y < 0.5 ? 'Visionario'
+            : g.x < 0.5 && g.y >= 0.5 ? 'Challenger' : 'Nicho';
+        kpis = [
+            { label: 'Posición', value: pos },
+            { label: 'Capacidad ejecución', value: g.x.toFixed(2) },
+            { label: 'Completitud visión', value: g.y.toFixed(2) }
+        ];
+    } else if (type === 'evolution') {
+        const ds = d.datasets[0].data;
+        const last = d.labels[d.labels.length - 1];
+        kpis = [
+            { label: 'CAGR', value: `${cagr(ds).toFixed(0)}%` },
+            { label: last, value: ds[ds.length - 1] },
+            { label: 'Periodo', value: `${d.labels[0]}–${last}` }
+        ];
+    } else if (type === 'solutions') {
+        const g = avg(d.datasets[0].data);
+        const c = avg(d.datasets[1].data);
+        kpis = [
+            { label: 'GProA (prom.)', value: g.toFixed(1) },
+            { label: 'Competidores (prom.)', value: c.toFixed(1) },
+            { label: 'Ventaja', value: `+${(g - c).toFixed(1)} pts` }
+        ];
+    } else if (type === 'market') {
+        const ds = d.datasets[0].data;
+        const last = d.labels[d.labels.length - 1];
+        kpis = [
+            { label: 'CAGR', value: `${cagr(ds).toFixed(0)}%` },
+            { label: last, value: `${ds[ds.length - 1]} B USD` },
+            { label: 'Periodo', value: `${d.labels[0]}–${last}` }
+        ];
+    }
+
+    let strip = view.querySelector('.kpi-strip');
+    if (!strip) {
+        strip = document.createElement('div');
+        strip.className = 'kpi-strip';
+        view.insertBefore(strip, view.firstChild);
+    }
+    strip.innerHTML = kpis.map(k =>
+        `<div class="kpi"><span class="kpi-value">${k.value}</span><span class="kpi-label">${k.label}</span></div>`
+    ).join('');
 }
 
 function initGartnerChart(type) {
@@ -67,33 +122,140 @@ function initGartnerChart(type) {
         }
     };
 
-    if (type === 'quadrant') {
-        const ctx = document.getElementById('quadrantChart');
-        if (!ctx || ctx.chart) return;
+    const d = GARTNER_DATA[type];
+    if (!d) return;
 
+    const canvasId = {
+        quadrant: 'quadrantChart',
+        evolution: 'evolutionChart',
+        solutions: 'solutionsChart',
+        market: 'marketChart'
+    }[type];
+
+    const ctx = document.getElementById(canvasId);
+    if (!ctx) return;
+
+    const prev = Chart.getChart(ctx);
+    if (prev) prev.destroy();
+
+    const unit = d.unit || '';
+
+    // Tooltip informativo compartido por todas las gráficas.
+    const tooltip = {
+        callbacks: {
+            label: (c) => {
+                const t = c.chart.config.type;
+                if (t === 'scatter' || t === 'bubble') {
+                    const { x, y, name } = c.raw;
+                    return name ? `${name}: (${x}, ${y})` : `${c.dataset.label}: (${x}, ${y})`;
+                }
+                const v = c.parsed.y ?? c.parsed;
+                return unit
+                    ? `${c.dataset.label} — ${c.label}: ${v} ${unit}`
+                    : `${c.dataset.label} — ${c.label}: ${v}`;
+            }
+        }
+    };
+
+    const basePlugins = { ...chartConfig.plugins, tooltip };
+
+    // Plugin del Cuadrante Mágico: zonas + etiquetas de puntos (sin dependencias).
+    const quadrantPlugin = {
+        id: 'quadrantExtras',
+        beforeDraw(chart) {
+            const x = chart.scales.x;
+            const y = chart.scales.y;
+            if (!x || !y) return;
+            const c = chart.ctx;
+            const left = x.getPixelForValue(0);
+            const right = x.getPixelForValue(1);
+            const top = y.getPixelForValue(1);
+            const bottom = y.getPixelForValue(0);
+            const midX = x.getPixelForValue(0.5);
+            const midY = y.getPixelForValue(0.5);
+            const w = right - left;
+            const h = bottom - top;
+
+            c.save();
+            const zones = [
+                { x: left, y: top, fill: 'rgba(156, 163, 175, 0.05)' },
+                { x: midX, y: top, fill: 'rgba(16, 185, 129, 0.06)' },
+                { x: left, y: midY, fill: 'rgba(156, 163, 175, 0.04)' },
+                { x: midX, y: midY, fill: 'rgba(245, 158, 11, 0.05)' }
+            ];
+            zones.forEach((z) => {
+                c.fillStyle = z.fill;
+                c.fillRect(z.x, z.y, w / 2, h / 2);
+            });
+
+            c.strokeStyle = 'rgba(148, 163, 184, 0.25)';
+            c.lineWidth = 1;
+            c.setLineDash([4, 4]);
+            c.beginPath();
+            c.moveTo(midX, top); c.lineTo(midX, bottom);
+            c.moveTo(left, midY); c.lineTo(right, midY);
+            c.stroke();
+            c.setLineDash([]);
+
+            c.fillStyle = 'rgba(148, 163, 184, 0.6)';
+            c.font = '600 11px "Exo 2", sans-serif';
+            c.textAlign = 'left';
+            c.fillText('Challengers', left + 8, top + 18);
+            c.textAlign = 'right';
+            c.fillText('Líderes', right - 8, top + 18);
+            c.textAlign = 'left';
+            c.fillText('Nicho', left + 8, bottom - 10);
+            c.textAlign = 'right';
+            c.fillText('Visionarios', right - 8, bottom - 10);
+            c.restore();
+        },
+        afterDatasetsDraw(chart) {
+            const c = chart.ctx;
+            chart.data.datasets.forEach((ds, di) => {
+                const meta = chart.getDatasetMeta(di);
+                meta.data.forEach((pt, i) => {
+                    const p = ds.data[i];
+                    if (!p || !p.name) return;
+                    const r = p.r || 6;
+                    c.save();
+                    c.fillStyle = ds.label === 'GProA Technology' ? '#00e0ff' : '#cbd5e1';
+                    c.font = '600 11px "Exo 2", sans-serif';
+                    c.textAlign = 'center';
+                    c.fillText(p.name, pt.x, pt.y - r - 6);
+                    c.restore();
+                });
+            });
+        }
+    };
+
+    // Plugin sin dependencias: dibuja el valor encima de cada barra.
+    const barValueLabels = {
+        id: 'barValueLabels',
+        afterDatasetsDraw(chart) {
+            const c = chart.ctx;
+            chart.data.datasets.forEach((ds, i) => {
+                const meta = chart.getDatasetMeta(i);
+                if (meta.type !== 'bar') return;
+                meta.data.forEach((bar, idx) => {
+                    const val = ds.data[idx];
+                    c.save();
+                    c.fillStyle = '#e0f2fe';
+                    c.font = '600 12px "JetBrains Mono", monospace';
+                    c.textAlign = 'center';
+                    c.fillText(val, bar.x, bar.y - 8);
+                    c.restore();
+                });
+            });
+        }
+    };
+
+    if (type === 'quadrant') {
         new Chart(ctx, {
-            type: 'scatter',
-            data: {
-                datasets: [{
-                    label: 'GProA Technology',
-                    data: [{ x: 0.85, y: 0.75 }],
-                    backgroundColor: '#00e0ff',
-                    borderColor: '#00e0ff',
-                    borderWidth: 3,
-                    pointRadius: 10,
-                    pointHoverRadius: 14
-                }, {
-                    label: 'Competidores',
-                    data: [
-                        { x: 0.6, y: 0.8 }, { x: 0.7, y: 0.6 }, { x: 0.5, y: 0.7 },
-                        { x: 0.8, y: 0.5 }, { x: 0.4, y: 0.6 }, { x: 0.65, y: 0.55 }
-                    ],
-                    backgroundColor: 'rgba(156, 163, 175, 0.6)',
-                    pointRadius: 6
-                }]
-            },
+            type: 'bubble',
+            data: { datasets: d.datasets },
             options: {
                 ...chartConfig,
+                plugins: basePlugins,
                 scales: {
                     ...chartConfig.scales,
                     x: {
@@ -107,63 +269,35 @@ function initGartnerChart(type) {
                         min: 0, max: 1
                     }
                 }
-            }
+            },
+            plugins: [quadrantPlugin]
         });
     }
     else if (type === 'evolution') {
-        const ctx = document.getElementById('evolutionChart');
-        if (!ctx || ctx.chart) return;
-
         new Chart(ctx, {
             type: 'line',
-            data: {
-                labels: ['2021', '2022', '2023', '2024', '2025'],
-                datasets: [{
-                    label: 'Crecimiento IA',
-                    data: [20, 45, 75, 120, 160],
-                    borderColor: '#00e0ff',
-                    backgroundColor: 'rgba(0, 224, 255, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }, {
-                    label: 'Automatización',
-                    data: [15, 35, 65, 95, 125],
-                    borderColor: '#10b981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: chartConfig
+            data: { labels: d.labels, datasets: d.datasets },
+            options: {
+                ...chartConfig,
+                plugins: basePlugins,
+                scales: {
+                    ...chartConfig.scales,
+                    x: { ...chartConfig.scales.x, title: { display: true, text: 'Año', color: '#93c5fd' } },
+                    y: { ...chartConfig.scales.y, title: { display: true, text: d.unit, color: '#93c5fd' } }
+                }
+            }
         });
     }
     else if (type === 'solutions') {
-        const ctx = document.getElementById('solutionsChart');
-        if (!ctx || ctx.chart) return;
-
         new Chart(ctx, {
             type: 'radar',
-            data: {
-                labels: ['Innovación', 'Especialización', 'Escalabilidad', 'Integración', 'Soporte'],
-                datasets: [{
-                    label: 'GProA Technology',
-                    data: [92, 88, 85, 90, 87],
-                    borderColor: '#00e0ff',
-                    backgroundColor: 'rgba(0, 224, 255, 0.2)',
-                    pointBackgroundColor: '#00e0ff'
-                }, {
-                    label: 'Promedio Competidores',
-                    data: [75, 70, 78, 72, 80],
-                    borderColor: 'rgba(156, 163, 175, 0.8)',
-                    backgroundColor: 'rgba(156, 163, 175, 0.1)',
-                    pointBackgroundColor: 'rgba(156, 163, 175, 0.8)'
-                }]
-            },
+            data: { labels: d.labels, datasets: d.datasets },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { labels: { color: '#e0f2fe' } }
+                    legend: { labels: { color: '#e0f2fe' } },
+                    tooltip
                 },
                 scales: {
                     r: {
@@ -177,22 +311,19 @@ function initGartnerChart(type) {
         });
     }
     else if (type === 'market') {
-        const ctx = document.getElementById('marketChart');
-        if (!ctx || ctx.chart) return;
-
         new Chart(ctx, {
             type: 'bar',
-            data: {
-                labels: ['2025', '2026', '2027', '2028', '2029'],
-                datasets: [{
-                    label: 'Mercado IA Industrial (Miles de millones USD)',
-                    data: [47.2, 58.5, 72.1, 89.2, 110.3],
-                    backgroundColor: 'rgba(0, 224, 255, 0.6)',
-                    borderColor: '#00e0ff',
-                    borderWidth: 2
-                }]
+            data: { labels: d.labels, datasets: d.datasets },
+            options: {
+                ...chartConfig,
+                plugins: basePlugins,
+                scales: {
+                    ...chartConfig.scales,
+                    x: { ...chartConfig.scales.x, title: { display: true, text: 'Año', color: '#93c5fd' } },
+                    y: { ...chartConfig.scales.y, title: { display: true, text: d.unit, color: '#93c5fd' } }
+                }
             },
-            options: chartConfig
+            plugins: [barValueLabels]
         });
     }
 }

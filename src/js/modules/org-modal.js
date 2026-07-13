@@ -10,11 +10,12 @@ const orgData = {
     'CEO': {
         title: 'Chief Executive Officer',
         content: `
-            <p><strong>Juan Abdel Lugo Trejo</strong> es el fundador y CEO de GProA Technology. Líder visionario con amplia experiencia en desarrollo de software y automatización industrial.</p>
-            
+            <p><strong>Juan Abdel Lugo Trejo</strong> es el socio fundador y CEO de GProA Technology. 
+            Líder visionario con gran experiencia en desarrollo de tecnologías emergentes, control electrónico y automatización industrial.</p>
+        
             <h3>Responsabilidades</h3>
             <ul>
-                <li>Definir la visión estratégica de la empresa</li>
+                <li>Definir la visión estratégica de GProA</li>
                 <li>Liderar el desarrollo de productos tecnológicos</li>
                 <li>Dirigir la dirección técnica y desarrollo</li>
                 <li>Gestionar relaciones con clientes estratégicos</li>
@@ -28,14 +29,16 @@ const orgData = {
     'COO': {
         title: 'Chief Operating Officer',
         content: `
-            <p><strong>Israel Aldair Reséndiz Gálvez</strong> es el COO de GProA Technology. Responsable de la operación diaria y la estructura administrativa de la empresa.</p>
+            <p><strong>Israel Aldair Reséndiz Gálvez</strong> es el socio administrativo y COO de GProA Technology. Además de ser el representante legal, es el 
+            responsable de la operación diaria y la estructura administrativa de la empresa.</p>
             
             <h3>Responsabilidades</h3>
             <ul>
-                <li>Supervisar las operaciones diarias</li>
+                <li>Supervisar las operaciones de GProA</li>
                 <li>Gestionar la administración general</li>
                 <li>Coordinar asuntos legales y cumplimiento normativo</li>
                 <li>Administrar finanzas y contabilidad</li>
+                <li>Implemetar relaciones con clientes estratégicos</li>
             </ul>
             
             <h3>Contacto</h3>
