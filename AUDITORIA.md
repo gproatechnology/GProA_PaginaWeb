@@ -200,4 +200,31 @@ El proyecto ha sido completamente corregido. Todos los problemas críticos y med
 
 ---
 
+## 🧮 Validación del motor de cálculo GECRAI - 13 de julio de 2026
+
+Se validó `proyectos/gecrai/demo/calculo.js` contra la fuente de verdad
+`proyectos/gecrai/docs/Memoria de Cálculo Rev 8.xlsx - Hoja1.csv`
+(caso: motor 20 HP, 440 V, 3 fases, L=70 m, FP=0.95, FU=1.25).
+
+### Bugs de ingeniería corregidos
+
+| # | Sev | Problema | Corrección |
+|---|-----|----------|------------|
+| 1 | 🔴 | `Ipc` se calculaba por fórmula e incluía el factor de utilización → ~28.6 A en vez de los 27 A tabulados. | Implementada **Tabla 430-250 NOM-001-SEDE-2012** (`obtenerIpcTabla`); `calcularIpc` toma el valor tabulado para motores trifásicos y solo cae a la fórmula (ya sin FU) si el HP/tensión no está en tabla. |
+| 2 | 🔴 | Factor `1.25` aplicado dos veces: `calcularIpc` (×FU) y luego `calcularIm` (×1.25) → Im inflado ×1.5625. | `Ipc` ya no aplica FU; `Im = Ipc × 1.25` una sola vez → 33.75 A correcto. |
+| 3 | 🟠 | Interruptor con escala que incluía 25/35 A → daba 35 A en vez de 40 A. | Escala comercial estándar (…30, 40, 50…) dimensionada sobre 125% de Ipc → 40 A. |
+
+### Resultado de la verificación numérica (caso 20 HP)
+
+Todos los parámetros coinciden con el Excel: Ipc 27 A, Im 33.75 A, Id 33.75 A,
+calibre por ampacidad 8 AWG, caída 8.136 V / 1.85 %, interruptor 3 × 40 A,
+calibre a tierra 10 AWG, calibre sugerido 8 AWG. ✅
+
+### Limitaciones conocidas (siguientes pasos)
+- La Tabla 430-250 implementada cubre **motores trifásicos**. Para monofásico se usa la fórmula (falta Tabla 430-248 si se requiere).
+- `compararCalibres` usa R/XL fijos de los parámetros, no los R/XL propios de cada calibre; la comparación de caída entre calibres es aproximada.
+- Faltaría validar más casos (otros HP, 220 V, temperaturas ≠ 30 °C, >3 conductores) contra memorias de referencia.
+
+---
+
 *Este informe fue generado como parte del proceso de auditoría de calidad del proyecto GProA Technology Landing Page.*

@@ -18,11 +18,83 @@ export const TABLA_AMPACIDAD = {
     '4/0 AWG': 195
 };
 
-export function calcularIpc({ hp, voltaje, fases, fp, eficiencia = 0.9, factorUtilizacion = 1.25 }) {
+/**
+ * Tabla 430-250 NOM-001-SEDE-2012
+ * Corriente a plena carga (A) de motores trifásicos de inducción
+ * (jaula de ardilla y rotor devanado).
+ * Columnas = tensión nominal del motor. Según la nota de la tabla, cada
+ * columna aplica a intervalos: 115V (110-120), 230V (220-240),
+ * 460V (440-480), 575V (550-600).
+ */
+export const TABLA_430_250 = {
+    0.5:  { 115: 4.4,  200: 2.5,  208: 2.4,  230: 2.2,  460: 1.1,  575: 0.9 },
+    0.75: { 115: 6.4,  200: 3.7,  208: 3.5,  230: 3.2,  460: 1.6,  575: 1.3 },
+    1:    { 115: 8.4,  200: 4.8,  208: 4.6,  230: 4.2,  460: 2.1,  575: 1.7 },
+    1.5:  { 115: 12,   200: 6.9,  208: 6.6,  230: 6,    460: 3,    575: 2.4 },
+    2:    { 115: 13.6, 200: 7.8,  208: 7.5,  230: 6.8,  460: 3.4,  575: 2.7 },
+    3:    {            200: 11,   208: 10.6, 230: 9.6,  460: 4.8,  575: 3.9 },
+    5:    {            200: 17.5, 208: 16.7, 230: 15.2, 460: 7.6,  575: 6.1 },
+    7.5:  {            200: 25.3, 208: 24.2, 230: 22,   460: 11,   575: 9 },
+    10:   {            200: 32.2, 208: 30.8, 230: 28,   460: 14,   575: 11 },
+    15:   {            200: 48.3, 208: 46.2, 230: 42,   460: 21,   575: 17 },
+    20:   {            200: 62.1, 208: 59.4, 230: 54,   460: 27,   575: 22 },
+    25:   {            200: 78.2, 208: 74.8, 230: 68,   460: 34,   575: 27 },
+    30:   {            200: 92,   208: 88,   230: 80,   460: 40,   575: 32 },
+    40:   {            200: 120,  208: 114,  230: 104,  460: 52,   575: 41 },
+    50:   {            200: 150,  208: 143,  230: 130,  460: 65,   575: 52 },
+    60:   {            200: 177,  208: 169,  230: 154,  460: 77,   575: 62,  2300: 16 },
+    75:   {            200: 221,  208: 211,  230: 192,  460: 96,   575: 77,  2300: 20 },
+    100:  {            200: 285,  208: 273,  230: 248,  460: 124,  575: 99,  2300: 26 },
+    125:  {            200: 359,  208: 343,  230: 312,  460: 156,  575: 125, 2300: 31 },
+    150:  {            200: 414,  208: 396,  230: 360,  460: 180,  575: 144, 2300: 37 },
+    200:  {            200: 552,  208: 528,  230: 480,  460: 240,  575: 192, 2300: 49 },
+    250:  {            460: 302,  575: 242,  2300: 60 },
+    300:  {            460: 361,  575: 289,  2300: 72 },
+    350:  {            460: 414,  575: 336,  2300: 83 },
+    400:  {            460: 477,  575: 382,  2300: 95 },
+    450:  {            460: 515,  575: 412,  2300: 103 },
+    500:  {            460: 590,  575: 472,  2300: 118 }
+};
+
+/** Mapea una tensión de sistema a la columna nominal de la Tabla 430-250. */
+export function columnaTension430250(voltaje) {
+    const v = Number.parseFloat(voltaje) || 0;
+    if (v <= 120) return 115;
+    if (v <= 200) return 200;
+    if (v <= 208) return 208;
+    if (v <= 240) return 230;
+    if (v <= 480) return 460;
+    if (v <= 600) return 575;
+    return 2300;
+}
+
+/**
+ * Devuelve la corriente a plena carga tabulada (A) para un motor trifásico
+ * según HP y tensión, o null si no está en la tabla.
+ */
+export function obtenerIpcTabla(hp, voltaje) {
+    const fila = TABLA_430_250[Number.parseFloat(hp)];
+    if (!fila) return null;
+    const col = columnaTension430250(voltaje);
+    const valor = fila[col];
+    return (valor === undefined || valor === null) ? null : valor;
+}
+
+export function calcularIpc({ hp, voltaje, fases, fp, eficiencia = 0.9 }) {
+    const numFases = Number.parseInt(fases) || 3;
+
+    // 1) Preferir el valor tabulado de la Tabla 430-250 (como la memoria
+    //    de cálculo de referencia). Solo aplica a motores trifásicos.
+    if (numFases === 3) {
+        const ipcTabla = obtenerIpcTabla(hp, voltaje);
+        if (ipcTabla !== null) return ipcTabla;
+    }
+
+    // 2) Fallback por fórmula. Ipc es la corriente a plena carga y NO
+    //    incluye el factor de utilización (ese se aplica al calcular Im).
     const hpNum = Number.parseFloat(hp) || 0;
     const v = Number.parseFloat(voltaje) || 0;
     const fpNum = Number.parseFloat(fp) || 0;
-    const fu = Number.parseFloat(factorUtilizacion) || 1;
     const eff = Number.parseFloat(eficiencia) || 0.9;
 
     if (!hpNum || !v || !fpNum) return 0;
@@ -30,13 +102,13 @@ export function calcularIpc({ hp, voltaje, fases, fp, eficiencia = 0.9, factorUt
     const potencia = hpNum * 746;
     let ipc;
 
-    if (fases === 3) {
+    if (numFases === 3) {
         ipc = potencia / (1.732 * v * fpNum * eff);
     } else {
         ipc = potencia / (v * fpNum * eff);
     }
 
-    return Number.parseFloat((ipc * fu).toFixed(2));
+    return Number.parseFloat(ipc.toFixed(2));
 }
 
 export function calcularIm(ipc) {
@@ -160,9 +232,13 @@ export function calcularCaidaTension({ longitud, corriente, voltaje, fp, resiste
 export function seleccionarInterruptor(ipc, factorUtilizacion = 1.25, fases = 3) {
     const i = Number.parseFloat(ipc) || 0;
     const fu = Number.parseFloat(factorUtilizacion) || 1;
+    // El interruptor se dimensiona sobre el 125% de la corriente a plena
+    // carga (equivalente a Im) y se lleva al valor comercial estándar.
     const it = i * fu;
 
-    const estandares = [15, 20, 25, 30, 35, 40, 50, 60, 70, 80, 100, 125, 150];
+    // Valores comerciales estándar de interruptores termomagnéticos
+    // (escala usada en la memoria de cálculo de referencia).
+    const estandares = [15, 20, 30, 40, 50, 60, 70, 80, 100, 125, 150, 175, 200, 225, 250, 300, 350, 400];
 
     for (const cal of estandares) {
         if (cal >= it) {
