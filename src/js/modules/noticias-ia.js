@@ -76,8 +76,8 @@ export function initNoticiasIA() {
 
     function capitalize(text) {
         return text
-            .replace(/\b\w/g, (c) => c.toUpperCase())
-            .replace('Ia', 'IA');
+            .replace(/(^|\s|-)\w/g, (m) => m.toUpperCase())
+            .replace(/\bia\b/gi, 'IA');
     }
 
     function updateCarousel() {

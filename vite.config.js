@@ -27,7 +27,11 @@ function copyExtraStatic() {
         const src = path.join(rootDir, entry);
         if (!fs.existsSync(src)) continue;
         const dest = path.join(rootDir, 'dist', entry);
-        fs.cpSync(src, dest, { recursive: true });
+        fs.cpSync(src, dest, {
+          recursive: true,
+          // Excluye scripts de prueba (*.mjs) del build de producción.
+          filter: (src) => !src.toLowerCase().endsWith('.mjs')
+        });
       }
     }
   };

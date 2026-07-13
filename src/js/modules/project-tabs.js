@@ -6,7 +6,7 @@
 import proyectos from '../../data/proyectos.js';
 import { trapFocus } from '../utils/focus-trap.js';
 
-export async function initProjectTabs() {
+export function initProjectTabs() {
     const tabs = document.querySelectorAll('.proyecto-tab');
     const container = document.getElementById('proyectosContainer');
     const modal = document.getElementById('proyectoModal');
@@ -17,6 +17,7 @@ export async function initProjectTabs() {
 
     if (!tabs.length || !container) return;
 
+    let demoCleanup = null;
     const projects = proyectos;
 
     container.innerHTML = '';
@@ -81,7 +82,7 @@ export async function initProjectTabs() {
             modal.classList.add('open');
             document.body.style.overflow = 'hidden';
 
-            trapFocus({
+            demoCleanup = trapFocus({
                 modal,
                 onClose: closeProyectoModal,
                 restoreSelector: '.proyecto-card'
@@ -91,6 +92,10 @@ export async function initProjectTabs() {
 
     function closeProyectoModal() {
         if (!modal || !modalBody) return;
+        if (demoCleanup) {
+            demoCleanup();
+            demoCleanup = null;
+        }
         modal.classList.remove('open');
         modalBody.innerHTML = '';
         document.body.style.overflow = '';

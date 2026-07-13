@@ -45,6 +45,8 @@ const orgData = {
     }
 };
 
+let orgCleanup = null;
+
 function showOrgModal(type) {
     const modal = document.getElementById('orgModal');
     const title = document.getElementById('modalTitle');
@@ -58,7 +60,7 @@ function showOrgModal(type) {
 
     modal.classList.add('show');
 
-    trapFocus({
+    orgCleanup = trapFocus({
         modal,
         onClose: closeOrgModal,
         restoreSelector: '.executive-btn'
@@ -67,6 +69,10 @@ function showOrgModal(type) {
 
 function closeOrgModal() {
     const modal = document.getElementById('orgModal');
+    if (orgCleanup) {
+        orgCleanup();
+        orgCleanup = null;
+    }
     modal.classList.remove('show');
 }
 

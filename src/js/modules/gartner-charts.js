@@ -38,6 +38,15 @@ function showGartnerInitial() {
 }
 
 function initGartnerChart(type) {
+    if (typeof Chart === 'undefined') {
+        const view = document.getElementById(`${type}View`);
+        if (view) {
+            view.insertAdjacentHTML('beforeend',
+                '<p style="color:#94a3b8;margin-top:12px;">Gráficas no disponibles (Chart.js no cargó).</p>');
+        }
+        return;
+    }
+
     const chartConfig = {
         responsive: true,
         maintainAspectRatio: false,

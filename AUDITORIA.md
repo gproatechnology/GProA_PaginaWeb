@@ -288,4 +288,33 @@ la fuente de verdad y casos 1F/2F/3F, incluyendo caída de tensión, factores NO
 
 ---
 
+## 🛠️ Auditoría profunda del desarrollo completo - 13 de julio de 2026
+
+Auditoría de todo `Pagina_web` (landing Vite v3 + subproyecto GECRAI). Se verificó:
+build (`npm run build` limpio, 1.19s, 18 módulos), sin IDs duplicados (59), filtros de
+noticias coinciden con categorías de datos, formulario coherente (campos+errores+honeypot
+`_gotcha`), SEO/OG/Twitter/JSON-LD/GTM presentes, y el motor GECRAI (58 pruebas OK:
+21 `_test_ipc` + 24 `_audit_full` + 13 `_audit_integration`).
+
+### Hallazgos y correcciones aplicadas (plan de acción punto por punto)
+
+| # | Severidad | Hallazgo | Estado |
+|---|-----------|----------|--------|
+| 1 | 🔴 Alto | Peso de media: `hero-background.webm` 5 MB; `logoweb2` 874 KB, `COO` 806 KB, `CEO` 628 KB | Parcial: `preload="none"` + `width/height` en imágenes (evita CLS). **Re-encoder binario pendiente** (falta `ffmpeg`/`sharp` en el entorno) |
+| 2 | 🟠 Medio | Fuga de listeners: `org-modal.js` y modal demo de `project-tabs.js` no invocaban `cleanup` de `trapFocus` (se acumulaban por apertura) | ✅ Corregido: se captura `cleanup` y se llama al cerrar (consistente con `servicios.js`/`tecnologias.js`) |
+| 3 | 🟠 Medio | CDN sin SRI: Chart.js y Font Awesome | ✅ Corregido: `integrity` SHA-384 + `crossorigin="anonymous"` en ambos |
+| 4 | 🟠 Medio | Scripts de test (`*.mjs`) copiados a `dist/` por el plugin | ✅ Corregido: `fs.cpSync` con `filter` que excluye `*.mjs` |
+| 5 | 🟡 Bajo | Sin fallback si Chart.js no carga; `capitalize` frágil; `async` innecesario; OG mejorable | ✅ Corregido: guard en `initGartnerChart`, `capitalize` robusto, `async` removido, `og:locale=es_MX` + `og:image:width/height` |
+
+### Notas / pendientes
+- **Punto 1 (binario):** requiere `ffmpeg` (webm) y `sharp`/ImageMagick (webp). Recomendado:
+  webm <1.5 MB (o poster + no-autoplay), webp redimensionados a <200 KB. Las dimensiones
+  intrínsecas reales de las imágenes son normales (CEO 747×1024, COO 1024×1024,
+  favicon 1120×928, logoweb2 1504×704) — un parseo inicial erróneo fue descartado.
+- **OG image:** ideal una imagen dedicada 1200×630 (la actual es el logo 462×219).
+- **Motor GECRAI:** limitaciones conocidas del modelo demo se mantienen (caída con R/XL
+  fijos, ampacidad hasta 4/0 AWG, factor temperatura por tramos, eficiencia 0.9 fija).
+
+---
+
 *Este informe fue generado como parte del proceso de auditoría de calidad del proyecto GProA Technology Landing Page.*
