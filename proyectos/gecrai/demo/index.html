@@ -316,13 +316,14 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Tensión alimentación (V)</label>
-                                            <input type="number" id="voltaje" placeholder="Ej: 440" min="0">
+                                            <select id="voltaje"></select>
                                         </div>
                                         <div class="form-group">
                                             <label>Número de fases</label>
                                             <select id="fases">
-                                                <option value="1">Monofásico</option>
-                                                <option value="3">Trifásico</option>
+                                                <option value="1">Monofásico (1F)</option>
+                                                <option value="2">Bifásico 4 hilos (2F)</option>
+                                                <option value="3" selected>Trifásico (3F)</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
@@ -331,7 +332,10 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Carga (HP)</label>
-                                            <input type="number" id="hp" placeholder="Ej: 20" min="0" step="0.1">
+                                            <select id="hp"></select>
+                                        </div>
+                                        <div class="form-group" style="grid-column: 1 / -1;">
+                                            <div id="wizardValidation" style="display:none;padding:10px;border-radius:10px;font-size:13px;"></div>
                                         </div>
                                         <div class="form-group">
                                             <label>Temperatura ambiente (°C)</label>
@@ -559,7 +563,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module">
         import { getRecentActivity, getUsageByNorm, generateMemory, getMemories, getDashboardMetrics } from './data.js';
-        import { calcularMemoriaCompleta, compararCalibres } from './calculo.js';
+        import { calcularMemoriaCompleta, compararCalibres, voltajesDisponibles, hpDisponibles, validarCombinacion } from './calculo.js';
 
         const state = {
             memorias: getMemories(),
@@ -673,6 +677,65 @@
             document.getElementById('wizardNext').style.display = step === state.totalSteps ? 'none' : 'inline-flex';
         }
 
+        function poblarVoltaje() {
+            const fases = Number.parseInt(document.getElementById('fases')?.value || '3');
+            const sel = document.getElementById('voltaje');
+            if (!sel) return;
+            const opciones = voltajesDisponibles(fases);
+            const defecto = fases === 1 ? 230 : (fases === 2 ? 230 : 460);
+            sel.innerHTML = opciones.map(v =>
+                `<option value="${v}"${v === defecto ? ' selected' : ''}>${v} V</option>`
+            ).join('');
+        }
+
+        function poblarHp() {
+            const fases = Number.parseInt(document.getElementById('fases')?.value || '3');
+            const voltaje = Number.parseFloat(document.getElementById('voltaje')?.value);
+            const sel = document.getElementById('hp');
+            if (!sel) return;
+            const opciones = hpDisponibles(fases, voltaje);
+            const preferido = opciones.includes(20) ? 20 : opciones[0];
+            sel.innerHTML = opciones.map(hp =>
+                `<option value="${hp}"${hp === preferido ? ' selected' : ''}>${hp} HP</option>`
+            ).join('');
+        }
+
+        function validarEntradas() {
+            const box = document.getElementById('wizardValidation');
+            const fases = Number.parseInt(document.getElementById('fases')?.value || '3');
+            const voltaje = Number.parseFloat(document.getElementById('voltaje')?.value);
+            const hp = Number.parseFloat(document.getElementById('hp')?.value);
+            const fp = Number.parseFloat(document.getElementById('fp')?.value);
+            const ta = Number.parseFloat(document.getElementById('temperaturaAmbiente')?.value);
+            const longitud = Number.parseFloat(document.getElementById('longitud')?.value);
+            const r = Number.parseFloat(document.getElementById('r')?.value);
+            const xl = Number.parseFloat(document.getElementById('xl')?.value);
+
+            const errores = [];
+
+            const comb = validarCombinacion(fases, voltaje, hp);
+            if (!comb.valido) errores.push(comb.motivo);
+
+            if (isNaN(fp) || fp <= 0 || fp > 1) errores.push('El factor de potencia (cos φ) debe estar entre 0 y 1.');
+            if (isNaN(ta) || ta < -20 || ta > 120) errores.push('La temperatura ambiente debe estar entre -20 °C y 120 °C.');
+            if (isNaN(longitud) || longitud <= 0) errores.push('La longitud del circuito debe ser mayor a 0 km.');
+            if (isNaN(r) || r <= 0) errores.push('La resistencia debe ser mayor a 0 Ω/km.');
+            if (isNaN(xl) || xl < 0) errores.push('La reactancia no puede ser negativa.');
+
+            if (errores.length) {
+                box.style.display = 'block';
+                box.style.background = 'rgba(239,68,68,0.1)';
+                box.style.border = '1px solid rgba(239,68,68,0.3)';
+                box.style.color = '#e0f2fe';
+                box.innerHTML = '<strong style="color:#ef4444;">Revisá los datos:</strong><ul style="margin-top:6px;padding-left:18px;">' +
+                    errores.map(e => `<li>${e}</li>`).join('') + '</ul>';
+                return false;
+            }
+            box.style.display = 'none';
+            box.innerHTML = '';
+            return true;
+        }
+
         function getWizardParams() {
             return {
                 proyecto: document.getElementById('proyecto')?.value || '',
@@ -696,13 +759,8 @@
 
         function validateStep(step) {
             if (step === 1) {
-                const hp = document.getElementById('hp')?.value;
-                const voltaje = document.getElementById('voltaje')?.value;
-                const fp = document.getElementById('fp')?.value;
-                const longitud = document.getElementById('longitud')?.value;
-
-                if (!hp || !voltaje || !fp || !longitud) {
-                    showToast('Completa HP, voltaje, FP y longitud');
+                if (!validarEntradas()) {
+                    showToast('Corregí los datos resaltados');
                     return false;
                 }
             }
@@ -743,6 +801,10 @@
         }
 
         function renderResults() {
+            if (!validarEntradas()) {
+                state.result = null;
+                return;
+            }
             const params = getWizardParams();
             const result = calcularMemoriaCompleta(params);
             state.result = result;
@@ -854,6 +916,18 @@ Estado: ${result.aprobado ? 'Aprobado' : 'Revisar'}`;
         });
 
         document.getElementById('wizardFinish').addEventListener('click', finishMemory);
+
+        const fasesSel = document.getElementById('fases');
+        const voltajeSel = document.getElementById('voltaje');
+        if (fasesSel) fasesSel.addEventListener('change', () => { poblarVoltaje(); poblarHp(); validarEntradas(); });
+        if (voltajeSel) voltajeSel.addEventListener('change', () => { poblarHp(); validarEntradas(); });
+        ['fp', 'temperaturaAmbiente', 'longitud', 'r', 'xl', 'cantidadConductores', 'hp'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', validarEntradas);
+        });
+        poblarVoltaje();
+        poblarHp();
+        validarEntradas();
 
         document.getElementById('btnPrintMemory')?.addEventListener('click', () => {
             window.print();

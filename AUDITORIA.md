@@ -221,9 +221,37 @@ calibre por ampacidad 8 AWG, caída 8.136 V / 1.85 %, interruptor 3 × 40 A,
 calibre a tierra 10 AWG, calibre sugerido 8 AWG. ✅
 
 ### Limitaciones conocidas (siguientes pasos)
-- La Tabla 430-250 implementada cubre **motores trifásicos**. Para monofásico se usa la fórmula (falta Tabla 430-248 si se requiere).
 - `compararCalibres` usa R/XL fijos de los parámetros, no los R/XL propios de cada calibre; la comparación de caída entre calibres es aproximada.
 - Faltaría validar más casos (otros HP, 220 V, temperaturas ≠ 30 °C, >3 conductores) contra memorias de referencia.
+
+---
+
+## 🔌 Soporte monofásico / bifásico / trifásico + validación dinámica - 13 de julio de 2026
+
+Se extendió el motor de cálculo para **motores monofásicos (1F), bifásicos 4 hilos (2F) y trifásicos (3F)** usando las Tablas de plena carga NOM-001-SEDE-2012:
+
+| Fases | Tabla NOM | Columnas disponibles (V) |
+|-------|-----------|--------------------------|
+| 1F | **430-248** | 115, 200, 208, 230 |
+| 2F (4 hilos) | **430-249** | 115, 230, 460, 575, 2300 |
+| 3F | **430-250** | 115, 200, 208, 230, 460, 575, 2300 |
+
+### Cambios en `calculo.js`
+- Nuevas `TABLA_430_248` y `TABLA_430_249` + sus mapeos de tensión (`columnaTension430248`, `columnaTension430249`).
+- Dispatcher único `obtenerIpcTabla(hp, voltaje, fases)` que elige tabla por fases.
+- `calcularIpc` ahora toma valor tabulado para **las 3** configuraciones (antes solo 3F); la fórmula es fallback.
+- Helpers para la UI: `voltajesDisponibles(fases)`, `hpDisponibles(fases, voltaje)`, `validarCombinacion(fases, voltaje, hp)`.
+- `columnaTension430248` devuelve `null` fuera de rango (110-240 V) para rechazar tensiones inválidas en 1F (ej. 460 V no es monofásico NOM).
+
+### Cambios en `index.html` (wizard)
+- `voltaje` y `hp` pasan de inputs libres a **`<select>` poblados en cascada** según el número de fases → el usuario solo puede elegir combinaciones válidas en tabla (filtro de origen).
+- Se agregó opción **Bifásico 4 hilos (2F)** en el selector de fases.
+- `validarEntradas()` valida en tiempo real (al escribir/cambiar): FP ∈ (0,1], temperatura ambiente ∈ [-20,120] °C, longitud > 0, R > 0, XL ≥ 0, y que la combinación fases/tensión/HP sea tabulada. Muestra errores inline y bloquea el cálculo/guardado si hay datos incorrectos.
+
+### Verificación (`_test_ipc.mjs`)
+21/21 pruebas OK, incluyendo: 3F 20HP@440V→27 A, 1F 20HP@230V→54 A (430-248),
+2F 20HP@460V→23 A (430-249), validación de rangos (1F@460V rechazado), y consistencia
+Im = 125% × Ipc por fase.
 
 ---
 

@@ -69,26 +69,184 @@ export function columnaTension430250(voltaje) {
 }
 
 /**
- * Devuelve la corriente a plena carga tabulada (A) para un motor trifásico
- * según HP y tensión, o null si no está en la tabla.
+ * Tabla 430-248 NOM-001-SEDE-2012
+ * Corriente a plena carga (A) de motores monofásicos de inducción.
+ * Columnas = tensión nominal del motor (intervalos: 115V = 110-120,
+ * 230V = 220-240; 200V y 208V columnas directas).
  */
-export function obtenerIpcTabla(hp, voltaje) {
-    const fila = TABLA_430_250[Number.parseFloat(hp)];
+export const TABLA_430_248 = {
+    0.5:  { 115: 4.4,  200: 2.5,  208: 2.4,  230: 2.2 },
+    0.75: { 115: 6.4,  200: 3.7,  208: 3.5,  230: 3.2 },
+    1:    { 115: 8.4,  200: 4.8,  208: 4.6,  230: 4.2 },
+    1.5:  { 115: 12,   200: 6.9,  208: 6.6,  230: 6 },
+    2:    { 115: 13.6, 200: 7.8,  208: 7.5,  230: 6.8 },
+    3:    {            200: 11,   208: 10.6, 230: 9.6 },
+    5:    {            200: 17.5, 208: 16.7, 230: 15.2 },
+    7.5:  {            200: 25.3, 208: 24.2, 230: 22 },
+    10:   {            200: 32.2, 208: 30.8, 230: 28 },
+    15:   {            200: 48.3, 208: 46.2, 230: 42 },
+    20:   {            200: 62.1, 208: 59.4, 230: 54 },
+    25:   {            200: 78.2, 208: 74.8, 230: 68 },
+    30:   {            200: 92,   208: 88,   230: 80 },
+    40:   {            200: 120,  208: 114,  230: 104 },
+    50:   {            200: 150,  208: 143,  230: 130 },
+    60:   {            200: 177,  208: 169,  230: 154 },
+    75:   {            200: 221,  208: 211,  230: 192 },
+    100:  {            200: 285,  208: 273,  230: 248 },
+    125:  {            200: 359,  208: 343,  230: 312 },
+    150:  {            200: 414,  208: 396,  230: 360 },
+    200:  {            200: 552,  208: 528,  230: 480 }
+};
+
+/** Mapea una tensión de sistema a la columna nominal de la Tabla 430-248. */
+export function columnaTension430248(voltaje) {
+    const v = Number.parseFloat(voltaje) || 0;
+    if (v <= 120) return 115;
+    if (v <= 200) return 200;
+    if (v <= 208) return 208;
+    if (v <= 240) return 230;
+    return null;
+}
+
+/**
+ * Tabla 430-249 NOM-001-SEDE-2012
+ * Corriente a plena carga (A) de motores de dos fases (4 hilos) de inducción.
+ * Columnas = tensión nominal del motor (intervalos: 115V = 110-120,
+ * 230V = 220-240, 460V = 440-480, 575V = 550-600; 2300V directa).
+ */
+export const TABLA_430_249 = {
+    2:    { 115: 4,    230: 2,    460: 1,    575: 0.8,  2300: null },
+    3:    { 115: 6.4,  230: 3.2,  460: 1.6,  575: 1.3,  2300: null },
+    5:    { 115: null, 230: 13.2, 460: 6.6,  575: 5.3,  2300: null },
+    7.5:  { 115: null, 230: 19,   460: 9,    575: null, 2300: null },
+    10:   { 115: null, 230: 24,   460: 12,   575: null, 2300: null },
+    15:   { 115: null, 230: 36,   460: 18,   575: 14,   2300: null },
+    20:   { 115: null, 230: 47,   460: 23,   575: 19,   2300: null },
+    25:   { 115: null, 230: 59,   460: 29,   575: 24,   2300: null },
+    30:   { 115: null, 230: 69,   460: 35,   575: 28,   2300: null },
+    40:   { 115: null, 230: 90,   460: 45,   575: 36,   2300: null },
+    50:   { 115: null, 230: 113,  460: 56,   575: 45,   2300: null },
+    60:   { 115: null, 230: 133,  460: 67,   575: 53,   2300: 14 },
+    75:   { 115: null, 230: 166,  460: 83,   575: 66,   2300: 18 },
+    100:  { 115: null, 230: 218,  460: 109,  575: 87,   2300: 23 },
+    125:  { 115: null, 230: 270,  460: 135,  575: 108,  2300: 28 },
+    150:  { 115: null, 230: 312,  460: 156,  575: 125,  2300: 32 },
+    200:  { 115: null, 230: 416,  460: 208,  575: 167,  2300: 43 },
+    250:  { 2300: 49 },
+    300:  { 2300: 60 },
+    350:  { 2300: 72 },
+    400:  { 2300: 83 },
+    450:  { 2300: 95 },
+    500:  { 2300: 118 }
+};
+
+/** Mapea una tensión de sistema a la columna nominal de la Tabla 430-249. */
+export function columnaTension430249(voltaje) {
+    const v = Number.parseFloat(voltaje) || 0;
+    if (v <= 120) return 115;
+    if (v <= 240) return 230;
+    if (v <= 480) return 460;
+    if (v <= 600) return 575;
+    return 2300;
+}
+
+/** Tabla de plena carga activa según número de fases. */
+export const TABLA_IPC_POR_FASES = {
+    1: TABLA_430_248,
+    2: TABLA_430_249,
+    3: TABLA_430_250
+};
+
+/** Tensiones nominales (columnas) disponibles por número de fases. */
+export const VOLTAJES_POR_FASES = {
+    1: [115, 200, 208, 230],
+    2: [115, 230, 460, 575, 2300],
+    3: [115, 200, 208, 230, 460, 575, 2300]
+};
+
+/**
+ * Devuelve la corriente a plena carga tabulada (A) para un motor según
+ * número de fases, HP y tensión, o null si no está en la tabla.
+ */
+export function obtenerIpcTabla(hp, voltaje, fases) {
+    const numFases = Number.parseInt(fases) || 3;
+    const tabla = TABLA_IPC_POR_FASES[numFases];
+    if (!tabla) return null;
+
+    const fila = tabla[Number.parseFloat(hp)];
     if (!fila) return null;
-    const col = columnaTension430250(voltaje);
+
+    let col;
+    if (numFases === 1) col = columnaTension430248(voltaje);
+    else if (numFases === 2) col = columnaTension430249(voltaje);
+    else col = columnaTension430250(voltaje);
+
     const valor = fila[col];
     return (valor === undefined || valor === null) ? null : valor;
+}
+
+/** Lista de tensiones nominales válidas para el número de fases dado. */
+export function voltajesDisponibles(fases) {
+    const numFases = Number.parseInt(fases) || 3;
+    return VOLTAJES_POR_FASES[numFases] || [];
+}
+
+/** Lista de HP válidos para el número de fases y tensión dados. */
+export function hpDisponibles(fases, voltaje) {
+    const numFases = Number.parseInt(fases) || 3;
+    const tabla = TABLA_IPC_POR_FASES[numFases];
+    if (!tabla) return [];
+    let col;
+    if (numFases === 1) col = columnaTension430248(voltaje);
+    else if (numFases === 2) col = columnaTension430249(voltaje);
+    else col = columnaTension430250(voltaje);
+
+    return Object.keys(tabla)
+        .map(Number)
+        .filter(hp => {
+            const fila = tabla[hp];
+            const valor = fila && fila[col];
+            return valor !== undefined && valor !== null;
+        })
+        .sort((a, b) => a - b);
+}
+
+/**
+ * Valida que una combinación (fases, voltaje, hp) tenga Ipc tabulado.
+ * Devuelve { valido, ipc, motivo }.
+ */
+export function validarCombinacion(fases, voltaje, hp) {
+    const numFases = Number.parseInt(fases) || 3;
+    const hpNum = Number.parseFloat(hp);
+    const voltajeNum = Number.parseFloat(voltaje);
+
+    if (numFases !== 1 && numFases !== 2 && numFases !== 3) {
+        return { valido: false, ipc: null, motivo: 'Número de fases no válido.' };
+    }
+
+    let col;
+    if (numFases === 1) col = columnaTension430248(voltajeNum);
+    else if (numFases === 2) col = columnaTension430249(voltajeNum);
+    else col = columnaTension430250(voltajeNum);
+
+    if (col == null || !voltajesDisponibles(numFases).includes(col)) {
+        return { valido: false, ipc: null, motivo: 'Tensión fuera del rango NOM-001 para ' + numFases + 'F.' };
+    }
+    const ipc = obtenerIpcTabla(hpNum, voltajeNum, numFases);
+    if (ipc === null) {
+        return { valido: false, ipc: null, motivo: 'HP ' + hpNum + ' no tabulado para ' + numFases + 'F a ' + voltajeNum + ' V.' };
+    }
+    return { valido: true, ipc, motivo: '' };
 }
 
 export function calcularIpc({ hp, voltaje, fases, fp, eficiencia = 0.9 }) {
     const numFases = Number.parseInt(fases) || 3;
 
-    // 1) Preferir el valor tabulado de la Tabla 430-250 (como la memoria
-    //    de cálculo de referencia). Solo aplica a motores trifásicos.
-    if (numFases === 3) {
-        const ipcTabla = obtenerIpcTabla(hp, voltaje);
-        if (ipcTabla !== null) return ipcTabla;
-    }
+    // 1) Preferir el valor tabulado de las Tablas NOM-001 (430-248
+    //    monofásico, 430-249 dos fases, 430-250 trifásico), igual que la
+    //    memoria de cálculo de referencia.
+    const ipcTabla = obtenerIpcTabla(hp, voltaje, numFases);
+    if (ipcTabla !== null) return ipcTabla;
 
     // 2) Fallback por fórmula. Ipc es la corriente a plena carga y NO
     //    incluye el factor de utilización (ese se aplica al calcular Im).
@@ -105,6 +263,7 @@ export function calcularIpc({ hp, voltaje, fases, fp, eficiencia = 0.9 }) {
     if (numFases === 3) {
         ipc = potencia / (1.732 * v * fpNum * eff);
     } else {
+        // Monofásico / dos fases (4 hilos): corriente por fase.
         ipc = potencia / (v * fpNum * eff);
     }
 
