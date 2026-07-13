@@ -255,4 +255,37 @@ Im = 125% × Ipc por fase.
 
 ---
 
+## 🔍 Segunda auditoría (caja completa) - 13 de julio de 2026
+
+Se corrió una verificación de memoria de caja completa (`_audit_full.mjs`, 24/24 OK) contra
+la fuente de verdad y casos 1F/2F/3F, incluyendo caída de tensión, factores NOM e interruptor.
+
+### Caso de referencia (20 HP / 440 V / 3F / L=0.07 km / FP=0.95)
+| Parámetro | Valor | Estado |
+|-----------|-------|--------|
+| Ipc | 27 A | ✅ |
+| Im = 125%·Ipc | 33.75 A | ✅ |
+| Id (fc=1, ft=1) | 33.75 A | ✅ |
+| Calibre por ampacidad | 8 AWG | ✅ |
+| Caída de tensión | 8.14 V / 1.85 % | ✅ |
+| Interruptor | 40 A (3F) | ✅ |
+| Calibre a tierra | 10 AWG | ✅ |
+| Calibre sugerido | 8 AWG | ✅ |
+
+### Corrección aplicada
+- **Etiqueta de polos del interruptor:** antes mostraba `2 x ... A` para 1F y 2F (ambiguio/incorrecto).
+  Ahora `seleccionarInterruptor` devuelve `1F (2P)`, `2F (2P)` o `3F (3P)` según el número de fases.
+
+### Limitaciones conocidas (no bloqueantes, propias del modelo demo)
+1. **Caída de tensión con R/XL fijos:** `calcularCaidaTension` usa los `r`/`xl` que ingresa el usuario,
+   no la R/XL propia del calibre seleccionado. Por eso `calibreCaida` es referencial (subir calibre no
+   reduce la caída en este modelo). Para comparar calibres por caída real, usar `compararCalibres`.
+2. **Tabla de ampacidad hasta 4/0 AWG (195 A):** motores muy grandes (>~150 HP a 460 V) dan
+   `calibreAmpacidad = 'No encontrado'`. Ampliar `TABLA_AMPACIDAD` si se requiere.
+3. **Factor de temperatura por tramos** (`obtenerFactorTemperatura`) es aproximación; ignora
+   `temperaturaCable` y asume 75 °C de base.
+4. **Eficiencia fija 0.9:** solo afecta el fallback por fórmula (fuera de tabla); lo tabulado no la usa.
+
+---
+
 *Este informe fue generado como parte del proceso de auditoría de calidad del proyecto GProA Technology Landing Page.*

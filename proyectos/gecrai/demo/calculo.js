@@ -399,11 +399,16 @@ export function seleccionarInterruptor(ipc, factorUtilizacion = 1.25, fases = 3)
     // (escala usada en la memoria de cálculo de referencia).
     const estandares = [15, 20, 30, 40, 50, 60, 70, 80, 100, 125, 150, 175, 200, 225, 250, 300, 350, 400];
 
+    const numFases = Number.parseInt(fases) || 3;
+    const descripcionPolos = numFases === 1 ? '1F (2P)'
+        : numFases === 2 ? '2F (2P)'
+        : '3F (3P)';
+
     for (const cal of estandares) {
         if (cal >= it) {
             return {
                 amperaje: cal,
-                polos: Number.parseInt(fases) === 3 ? '3 x ' + cal + ' A' : '2 x ' + cal + ' A'
+                polos: descripcionPolos + ' - ' + cal + ' A'
             };
         }
     }
@@ -411,7 +416,7 @@ export function seleccionarInterruptor(ipc, factorUtilizacion = 1.25, fases = 3)
     const max = estandares[estandares.length - 1];
     return {
         amperaje: max,
-        polos: Number.parseInt(fases) === 3 ? '3 x ' + max + ' A' : '2 x ' + max + ' A'
+        polos: descripcionPolos + ' - ' + max + ' A'
     };
 }
 
