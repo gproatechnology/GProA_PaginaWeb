@@ -559,7 +559,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module">
         import { getRecentActivity, getUsageByNorm, generateMemory, getMemories, getDashboardMetrics } from './data.js';
-        import { calcularMemoriaCompleta } from './calculo.js';
+        import { calcularMemoriaCompleta, compararCalibres } from './calculo.js';
 
         const state = {
             memorias: getMemories(),
@@ -603,13 +603,14 @@
                 usageChartInstance.destroy();
             }
 
+            const activity = getRecentActivity();
             activityChartInstance = new Chart(activityCtx, {
                 type: 'line',
                 data: {
-                    labels: ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'],
+                    labels: activity.map((item) => item.label),
                     datasets: [{
                         label: 'Consultas',
-                        data: getRecentActivity().map((item) => item.value),
+                        data: activity.map((item) => item.value),
                         borderColor: '#00e0ff',
                         backgroundColor: 'rgba(0,224,255,0.1)',
                         fill: true,

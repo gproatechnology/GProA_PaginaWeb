@@ -3,6 +3,21 @@
  * Funciones puras de cálculo de memoria de conductores de baja tensión.
  */
 
+// Tabla de ampacidad AWG (A). Fuente única para todo el módulo.
+export const TABLA_AMPACIDAD = {
+    '14 AWG': 15,
+    '12 AWG': 20,
+    '10 AWG': 30,
+    '8 AWG': 43,
+    '6 AWG': 55,
+    '4 AWG': 70,
+    '2 AWG': 95,
+    '1/0 AWG': 125,
+    '2/0 AWG': 145,
+    '3/0 AWG': 165,
+    '4/0 AWG': 195
+};
+
 export function calcularIpc({ hp, voltaje, fases, fp, eficiencia = 0.9, factorUtilizacion = 1.25 }) {
     const hpNum = Number.parseFloat(hp) || 0;
     const v = Number.parseFloat(voltaje) || 0;
@@ -81,19 +96,7 @@ export function seleccionarCalibrePorAmpacidad(id, tablaAmpacidad) {
 
 export function compararCalibres(params, calibreA, calibreB) {
     const resultBase = calcularMemoriaCompleta(params);
-    const tablaAmpacidad = {
-        '14 AWG': 15,
-        '12 AWG': 20,
-        '10 AWG': 30,
-        '8 AWG': 43,
-        '6 AWG': 55,
-        '4 AWG': 70,
-        '2 AWG': 95,
-        '1/0 AWG': 125,
-        '2/0 AWG': 145,
-        '3/0 AWG': 165,
-        '4/0 AWG': 195
-    };
+    const tablaAmpacidad = TABLA_AMPACIDAD;
 
     const getAmpacidad = (calibre) => tablaAmpacidad[calibre] || 0;
 
@@ -224,19 +227,7 @@ export function calcularMemoriaCompleta(params) {
     const factorTemperatura = obtenerFactorTemperatura(temperaturaAmbiente, temperaturaCable);
     const id = calcularId(im, factorConductores, factorTemperatura);
 
-    const tablaAmpacidad = {
-        '14 AWG': 15,
-        '12 AWG': 20,
-        '10 AWG': 30,
-        '8 AWG': 43,
-        '6 AWG': 55,
-        '4 AWG': 70,
-        '2 AWG': 95,
-        '1/0 AWG': 125,
-        '2/0 AWG': 145,
-        '3/0 AWG': 165,
-        '4/0 AWG': 195
-    };
+    const tablaAmpacidad = TABLA_AMPACIDAD;
 
     const calibreAmpacidad = seleccionarCalibrePorAmpacidad(id, tablaAmpacidad);
     const { caidaV, porcentaje } = calcularCaidaTension({
