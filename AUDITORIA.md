@@ -324,4 +324,60 @@ noticias coinciden con categorías de datos, formulario coherente (campos+errore
 
 ---
 
+## 🧬 Auditoría final — GlucAI 1.5 + consistencia GECRAI (17 jul 2026)
+
+Ciclo de trabajo centrado en completar GlucAI (Fase 4) y auditar los dos
+subproyectos de `proyectos/`. Resultado: ambos compilan, pasan tests y se
+despliegan sin assets muertos ni IDs duplicados.
+
+### GlucAI — Fase 4 completada (commit `cdf365f`)
+- Manual de usuario creado en espejo a GECRAI: `glucai/docs/manual-usuario.html`,
+  `manual.css` y `data.js` (contenido glucémico: KNN, normalización, modelo
+  anatómico, aviso no-médico).
+- `glucai/demo/api.js` rebrandizado al stub glucémico (quitado el texto/params
+  eléctricos heredados de GECRAI).
+- `src/data/proyectos.js`: agregado `docsUrl` para GlucAI → la tarjeta del landing
+  ahora muestra "Ver documentación" además de "Ver Demo".
+- `glucai/demo/index.html`: corregido ID duplicado `usageChart` (el de reportes
+  pasó a `usageChartReport`).
+- `glucai/README.md` actualizado: las 5 fases marcadas como completadas.
+
+### GlucAI — wizard de 6 pasos (commits `2e1d133` y `388419b`)
+Auditoría del asistente que detectó 7 hallazgos; todos resueltos:
+
+| # | Sev | Hallazgo | Solución | Commit |
+|---|-----|----------|----------|--------|
+| 1 | 🔴 | Validación solo en paso 2 (salto por tab llegaba a estado roto) | `validateStep()` valida la química siempre | `2e1d133` |
+| 2 | 🟠 | Paso 1 (edad) sin validación de rango | `validateStep()` valida 0–120 años | `388419b` |
+| 3 | 🟠 | Resultado no se recalculaba al editar y retroceder | Listeners `input` en paso 2 → `syncQuimica()` invalida `state.result` | `2e1d133` |
+| 4 | 🟡 | Dos fuentes de "valores actuales" desincronizables | `syncQuimica()` como fuente única | `2e1d133` |
+| 5 | 🟡 | "Vasos" duplicaba los elementos de "Corazón" | "Vasos" usa solo `homocisteina` (señal distinta) | `388419b` |
+| 6 | 🟡 | Sección "Comparar" decía "Pendiente Fase 2" (contradictorio) | Texto honesto: "Funcionalidad en roadmap" | `388419b` |
+| 7 | 🟢 | Textarea de memoria se sobreescribía al retroceder | Editable + preserva notas manuales; `finishMemory` las guarda | `388419b` |
+
+### GECRAI — corrección de consistencia (commit `2720804`)
+- Mismo bug de ID duplicado `usageChart` que se había corregido en GlucAI: el
+  canvas de la sección Reportes (`proyectos/gecrai/demo/index.html:541`) pasó a
+  `id="usageChartReport"`, dejando el del dashboard intacto. Sin canvas muertos.
+
+### Verificación en ejecución (post-cambios)
+- `npm run build`: ✅ limpio, 19 módulos, sin errores.
+- Tests GECRAI: ✅ 58/58 OK (`_test_ipc` 21 + `_audit_full` 24 + `_audit_integration` 13).
+- Tests GlucAI: ✅ 12/12 OK (`_test_knn`).
+- IDs duplicados en landing y en ambos demos: ✅ ninguno.
+- Manuales en `dist/`: ✅ `gecrai/docs` y `glucai/docs` desplegados; `.mjs` excluidos del build.
+
+### Estado de sincronización
+- `origin` → `github.com/gproatechnology/GProA_PaginaWeb.git` (rama `main`).
+- Commits locales pendientes de push: `cdf365f`, `2e1d133`, `388419b`, `2720804`.
+
+### Pendientes conocidos (no bloqueantes)
+1. **Media pesada** (documentado arriba): `hero-background.webm` ~5 MB;
+   `logoweb2`/`COO`/`CEO` ~0.6–0.9 MB. Requiere `ffmpeg`/`sharp` para re-encoder.
+2. **GECRAI "Comparar calibres"**: caída con R/XL fijos → no baja al subir calibre.
+3. **GlucAI "Comparar perfiles"**: roadmap (texto honesto).
+4. **OG image**: ideal 1200×630 dedicada (hoy usa el logo).
+
+---
+
 *Este informe fue generado como parte del proceso de auditoría de calidad del proyecto GProA Technology Landing Page.*
