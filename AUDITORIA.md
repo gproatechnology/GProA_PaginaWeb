@@ -170,10 +170,11 @@ El proyecto ha sido completamente corregido. Todos los problemas críticos y med
 - ✅ Focus trap en modal implementado
 - ✅ aria-expanded en menú móvil
 
-**Próximos pasos:**
-1. Agregar analytics para medir comportamiento de usuarios
-2. Comprimir imágenes a WebP
-3. Implementar PWA
+**Próximos pasos (histórico, resueltos en actualizaciones posteriores):**
+1. ~~Agregar analytics~~ ✅ Hecho con Google Tag Manager (GTM-P9MSFN8L)
+2. ~~Comprimir imágenes a WebP~~ ✅ Hecho (CEO/COO/logos en WebP, favicon .webp/.ico)
+3. Implementar PWA — pendiente (ver sección final de auditoría para el estado actual)
+
 
 ---
 

@@ -67,8 +67,12 @@ Pagina_web/
 │   ├── images/             # WebP (CEO, COO, logos, favicon)
 │   └── video/             # WebM (hero-background)
 └── proyectos/
-    └── gecrai/
-        ├── demo/            # Demo enterprise GECRAI (data.js, calculo.js, api.js)
+    ├── gecrai/
+    │   ├── demo/            # Demo enterprise GECRAI (data.js, calculo.js, api.js)
+    │   └── docs/            # Manual de usuario data-driven (data.js + manual-usuario.html)
+    └── glucai/
+        ├── README.md        # Propuesta y estado de fases (0-4 completadas)
+        ├── demo/            # Demo GlucAI (data.js, diagnostico.js, api.js) - motor KNN 33 biomarcadores
         └── docs/            # Manual de usuario data-driven (data.js + manual-usuario.html)
 ```
 
