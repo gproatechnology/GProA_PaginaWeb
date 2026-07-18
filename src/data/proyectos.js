@@ -34,6 +34,8 @@ export default [
     "title": "GlucAI 1.5",
     "description": "Inteligencia Artificial para Gestión de Diabetes",
     "longDescription": "Sistema especializado en diagnóstico predictivo, monitoreo continuo y recomendaciones personalizadas.",
+    "demoUrl": "./proyectos/glucai/demo/",
+    "docsUrl": "./proyectos/glucai/docs/manual-usuario.html",
     "features": [
       "Predicción de hipo/hiperglucemia",
       "Integración con wearables",

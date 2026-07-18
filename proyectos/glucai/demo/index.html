@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlucAI 1.5 - Demo Enterprise</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #050a14 0%, #0a1526 100%);
+            color: #e0f2fe;
+            min-height: 100vh;
+        }
+        .app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(0,224,255,0.15);
+            background: rgba(10,15,28,0.8);
+            backdrop-filter: blur(6px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .brand {
+            font-family: 'Orbitron', sans-serif;
+            color: #00e0ff;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .badge {
+            padding: 6px 14px;
+            background: rgba(0,224,255,0.15);
+            border: 1px solid rgba(0,224,255,0.25);
+            border-radius: 999px;
+            font-size: 0.85rem;
+            color: #00e0ff;
+        }
+        .btn {
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            color: #050a14;
+            background: linear-gradient(135deg,#0066ff,#00e0ff);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px rgba(0,224,255,0.35);
+        }
+        .btn-outline {
+            background: transparent;
+            color: #00e0ff;
+            border: 1px solid rgba(0,224,255,0.4);
+        }
+        .layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            flex: 1;
+        }
+        .sidebar {
+            border-right: 1px solid rgba(0,224,255,0.1);
+            background: rgba(10,15,28,0.6);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .nav-item {
+            text-align: left;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: transparent;
+            color: #94a3b8;
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .nav-item.active {
+            background: rgba(0,224,255,0.1);
+            color: #00e0ff;
+            border-color: rgba(0,224,255,0.25);
+        }
+        .content {
+            padding: 24px;
+            overflow-y: auto;
+        }
+        .screen {
+            display: none;
+            animation: fadeIn .4s ease;
+        }
+        .screen.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .grid {
+            display: grid;
+            gap: 16px;
+        }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .card {
+            background: linear-gradient(145deg, rgba(20,30,50,0.95), rgba(10,20,35,0.95));
+            border: 1px solid rgba(0,224,255,0.15);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        .card h3 {
+            color: #00e0ff;
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+        }
+        .metric {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .form-group {
+            margin-bottom: 14px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #00e0ff;
+            font-weight: 600;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(5,10,20,0.9);
+            border: 1px solid rgba(0,224,255,0.3);
+            border-radius: 10px;
+            color: #e0f2fe;
+            font-size: 1rem;
+        }
+        .result {
+            margin-top: 18px;
+            padding: 16px;
+            background: rgba(16,185,129,0.1);
+            border: 1px solid rgba(16,185,129,0.3);
+            border-radius: 12px;
+            display: none;
+        }
+        .result.show { display: block; }
+        .login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: linear-gradient(145deg, rgba(20,30,50,0.95), rgba(10,20,35,0.95));
+            border: 1px solid rgba(0,224,255,0.2);
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 0 40px rgba(0,224,255,0.15);
+        }
+        .login-card h1 {
+            color: #00e0ff;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        .login-card p {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 20px;
+        }
+        .toast {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            padding: 12px 16px;
+            background: rgba(10,15,28,0.95);
+            border: 1px solid rgba(0,224,255,0.3);
+            color: #e0f2fe;
+            border-radius: 12px;
+            display: none;
+            z-index: 100;
+        }
+        .toast.show { display: block; }
+        .note {
+            background: rgba(0,224,255,0.08);
+            border-left: 4px solid #00e0ff;
+            padding: 12px 14px;
+            border-radius: 8px;
+            color: #94a3b8;
+            margin: 12px 0;
+        }
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; }
+            .grid-3, .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        .wizard-step { animation: fadeIn .4s ease; }
+        #wizardSteps { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+        #wizardSteps .nav-item { font-size:.85rem; padding:8px 10px; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #resumenMemoria, #resumenMemoria * { visibility: visible; }
+            #resumenMemoria {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: #fff;
+                color: #000;
+                border: none;
+                padding: 40px;
+                font-family: Arial, sans-serif;
+                font-size: 12pt;
+                line-height: 1.6;
+            }
+        }
+
+        #svgTooltip {
+            position: fixed;
+            display: none;
+            padding: 8px 10px;
+            background: rgba(5,10,20,0.95);
+            border: 1px solid rgba(0,224,255,0.4);
+            color: #e0f2fe;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            pointer-events: none;
+            z-index: 50;
+            max-width: 220px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+        .organo { transition: fill .3s ease, stroke .3s ease, filter .3s ease; }
+        #bodySvg { display: block; margin: 0 auto; }
+    </style>
+</head>
+<body>
+    <div class="app" id="app">
+        <!-- Login (mock) -->
+        <div class="login-screen" id="loginScreen">
+            <form class="login-card" id="loginForm">
+                <h1>GlucAI 1.5</h1>
+                <p>Demo Enterprise · Diagnóstico de glucosa con IA</p>
+                <div class="form-group">
+                    <label for="loginUser">Usuario</label>
+                    <input type="text" id="loginUser" value="demo@glucai.app" autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="loginPass">Contraseña</label>
+                    <input type="password" id="loginPass" value="demo123" autocomplete="current-password">
+                </div>
+                <button class="btn" type="submit" style="width:100%;">Entrar</button>
+                <p class="note" style="margin-top:16px;text-align:center;">Demo funcional: el inicio de sesión y el guardado son simulados (no requieren servidor).</p>
+            </form>
+        </div>
+
+        <!-- App -->
+        <div id="mainApp" style="display:none; flex:1; display:flex; flex-direction:column;">
+            <div class="topbar">
+                <div class="brand">GlucAI<span style="color:#94a3b8;font-weight:400;"> 1.5</span></div>
+                <div class="topbar-actions">
+                    <span class="badge" id="envBadge">Producción</span>
+                    <button class="btn btn-outline" id="logoutBtn">Cerrar sesión</button>
+                </div>
+            </div>
+
+            <div class="layout">
+                <aside class="sidebar">
+                    <button class="nav-item active" data-screen="dashboard">Dashboard</button>
+                    <button class="nav-item" data-screen="consulta">Asistente</button>
+                    <button class="nav-item" data-screen="comparar">Comparar</button>
+                    <button class="nav-item" data-screen="memorias">Memorias</button>
+                    <button class="nav-item" data-screen="reportes">Reportes</button>
+                </aside>
+
+                <main class="content">
+                    <!-- Dashboard -->
+                    <section class="screen active" id="screen-dashboard">
+                        <h2 style="margin-bottom:14px;">Panel principal</h2>
+                        <p style="color:#94a3b8;margin-bottom:18px;">Resumen de actividad del asistente de diagnóstico glucémico.</p>
+                        <div class="grid grid-3">
+                            <div class="card"><h3>Exámenes analizados</h3><div class="metric" id="dashExamenes">0</div></div>
+                            <div class="card"><h3>Diagnósticos</h3><div class="metric" id="dashDiagnosticos">0</div></div>
+                            <div class="card"><h3>Perfil más frecuente</h3><div class="metric" id="dashTopPerfil" style="font-size:1.2rem;">--</div></div>
+                        </div>
+                        <div class="grid grid-2" style="margin-top:18px;">
+                            <div class="card"><h3>Actividad reciente</h3><canvas id="activityChart" height="140"></canvas></div>
+                        <div class="card"><h3>Uso por perfil</h3><canvas id="usageChartReport" height="140"></canvas></div>
+                        </div>
+                    </section>
+
+                    <!-- Asistente (wizard 6 pasos) -->
+                    <section class="screen" id="screen-consulta">
+                        <h2 style="margin-bottom:14px;">Asistente de diagnóstico</h2>
+                        <span class="badge" id="wizardStepBadge">Paso 1 de 6</span>
+                        <div id="wizardSteps">
+                            <button class="nav-item active" data-step="1">Antecedentes</button>
+                            <button class="nav-item" data-step="2">Química (33 elem.)</button>
+                            <button class="nav-item" data-step="3">Normalización</button>
+                            <button class="nav-item" data-step="4">Clasificación KNN</button>
+                            <button class="nav-item" data-step="5">Explicabilidad</button>
+                            <button class="nav-item" data-step="6">Modelo + Memoria</button>
+                        </div>
+
+                        <form id="wizardForm" style="margin-top:18px;">
+                            <div class="wizard-step" data-step="1">
+                                <div class="card">
+                                    <h3>Antecedentes del paciente</h3>
+                                    <div class="grid grid-2">
+                                        <div class="form-group">
+                                            <label for="paciente">Identificador / Nombre</label>
+                                            <input type="text" id="paciente" placeholder="Ej: PAC-001">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="edad">Edad</label>
+                                            <input type="number" id="edad" placeholder="Ej: 54" min="0" max="120">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sexo">Sexo</label>
+                                        <select id="sexo">
+                                            <option value="M">Masculino</option>
+                                            <option value="F">Femenino</option>
+                                            <option value="O">Otro</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="wizard-step" data-step="2" style="display:none;">
+                                <div class="card">
+                                    <h3>Química sanguínea (33 elementos)</h3>
+                                    <div id="quimicaGrid" class="grid grid-3"></div>
+                                </div>
+                            </div>
+
+                            <div class="wizard-step" data-step="3" style="display:none;">
+                                <div class="card">
+                                    <h3>Normalización</h3>
+                                    <p style="color:#94a3b8;">Z-score con media/desvío del dataset de entrenamiento (obligatorio: las escalas de los 33 elementos difieren).</p>
+                                    <div id="normalizacionTable" style="margin-top:12px;"></div>
+                                </div>
+                            </div>
+
+                            <div class="wizard-step" data-step="4" style="display:none;">
+                                <div class="card">
+                                    <h3>Clasificación KNN</h3>
+                                    <p style="color:#94a3b8;">k vecinos más cercanos sobre el espacio normalizado; votación por mayoría (o ponderada) → Normal / Prediabetes / Riesgo glucosa.</p>
+                                    <div id="knnResult" style="margin-top:14px;"></div>
+                                </div>
+                            </div>
+
+                            <div class="wizard-step" data-step="5" style="display:none;">
+                                <div class="card">
+                                    <h3>Explicabilidad (agentes)</h3>
+                                    <p style="color:#94a3b8;">Contribución por elemento (tipo SHAP local) y trazabilidad del diagnóstico.</p>
+                                    <div id="explicabilidadResult" style="margin-top:14px;"></div>
+                                </div>
+                            </div>
+
+                            <div class="wizard-step" data-step="6" style="display:none;">
+                                <div class="card">
+                                    <h3>Modelo anatómico + Memoria</h3>
+                                    <p style="color:#94a3b8;">Visualización interactiva (SVG) de los sistemas afectados y memoria del diagnóstico.</p>
+                                    <div class="result" id="diagResult"></div>
+                                    <div id="anatomicalModel" style="margin-top:14px;display:flex;justify-content:center;">
+                                        <svg id="bodySvg" viewBox="0 0 200 360" width="220" height="400" style="max-width:100%;height:auto;">
+                                            <defs>
+                                                <filter id="glow">
+                                                    <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+                                                    <feMerge>
+                                                        <feMergeNode in="coloredBlur"/>
+                                                        <feMergeNode in="SourceGraphic"/>
+                                                    </feMerge>
+                                                </filter>
+                                            </defs>
+                                            <g id="svg-body" fill="rgba(148,163,184,0.25)" stroke="rgba(148,163,184,0.6)" stroke-width="1.2">
+                                                <path d="M100 30 C115 30 125 42 125 58 C125 74 115 84 100 84 C85 84 75 74 75 58 C75 42 85 30 100 30 Z"/>
+                                                <path d="M100 84 L100 110"/>
+                                                <path d="M70 110 L130 110 L135 160 L65 160 Z"/>
+                                                <path d="M65 160 L60 220 L140 220 L135 160 Z"/>
+                                                <path d="M60 220 L55 280 L145 280 L140 220 Z"/>
+                                                <path d="M55 280 L50 340 L150 340 L145 280 Z"/>
+                                                <path d="M100 110 L75 160 M100 110 L125 160" fill="none" opacity="0.6"/>
+                                                <path d="M75 160 L70 220 M125 160 L130 220" fill="none" opacity="0.6"/>
+                                            </g>
+                                            <g id="svg-corazon" class="organo" data-sistema="Corazón" fill="rgba(0,224,255,0.35)" stroke="#00e0ff" stroke-width="1.4">
+                                                <ellipse cx="100" cy="122" rx="12" ry="10"/>
+                                            </g>
+                                            <g id="svg-pancreas" class="organo" data-sistema="Páncreas" fill="rgba(0,224,255,0.35)" stroke="#00e0ff" stroke-width="1.4">
+                                                <path d="M88 148 Q100 156 112 148 Q112 158 100 162 Q88 158 88 148 Z"/>
+                                            </g>
+                                            <g id="svg-higado" class="organo" data-sistema="Hígado" fill="rgba(0,224,255,0.35)" stroke="#00e0ff" stroke-width="1.4">
+                                                <path d="M72 142 Q90 136 108 142 Q112 150 108 158 Q90 162 72 158 Q68 150 72 142 Z"/>
+                                            </g>
+                                            <g id="svg-rinones" class="organo" data-sistema="Riñones" fill="rgba(0,224,255,0.35)" stroke="#00e0ff" stroke-width="1.4">
+                                                <ellipse cx="86" cy="174" rx="7" ry="10"/>
+                                                <ellipse cx="114" cy="174" rx="7" ry="10"/>
+                                            </g>
+                                            <g id="svg-vasos" class="organo" data-sistema="Vasos" fill="none" stroke="#00e0ff" stroke-width="1.6" opacity="0.9">
+                                                <path d="M100 132 L100 200 M100 200 L70 240 M100 200 L130 240 M70 240 L50 300 M130 240 L150 300 M50 300 L50 340 M150 300 L150 340"/>
+                                            </g>
+                                        </svg>
+                                        <div id="svgTooltip"></div>
+                                        <div id="anatomicalCards" style="margin-top:14px;"></div>
+                                    </div>
+                                    <div id="organoDetail" style="margin-top:10px;"></div>
+                                    <textarea id="resumenMemoria" readonly rows="10" style="width:100%;background:rgba(5,10,20,0.9);border:1px solid rgba(0,224,255,0.3);border-radius:10px;margin-top:12px;color:#e0f2fe;"></textarea>
+                                    <button type="button" class="btn" id="btnPrintMemory" style="margin-top:12px;">Imprimir / Guardar PDF</button>
+                                    <div class="note">Modelo anatómico SVG: Fase 3.</div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div style="display:flex;gap:10px;margin-top:16px;">
+                            <button type="button" class="btn btn-outline" id="wizardPrev" disabled>Anterior</button>
+                            <button type="button" class="btn" id="wizardNext">Siguiente</button>
+                            <button type="button" class="btn" id="wizardFinish" style="display:none;">Guardar memoria</button>
+                        </div>
+                    </section>
+
+                    <!-- Comparar -->
+                    <section class="screen" id="screen-comparar">
+                        <h2 style="margin-bottom:14px;">Comparar perfiles</h2>
+                        <div class="card">
+                            <p style="color:#94a3b8;">Compara dos perfiles de paciente bajo la misma configuración de análisis.</p>
+                            <div class="note">Pendiente de implementación (Fase 2).</div>
+                        </div>
+                    </section>
+
+                    <!-- Memorias -->
+                    <section class="screen" id="screen-memorias">
+                        <h2 style="margin-bottom:14px;">Memorias guardadas</h2>
+                        <div id="memoriasList" style="display:flex;flex-direction:column;gap:10px;"></div>
+                    </section>
+
+                    <!-- Reportes -->
+                    <section class="screen" id="screen-reportes">
+                        <h2 style="margin-bottom:14px;">Reportes</h2>
+                        <div class="card"><h3>Uso por perfil</h3><canvas id="usageChart" height="140"></canvas></div>
+                    </section>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script type="module">
+        import { getRecentActivity, getUsageByNorm, generateMemory, getMemories, getDashboardMetrics, BIOMARCADORES } from './data.js';
+        import { calcularRiesgoGlucosa, normalizar, validarEntradas, clasificarKNN, explicarResultado } from './diagnostico.js';
+
+        const state = {
+            wizardStep: 1,
+            totalSteps: 6,
+            result: null,
+            valoresQuimica: {}
+        };
+
+        let activityChartInstance = null;
+        let usageChartInstance = null;
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2200);
+        }
+
+        function updateDashboardMetrics() {
+            const metrics = getDashboardMetrics();
+            document.getElementById('dashExamenes').textContent = metrics.dashExamenes;
+            document.getElementById('dashDiagnosticos').textContent = metrics.dashDiagnosticos;
+
+            const memorias = getMemories();
+            const last = memorias[0];
+            document.getElementById('dashTime') && (document.getElementById('dashTime').textContent = last ? new Date(last.fecha).toLocaleString() : '--');
+
+            const usage = getUsageByNorm();
+            const top = usage[0];
+            document.getElementById('dashTopPerfil').textContent = top ? top.label : '--';
+        }
+
+        function refreshDashboardCharts() {
+            const activityCtx = document.getElementById('activityChart')?.getContext('2d');
+            const usageCtx = document.getElementById('usageChart')?.getContext('2d');
+            if (!activityCtx || !usageCtx) return;
+
+            if (activityChartInstance) activityChartInstance.destroy();
+            if (usageChartInstance) usageChartInstance.destroy();
+
+            const activity = getRecentActivity();
+            activityChartInstance = new Chart(activityCtx, {
+                type: 'line',
+                data: {
+                    labels: activity.map((item) => item.label),
+                    datasets: [{ label: 'Exámenes', data: activity.map((item) => item.value), borderColor: '#00e0ff', backgroundColor: 'rgba(0,224,255,0.1)', fill: true, tension: 0.4 }]
+                },
+                options: { responsive: true, plugins: { legend: { labels: { color: '#e0f2fe' } } }, scales: { x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.1)' } }, y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.1)' } } } }
+            });
+
+            const usage = getUsageByNorm();
+            usageChartInstance = new Chart(usageCtx, {
+                type: 'bar',
+                data: {
+                    labels: usage.map((item) => item.label),
+                    datasets: [{ label: 'Exámenes', data: usage.map((item) => item.value), backgroundColor: 'rgba(0,224,255,0.6)', borderColor: '#00e0ff', borderWidth: 1 }]
+                },
+                options: { responsive: true, plugins: { legend: { labels: { color: '#e0f2fe' } } }, scales: { x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.1)' } }, y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.1)' } } } }
+            });
+        }
+
+        function initDashboard() {
+            updateDashboardMetrics();
+            renderMemorias();
+            refreshDashboardCharts();
+        }
+
+        function setWizardStep(step) {
+            state.wizardStep = step;
+            document.querySelectorAll('#screen-consulta .wizard-step').forEach(el => el.style.display = 'none');
+            const target = document.querySelector(`#screen-consulta .wizard-step[data-step="${step}"]`);
+            if (target) target.style.display = 'block';
+
+            document.querySelectorAll('#wizardSteps .nav-item').forEach(btn => {
+                btn.classList.toggle('active', Number(btn.dataset.step) === step);
+            });
+
+            document.getElementById('wizardStepBadge').textContent = `Paso ${step} de ${state.totalSteps}`;
+            document.getElementById('wizardPrev').disabled = step === 1;
+            document.getElementById('wizardFinish').style.display = step === state.totalSteps ? 'inline-flex' : 'none';
+            document.getElementById('wizardNext').style.display = step === state.totalSteps ? 'none' : 'inline-flex';
+        }
+
+        function getWizardParams() {
+            const base = {
+                paciente: document.getElementById('paciente')?.value || '',
+                edad: document.getElementById('edad')?.value || null,
+                sexo: document.getElementById('sexo')?.value || 'M'
+            };
+            const quimica = {};
+            for (const b of BIOMARCADORES) {
+                const el = document.getElementById(`q_${b.id}`);
+                if (el) quimica[b.id] = el.value === '' ? null : Number(el.value);
+            }
+            state.valoresQuimica = quimica;
+            return { ...base, ...quimica };
+        }
+
+        function collectQuimica() {
+            const valores = {};
+            for (const b of BIOMARCADORES) {
+                const el = document.getElementById(`q_${b.id}`);
+                if (!el) continue;
+                const v = el.value.trim();
+                valores[b.id] = v === '' ? null : Number(v);
+            }
+            state.valoresQuimica = valores;
+            return valores;
+        }
+
+        function runDiagnosis() {
+            const params = getWizardParams();
+            const validacion = validarEntradas(state.valoresQuimica);
+            if (!validacion.valido) {
+                state.result = {
+                    clasificacion: 'Error',
+                    confianza: 0,
+                    notas: validacion.motivo,
+                    explicacion: []
+                };
+                return;
+            }
+            const knn = clasificarKNN(DATASET, state.valoresQuimica, 5);
+            const explicacion = explicarResultado(state.valoresQuimica, knn, 5);
+            const mapNotas = {
+                'Normal': 'Perfil glucémico dentro de parámetros normales.',
+                'Prediabetes': 'Alteración en metabolismo glucémico. Requiere seguimiento.',
+                'Riesgo': 'Alteración significativa. Se recomienda evaluación clínica.'
+            };
+            state.result = {
+                clasificacion: knn.clasificacion,
+                confianza: knn.confianza,
+                notas: mapNotas[knn.clasificacion] || 'Resultado generado por motor KNN.',
+                explicacion,
+                vecinos: knn.vecinos
+            };
+        }
+
+        function renderNormalizacion() {
+            const valores = collectQuimica();
+            const validacion = validarEntradas(valores);
+            const container = document.getElementById('normalizacionTable');
+            if (!container) return;
+
+            if (!validacion.valido) {
+                container.innerHTML = `<div class="note" style="color:#f87171;">${validacion.motivo}</div>`;
+                return;
+            }
+
+            const norm = normalizar(valores);
+            let html = '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">';
+            for (let i = 0; i < BIOMARCADORES.length; i++) {
+                const b = BIOMARCADORES[i];
+                html += `<div class="card" style="padding:12px;">
+                    <div style="color:#00e0ff;font-weight:700;">${b.nombre}</div>
+                    <div style="font-size:.85rem;color:#94a3b8;">${b.unidad}</div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:1.1rem;margin-top:6px;">${norm[i] !== undefined ? norm[i].toFixed(3) : '--'}</div>
+                </div>`;
+            }
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function renderKNNResult() {
+            if (!state.result) runDiagnosis();
+            const container = document.getElementById('knnResult');
+            if (!container || !state.result) return;
+
+            const r = state.result;
+            let html = `<div class="card" style="margin-bottom:12px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <div>
+                        <div style="color:#00e0ff;font-weight:700;font-size:1.2rem;">${r.clasificacion}</div>
+                        <div style="color:#94a3b8;font-size:.9rem;">Confianza: ${r.confianza}%</div>
+                    </div>
+                    <div class="badge">${r.clasificacion}</div>
+                </div>
+                <p style="margin-top:10px;color:#94a3b8;">${r.notas}</p>
+            </div>`;
+
+            if (r.vecinos && r.vecinos.length) {
+                html += '<h4 style="margin-top:14px;color:#00e0ff;">Vecinos más cercanos</h4>';
+                html += '<div style="display:grid;gap:8px;margin-top:8px;">';
+                r.vecinos.forEach((v, idx) => {
+                    html += `<div class="card" style="padding:10px;display:flex;justify-content:space-between;">
+                        <span>#${idx + 1} · ${v.clase}</span>
+                        <span style="font-family:'JetBrains Mono',monospace;">d=${v.distancia.toFixed(3)}</span>
+                    </div>`;
+                });
+                html += '</div>';
+            }
+            container.innerHTML = html;
+        }
+
+        function renderExplicabilidad() {
+            if (!state.result) runDiagnosis();
+            const container = document.getElementById('explicabilidadResult');
+            if (!container || !state.result || !state.result.explicacion) return;
+
+            const items = state.result.explicacion;
+            let html = '<div style="display:grid;gap:8px;">';
+            items.forEach(item => {
+                html += `<div class="card" style="padding:10px;display:flex;justify-content:space-between;align-items:center;">
+                    <div>
+                        <div style="color:#00e0ff;font-weight:700;">${item.nombre}</div>
+                        <div style="font-size:.85rem;color:#94a3b8;">Valor: ${item.valor} ${item.unidad}</div>
+                    </div>
+                    <div style="font-family:'JetBrains Mono',monospace;">Δ ${item.diff.toFixed(3)}</div>
+                </div>`;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function renderAnatomicalModel() {
+            if (!state.result) runDiagnosis();
+            const container = document.getElementById('organoDetail');
+            const cardsContainer = document.getElementById('anatomicalCards');
+            const svg = document.getElementById('bodySvg');
+            const tooltip = document.getElementById('svgTooltip');
+            if (!container || !cardsContainer || !svg || !state.result) return;
+
+            const sistemas = {
+                'Corazón': { elementos: ['colesterol', 'ldl', 'hdl', 'trigliceridos', 'homocisteina'], umbral: 1.5 },
+                'Páncreas': { elementos: ['glucosa', 'hba1c', 'insulina'], umbral: 1.5 },
+                'Hígado': { elementos: ['alt', 'ast', 'alp', 'bilirrubina'], umbral: 1.5 },
+                'Riñones': { elementos: ['creatinina', 'bun', 'egfr'], umbral: 1.5 },
+                'Vasos': { elementos: ['colesterol', 'ldl', 'hdl', 'trigliceridos', 'homocisteina'], umbral: 1.5 }
+            };
+
+            const explicacionMap = {};
+            if (state.result.explicacion) {
+                state.result.explicacion.forEach(item => {
+                    explicacionMap[item.id] = item.diff;
+                });
+            }
+
+            const severity = {};
+            for (const [nombre, config] of Object.entries(sistemas)) {
+                let alterados = 0;
+                let total = 0;
+                config.elementos.forEach(id => {
+                    if (explicacionMap[id] !== undefined) {
+                        total++;
+                        if (explicacionMap[id] > (config.umbral || 1.5)) alterados++;
+                    }
+                });
+                const ratio = total > 0 ? alterados / total : 0;
+                severity[nombre] = ratio;
+            }
+
+            const getColor = (ratio) => {
+                if (ratio === 0) return 'rgba(16,185,129,0.4)';
+                if (ratio < 0.5) return 'rgba(250,204,21,0.5)';
+                return 'rgba(239,68,68,0.6)';
+            };
+
+            const getStroke = (ratio) => {
+                if (ratio === 0) return 'rgba(16,185,129,0.9)';
+                if (ratio < 0.5) return 'rgba(250,204,21,0.9)';
+                return 'rgba(239,68,68,0.9)';
+            };
+
+            for (const [nombre, ratio] of Object.entries(severity)) {
+                const el = svg.querySelector(`[data-sistema="${nombre}"]`);
+                if (el) {
+                    el.setAttribute('fill', getColor(ratio));
+                    el.setAttribute('stroke', getStroke(ratio));
+                    el.setAttribute('filter', ratio > 0 ? 'url(#glow)' : 'none');
+                }
+            }
+
+            svg.querySelectorAll('.organo').forEach(el => {
+                el.onmouseenter = () => {
+                    const nombre = el.getAttribute('data-sistema');
+                    const ratio = severity[nombre] || 0;
+                    const texto = `${nombre}\nAlteración: ${Math.round(ratio * 100)}%`;
+                    tooltip.textContent = texto;
+                    tooltip.style.display = 'block';
+                };
+                el.onmousemove = (e) => {
+                    tooltip.style.left = `${e.clientX + 12}px`;
+                    tooltip.style.top = `${e.clientY + 12}px`;
+                };
+                el.onmouseleave = () => {
+                    tooltip.style.display = 'none';
+                };
+                el.onclick = () => {
+                    const nombre = el.getAttribute('data-sistema');
+                    renderOrganoDetail(nombre, severity[nombre] || 0, sistemas[nombre]);
+                };
+            });
+
+            let html = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;">';
+            for (const [nombre, ratio] of Object.entries(severity)) {
+                const color = getColor(ratio).replace('0.4', '0.8').replace('0.5', '0.8').replace('0.6', '0.8');
+                html += `<div class="card" style="padding:12px;text-align:center;border-color:${color};cursor:pointer;" data-sistema="${nombre}">
+                    <div style="width:48px;height:48px;margin:0 auto 8px;border-radius:50%;background:${getColor(ratio)};border:2px solid ${getStroke(ratio)};"></div>
+                    <div style="color:#00e0ff;font-weight:700;">${nombre}</div>
+                    <div style="font-size:.8rem;color:#94a3b8;">Alteración: ${Math.round(ratio * 100)}%</div>
+                </div>`;
+            }
+            html += '</div>';
+            cardsContainer.innerHTML = html;
+
+            cardsContainer.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const nombre = card.getAttribute('data-sistema');
+                    const ratio = severity[nombre] || 0;
+                    const config = sistemas[nombre];
+                    const svgEl = svg.querySelector(`[data-sistema="${nombre}"]`);
+                    if (svgEl) svgEl.click();
+                    renderOrganoDetail(nombre, ratio, config);
+                });
+            });
+
+            const topSistema = Object.entries(severity).sort((a, b) => b[1] - a[1])[0];
+            if (topSistema) {
+                const nombre = topSistema[0];
+                const ratio = topSistema[1];
+                const el = svg.querySelector(`[data-sistema="${nombre}"]`);
+                if (el) el.click();
+            }
+        }
+
+        function renderOrganoDetail(nombre, ratio, config) {
+            const container = document.getElementById('organoDetail');
+            if (!container || !state.result) return;
+
+            const explicacionMap = {};
+            if (state.result.explicacion) {
+                state.result.explicacion.forEach(item => {
+                    explicacionMap[item.id] = item;
+                });
+            }
+
+            const relevantes = (config.elementos || []).map(id => explicacionMap[id]).filter(Boolean);
+            const getColor = (r) => {
+                if (r === 0) return 'rgba(16,185,129,0.4)';
+                if (r < 0.5) return 'rgba(250,204,21,0.5)';
+                return 'rgba(239,68,68,0.6)';
+            };
+
+            let html = `<div class="card" style="padding:14px;border-color:${getColor(ratio).replace('0.4','0.8').replace('0.5','0.8').replace('0.6','0.8')};">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                    <div style="color:#00e0ff;font-weight:700;font-size:1.1rem;">${nombre}</div>
+                    <div class="badge">Alteración ${Math.round(ratio * 100)}%</div>
+                </div>
+                <div style="display:grid;gap:6px;">`;
+
+            relevantes.forEach(item => {
+                html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px;background:rgba(5,10,20,0.6);border-radius:8px;">
+                    <div>
+                        <div style="color:#00e0ff;font-weight:700;font-size:.9rem;">${item.nombre}</div>
+                        <div style="font-size:.8rem;color:#94a3b8;">${item.valor} ${item.unidad}</div>
+                    </div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:.9rem;">Δ ${item.diff.toFixed(3)}</div>
+                </div>`;
+            });
+
+            html += '</div></div>';
+            container.innerHTML = html;
+        }
+
+        function renderResults() {
+            if (!state.result) runDiagnosis();
+            const params = getWizardParams();
+            const result = state.result;
+
+            const box = document.getElementById('diagResult');
+            if (box) {
+                box.classList.add('show');
+                box.innerHTML = `
+                    <strong>Clasificación:</strong> ${result.clasificacion}<br>
+                    <strong>Confianza:</strong> ${result.confianza}<br>
+                    <span style="color:#94a3b8;">${result.notas}</span>`;
+            }
+
+            const resumen = `Paciente: ${params.paciente || 'Sin nombre'}
+Edad: ${params.edad || 'N/A'} | Sexo: ${params.sexo}
+
+Diagnóstico: ${result.clasificacion}
+${result.notas}`;
+            document.getElementById('resumenMemoria').value = resumen;
+        }
+
+        function validateStep() {
+            const step = state.wizardStep;
+            if (step === 2) {
+                const valores = collectQuimica();
+                const validacion = validarEntradas(valores);
+                if (!validacion.valido) {
+                    showToast(validacion.motivo);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function finishMemory() {
+            if (!state.result) {
+                showToast('Calculá el diagnóstico antes de guardar');
+                return;
+            }
+            const params = getWizardParams();
+            generateMemory({
+                paciente: params.paciente,
+                perfil: state.result.clasificacion,
+                resultado: state.result
+            });
+            showToast('Memoria guardada');
+            renderMemorias();
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'flex';
+            initDashboard();
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+            showToast('Sesión cerrada');
+        });
+
+        document.querySelectorAll('.nav-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                document.getElementById('screen-' + btn.dataset.screen).classList.add('active');
+                if (btn.dataset.screen === 'consulta') setWizardStep(1);
+            });
+        });
+
+        document.getElementById('wizardNext').addEventListener('click', () => {
+            const current = state.wizardStep;
+            if (!validateStep()) return;
+            if (current < state.totalSteps) {
+                setWizardStep(current + 1);
+                if (current + 1 === 3) renderNormalizacion();
+                if (current + 1 === 4) { runDiagnosis(); renderKNNResult(); }
+                if (current + 1 === 5) renderExplicabilidad();
+                if (current + 1 === 6) { renderAnatomicalModel(); renderResults(); }
+            }
+        });
+
+        document.getElementById('wizardPrev').addEventListener('click', () => {
+            const current = state.wizardStep;
+            if (current > 1) setWizardStep(current - 1);
+        });
+
+        document.getElementById('wizardFinish').addEventListener('click', finishMemory);
+
+        document.querySelectorAll('#wizardSteps .nav-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const step = Number(btn.dataset.step);
+                if (step <= state.wizardStep || validateStep()) {
+                    setWizardStep(step);
+                    if (step === 3) renderNormalizacion();
+                    if (step === 4) { runDiagnosis(); renderKNNResult(); }
+                    if (step === 5) renderExplicabilidad();
+                    if (step === 6) { renderAnatomicalModel(); renderResults(); }
+                }
+            });
+        });
+
+        setWizardStep(1);
+
+        document.getElementById('btnPrintMemory')?.addEventListener('click', () => window.print());
+
+        function renderMemorias() {
+            const container = document.getElementById('memoriasList');
+            const memorias = getMemories();
+            if (!memorias.length) {
+                container.innerHTML = '<p style="color:#94a3b8;">Sin memorias aún.</p>';
+                updateDashboardMetrics();
+                refreshDashboardCharts();
+                return;
+            }
+            container.innerHTML = memorias.map(m => {
+                const extra = m.resultado ? ` | Perfil: ${m.resultado.clasificacion}` : '';
+                return `
+                <div class="card">
+                    <strong>${m.paciente || 'Paciente'}</strong>
+                    <span style="color:#94a3b8;">${new Date(m.fecha).toLocaleString()}</span>
+                    <p>Perfil: ${m.perfil || '--'}${extra}</p>
+                </div>`;
+            }).join('');
+            updateDashboardMetrics();
+            refreshDashboardCharts();
+        }
+
+        function buildQuimicaForm() {
+            const grid = document.getElementById('quimicaGrid');
+            if (!grid) return;
+            grid.innerHTML = BIOMARCADORES.map(b => `
+                <div class="form-group">
+                    <label for="q_${b.id}">${b.nombre} (${b.unidad})</label>
+                    <input type="number" id="q_${b.id}" data-id="${b.id}" step="any" placeholder="0">
+                </div>
+            `).join('');
+        }
+
+        buildQuimicaForm();
+    </script>
+</body>
+</html>
