@@ -577,6 +577,13 @@
             return valores;
         }
 
+        // Fuente de verdad única: lee el DOM al instante y marca el resultado como
+        // obsoleto para forzar recálculo reactivo en los pasos 3-6.
+        function syncQuimica() {
+            collectQuimica();
+            state.result = null;
+        }
+
         function runDiagnosis() {
             const params = getWizardParams();
             const validacion = validarEntradas(state.valoresQuimica);
@@ -854,14 +861,13 @@ ${result.notas}`;
         }
 
         function validateStep() {
-            const step = state.wizardStep;
-            if (step === 2) {
-                const valores = collectQuimica();
-                const validacion = validarEntradas(valores);
-                if (!validacion.valido) {
-                    showToast(validacion.motivo);
-                    return false;
-                }
+            // La química alimenta todo el diagnóstico; se valida siempre que se
+            // intente avanzar o saltar (por tab) hacia un paso que lo consume.
+            const valores = collectQuimica();
+            const validacion = validarEntradas(valores);
+            if (!validacion.valido) {
+                showToast(validacion.motivo);
+                return false;
             }
             return true;
         }
@@ -971,6 +977,12 @@ ${result.notas}`;
                     <input type="number" id="q_${b.id}" data-id="${b.id}" step="any" placeholder="0">
                 </div>
             `).join('');
+
+            // Recálculo reactivo: cualquier edición en el paso 2 invalida el
+            // resultado para que los pasos 3-6 se recalculen al re-renderizar.
+            grid.querySelectorAll('input[type="number"]').forEach(input => {
+                input.addEventListener('input', syncQuimica);
+            });
         }
 
         buildQuimicaForm();
