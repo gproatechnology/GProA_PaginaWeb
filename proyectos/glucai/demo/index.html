@@ -441,9 +441,31 @@
                     <section class="screen" id="screen-comparar">
                         <h2 style="margin-bottom:14px;">Comparar perfiles</h2>
                         <div class="card">
-                            <p style="color:#94a3b8;">Compara dos perfiles de paciente bajo la misma configuración de análisis para entender qué separa un perfil Normal de uno en Riesgo.</p>
-                            <div class="note">Funcionalidad en roadmap (próxima fase). El motor KNN y el asistente de 6 pasos ya están disponibles en esta demo.</div>
+                            <p style="color:#94a3b8;margin-bottom:14px;">Compara dos perfiles bajo el mismo motor KNN para entender qué separa un perfil Normal de uno en Riesgo.</p>
+                            <div class="grid grid-2">
+                                <div class="form-group">
+                                    <label for="cmpModo">Origen</label>
+                                    <select id="cmpModo">
+                                        <option value="memorias">Memorias guardadas</option>
+                                        <option value="vivo">Perfil del asistente vs ejemplo</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cmpPerfilA">Perfil A</label>
+                                    <select id="cmpPerfilA"></select>
+                                </div>
+                            </div>
+                            <div class="grid grid-2" style="margin-top:12px;">
+                                <div class="form-group">
+                                    <label for="cmpPerfilB">Perfil B</label>
+                                    <select id="cmpPerfilB"></select>
+                                </div>
+                                <div style="display:flex;align-items:flex-end;">
+                                    <button type="button" class="btn" id="cmpCalcular">Comparar</button>
+                                </div>
+                            </div>
                         </div>
+                        <div id="cmpResumen" style="margin-top:18px;"></div>
                     </section>
 
                     <!-- Memorias -->
@@ -466,7 +488,7 @@
 
     <script type="module">
         import { getRecentActivity, getUsageByNorm, generateMemory, getMemories, getDashboardMetrics, BIOMARCADORES } from './data.js';
-        import { calcularRiesgoGlucosa, normalizar, validarEntradas, clasificarKNN, explicarResultado } from './diagnostico.js';
+        import { calcularRiesgoGlucosa, normalizar, validarEntradas, clasificarKNN, explicarResultado, compararPerfiles } from './diagnostico.js';
 
         const state = {
             wizardStep: 1,
@@ -932,6 +954,7 @@ Notas del profesional:`;
                 document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
                 document.getElementById('screen-' + btn.dataset.screen).classList.add('active');
                 if (btn.dataset.screen === 'consulta') setWizardStep(1);
+                if (btn.dataset.screen === 'comparar') poblarSelectoresComparar();
             });
         });
 
@@ -1009,6 +1032,115 @@ Notas del profesional:`;
                 input.addEventListener('input', syncQuimica);
             });
         }
+
+        function poblarSelectoresComparar() {
+            const modo = document.getElementById('cmpModo')?.value;
+            const selA = document.getElementById('cmpPerfilA');
+            const selB = document.getElementById('cmpPerfilB');
+            if (!selA || !selB) return;
+
+            if (modo === 'memorias') {
+                const memorias = getMemories();
+                if (!memorias.length) {
+                    selA.innerHTML = '<option value="">Sin memorias guardadas</option>';
+                    selB.innerHTML = '<option value="">Sin memorias guardadas</option>';
+                    return;
+                }
+                const opts = memorias.map((m, i) =>
+                    `<option value="${i}">${m.paciente || 'Paciente'} — ${m.perfil} (${new Date(m.fecha).toLocaleDateString()})</option>`
+                ).join('');
+                selA.innerHTML = opts;
+                selB.innerHTML = opts;
+                if (memorias.length > 1) selB.selectedIndex = 1;
+            } else {
+                const normal = DATASET.find(m => m.clase === 'Normal');
+                const riesgo = DATASET.find(m => m.clase === 'Riesgo');
+                selA.innerHTML = '<option value="asistente">Perfil del asistente (paso 2)</option>' +
+                    (normal ? `<option value="Normal">Ejemplo Normal</option>` : '') +
+                    (riesgo ? `<option value="Riesgo">Ejemplo Riesgo</option>` : '');
+                selB.innerHTML = (normal ? `<option value="Normal">Ejemplo Normal</option>` : '') +
+                    (riesgo ? `<option value="Riesgo" selected>Ejemplo Riesgo</option>` : '') +
+                    '<option value="asistente">Perfil del asistente (paso 2)</option>';
+            }
+        }
+
+        function obtenerPerfilPorIndice(idx) {
+            const m = getMemories()[idx];
+            if (!m) return null;
+            return {
+                id: m.id,
+                paciente: m.paciente,
+                valores: m.resultado && m.resultado.explicacion
+                    ? Object.fromEntries(m.resultado.explicacion.map(e => [e.id, e.valor]))
+                    : (m.resultado ? m.resultado.valores : null)
+            };
+        }
+
+        function obtenerPerfilEjemplo(clase) {
+            const m = DATASET.find(x => x.clase === clase);
+            return m ? { id: m.id, paciente: 'Ejemplo ' + clase, valores: m } : null;
+        }
+
+        function renderComparar() {
+            const container = document.getElementById('cmpResumen');
+            if (!container) return;
+
+            const modo = document.getElementById('cmpModo')?.value;
+            let perfilA = null;
+            let perfilB = null;
+
+            if (modo === 'memorias') {
+                perfilA = obtenerPerfilPorIndice(Number(document.getElementById('cmpPerfilA')?.value));
+                perfilB = obtenerPerfilPorIndice(Number(document.getElementById('cmpPerfilB')?.value));
+            } else {
+                const valA = document.getElementById('cmpPerfilA')?.value;
+                const valB = document.getElementById('cmpPerfilB')?.value;
+                perfilA = valA === 'asistente'
+                    ? { id: 'asistente', paciente: 'Asistente', valores: state.valoresQuimica }
+                    : obtenerPerfilEjemplo(valA);
+                perfilB = valB === 'asistente'
+                    ? { id: 'asistente', paciente: 'Asistente', valores: state.valoresQuimica }
+                    : obtenerPerfilEjemplo(valB);
+            }
+
+            if (!perfilA || !perfilB) {
+                container.innerHTML = '<div class="note" style="color:#f87171;">Seleccioná ambos perfiles para comparar.</div>';
+                return;
+            }
+
+            const cmp = compararPerfiles(perfilA, perfilB, 5);
+            if (cmp.error) {
+                container.innerHTML = `<div class="note" style="color:#f87171;">${cmp.motivo}</div>`;
+                return;
+            }
+
+            const card = (label, d) => `
+                <div class="card" style="padding:14px;border-color:rgba(0,224,255,0.3);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <strong>${label}: ${d.paciente || 'Perfil'}</strong>
+                        <span class="badge">${d.clasificacion}</span>
+                    </div>
+                    <p style="color:#94a3b8;margin-top:6px;">Confianza: ${d.confianza}%</p>
+                    <p style="color:#94a3b8;">${d.notas}</p>
+                </div>`;
+
+            const diffs = cmp.diferencias.map(x => `
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(5,10,20,0.6);border-radius:8px;">
+                    <div>
+                        <div style="color:#00e0ff;font-weight:700;font-size:.9rem;">${x.nombre}</div>
+                        <div style="font-size:.8rem;color:#94a3b8;">A: ${x.valorA} ${x.unidad} | B: ${x.valorB} ${x.unidad}</div>
+                    </div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:.9rem;">Δ ${x.diferencia !== null ? x.diferencia : '--'}</div>
+                </div>`).join('');
+
+            container.innerHTML = `
+                <div class="grid grid-2">${card('Perfil A', cmp.a)}${card('Perfil B', cmp.b)}</div>
+                <h4 style="margin-top:18px;color:#00e0ff;">Biomarcadores que más separan los perfiles</h4>
+                <div style="display:grid;gap:8px;margin-top:8px;">${diffs}</div>`;
+        }
+
+        document.getElementById('cmpModo')?.addEventListener('change', poblarSelectoresComparar);
+        document.getElementById('cmpCalcular')?.addEventListener('click', renderComparar);
 
         buildQuimicaForm();
     </script>

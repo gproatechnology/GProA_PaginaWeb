@@ -136,4 +136,57 @@ export function orquestarDiagnostico(entradas) {
     return calcularRiesgoGlucosa(entradas);
 }
 
+/**
+ * Compara dos perfiles de 33 biomarcadores bajo el mismo motor KNN.
+ * Devuelve la clasificación de cada uno, sus top contribuciones y las
+ * diferencias absolutas en los biomarcadores más relevantes, para entender
+ * qué separa un perfil Normal de uno en Riesgo.
+ *
+ * @param {object} perfilA - { id?, paciente?, valores: {biomarcador: number} }
+ * @param {object} perfilB - igual que perfilA
+ * @param {number} topN - cantidad de biomarcadores a comparar (default 5)
+ */
+export function compararPerfiles(perfilA = {}, perfilB = {}, topN = 5) {
+    const valoresA = perfilA.valores || perfilA;
+    const valoresB = perfilB.valores || perfilB;
+
+    const diagA = calcularRiesgoGlucosa(valoresA);
+    const diagB = calcularRiesgoGlucosa(valoresB);
+
+    if (diagA.clasificacion === 'Error' || diagB.clasificacion === 'Error') {
+        return {
+            error: true,
+            motivo: diagA.clasificacion === 'Error' ? diagA.notas : diagB.notas,
+            a: diagA,
+            b: diagB,
+            diferencias: []
+        };
+    }
+
+    const knnA = clasificarKNN(DATASET, valoresA, 5);
+    const knnB = clasificarKNN(DATASET, valoresB, 5);
+    const explicA = explicarResultado(valoresA, knnA, topN);
+    const explicB = explicarResultado(valoresB, knnB, topN);
+
+    const diffs = explicA.map((itemA) => {
+        const itemB = explicB.find((x) => x.id === itemA.id);
+        const valB = itemB ? itemB.valor : null;
+        return {
+            id: itemA.id,
+            nombre: itemA.nombre,
+            unidad: itemA.unidad,
+            valorA: itemA.valor,
+            valorB: valB,
+            diferencia: valB === null ? null : Math.round((valB - itemA.valor) * 1000) / 1000
+        };
+    });
+
+    return {
+        error: false,
+        a: { id: perfilA.id, paciente: perfilA.paciente, ...diagA },
+        b: { id: perfilB.id, paciente: perfilB.paciente, ...diagB },
+        diferencias: diffs
+    };
+}
+
 export default { calcularRiesgoGlucosa };

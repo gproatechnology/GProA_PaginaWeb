@@ -1,5 +1,5 @@
 import { BIOMARCADORES, CLASES, DATASET, estadisticasDataset } from './data.js';
-import { validarEntradas, normalizar, distanciaPonderada, clasificarKNN, explicarResultado, calcularRiesgoGlucosa } from './diagnostico.js';
+import { validarEntradas, normalizar, distanciaPonderada, clasificarKNN, explicarResultado, calcularRiesgoGlucosa, compararPerfiles } from './diagnostico.js';
 
 let pasadas = 0;
 let fallidas = 0;
@@ -118,6 +118,34 @@ test('explicarResultado devuelve top N contribuciones', () => {
     if (exp.length > 1) {
         assert(exp[0].diff >= exp[exp.length - 1].diff, 'Debería estar ordenado por diff descendente');
     }
+});
+
+// 9. Comparar perfiles
+test('compararPerfiles compara dos muestras Normal vs Riesgo', () => {
+    const normal = DATASET.find(m => m.clase === 'Normal');
+    const riesgo = DATASET.find(m => m.clase === 'Riesgo');
+    const cmp = compararPerfiles(
+        { id: normal.id, paciente: 'N', valores: normal },
+        { id: riesgo.id, paciente: 'R', valores: riesgo },
+        5
+    );
+    assert(cmp.error === false, 'No debería marcar error');
+    assert(cmp.a.clasificacion === 'Normal', `A debería ser Normal, es ${cmp.a.clasificacion}`);
+    assert(cmp.b.clasificacion === 'Riesgo', `B debería ser Riesgo, es ${cmp.b.clasificacion}`);
+    assert(Array.isArray(cmp.diferencias), 'diferencias debería ser array');
+    assert(cmp.diferencias.length === 5, `diferencias debería tener 5, tiene ${cmp.diferencias.length}`);
+    const d0 = cmp.diferencias[0];
+    assert(d0.valorA !== undefined && d0.valorB !== undefined, 'Cada diferencia tiene valorA/valorB');
+    assert(typeof d0.diferencia === 'number', 'diferencia debería ser numérica');
+});
+
+test('compararPerfiles marca error si falta un perfil', () => {
+    const normal = DATASET.find(m => m.clase === 'Normal');
+    const cmp = compararPerfiles(
+        { id: normal.id, paciente: 'N', valores: normal },
+        { /* sin valores */ }
+    );
+    assert(cmp.error === true, 'Debería marcar error por perfil incompleto');
 });
 
 console.log(`\nResultados: ${pasadas} pasadas, ${fallidas} fallidas`);
