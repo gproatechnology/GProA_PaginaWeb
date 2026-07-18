@@ -372,12 +372,23 @@ Auditoría del asistente que detectó 7 hallazgos; todos resueltos:
 - `origin` → `github.com/gproatechnology/GProA_PaginaWeb.git` (rama `main`).
 - Commits locales pendientes de push: `cdf365f`, `2e1d133`, `388419b`, `2720804`.
 
+### Implementación del comparador de perfiles GlucAI (commit `019dcc9`)
+El punto 3 del plan (comparador real de perfiles, antes roadmap) quedó
+implementado:
+- `diagnostico.js`: función pura `compararPerfiles(perfilA, perfilB, topN)` que
+  diagnostica ambos perfiles con el motor KNN y devuelve la clasificación de
+  cada uno + los biomarcadores que más los separan.
+- `index.html`: sección "Comparar" funcional con dos modos — memorias guardadas
+  y perfil del asistente vs ejemplo (Normal/Riesgo) del dataset.
+- `_test_knn.mjs`: tests de comparación (Normal vs Riesgo y caso de error).
+- Tests GlucAI: 12 → 14 OK.
+
 ### Pendientes conocidos (no bloqueantes)
 1. **Media pesada** (documentado arriba): `hero-background.webm` ~5 MB;
    `logoweb2`/`COO`/`CEO` ~0.6–0.9 MB. Requiere `ffmpeg`/`sharp` para re-encoder.
 2. **GECRAI "Comparar calibres"**: caída con R/XL fijos → no baja al subir calibre.
-3. **GlucAI "Comparar perfiles"**: roadmap (texto honesto).
-4. **OG image**: ideal 1200×630 dedicada (hoy usa el logo).
+3. **OG image**: ideal 1200×630 dedicada (hoy usa el logo).
+4. **PWA**: no implementada.
 
 ---
 
