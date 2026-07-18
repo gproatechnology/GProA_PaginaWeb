@@ -423,7 +423,7 @@
                                         <div id="anatomicalCards" style="margin-top:14px;"></div>
                                     </div>
                                     <div id="organoDetail" style="margin-top:10px;"></div>
-                                    <textarea id="resumenMemoria" readonly rows="10" style="width:100%;background:rgba(5,10,20,0.9);border:1px solid rgba(0,224,255,0.3);border-radius:10px;margin-top:12px;color:#e0f2fe;"></textarea>
+                                    <textarea id="resumenMemoria" rows="10" placeholder="Notas del profesional (editables)" style="width:100%;background:rgba(5,10,20,0.9);border:1px solid rgba(0,224,255,0.3);border-radius:10px;margin-top:12px;color:#e0f2fe;padding:10px;font-family:'JetBrains Mono',monospace;resize:vertical;"></textarea>
                                     <button type="button" class="btn" id="btnPrintMemory" style="margin-top:12px;">Imprimir / Guardar PDF</button>
                                     <div class="note">Modelo anatómico SVG: Fase 3.</div>
                                 </div>
@@ -441,8 +441,8 @@
                     <section class="screen" id="screen-comparar">
                         <h2 style="margin-bottom:14px;">Comparar perfiles</h2>
                         <div class="card">
-                            <p style="color:#94a3b8;">Compara dos perfiles de paciente bajo la misma configuración de análisis.</p>
-                            <div class="note">Pendiente de implementación (Fase 2).</div>
+                            <p style="color:#94a3b8;">Compara dos perfiles de paciente bajo la misma configuración de análisis para entender qué separa un perfil Normal de uno en Riesgo.</p>
+                            <div class="note">Funcionalidad en roadmap (próxima fase). El motor KNN y el asistente de 6 pasos ya están disponibles en esta demo.</div>
                         </div>
                     </section>
 
@@ -701,7 +701,7 @@
                 'Páncreas': { elementos: ['glucosa', 'hba1c', 'insulina'], umbral: 1.5 },
                 'Hígado': { elementos: ['alt', 'ast', 'alp', 'bilirrubina'], umbral: 1.5 },
                 'Riñones': { elementos: ['creatinina', 'bun', 'egfr'], umbral: 1.5 },
-                'Vasos': { elementos: ['colesterol', 'ldl', 'hdl', 'trigliceridos', 'homocisteina'], umbral: 1.5 }
+                'Vasos': { elementos: ['homocisteina'], umbral: 1.5 }
             };
 
             const explicacionMap = {};
@@ -856,8 +856,21 @@
 Edad: ${params.edad || 'N/A'} | Sexo: ${params.sexo}
 
 Diagnóstico: ${result.clasificacion}
-${result.notas}`;
-            document.getElementById('resumenMemoria').value = resumen;
+${result.notas}
+
+---
+Notas del profesional:`;
+
+            // Preservar la edición manual: solo regenera el borrador cuando cambia
+            // el diagnóstico; si el usuario ya escribió notas, se conservan.
+            const ta = document.getElementById('resumenMemoria');
+            if (!ta) return;
+            if (state.resumenDiagKey !== result.clasificacion + '|' + result.confianza) {
+                state.resumenDiagKey = result.clasificacion + '|' + result.confianza;
+                ta.value = resumen;
+            } else if (!ta.value.trim()) {
+                ta.value = resumen;
+            }
         }
 
         function validateStep() {
@@ -869,6 +882,16 @@ ${result.notas}`;
                 showToast(validacion.motivo);
                 return false;
             }
+
+            // Antecedentes: la edad debe estar en un rango clínico plausible.
+            const edadRaw = document.getElementById('edad')?.value;
+            if (edadRaw !== '' && edadRaw !== null && edadRaw !== undefined) {
+                const edad = Number(edadRaw);
+                if (!Number.isFinite(edad) || edad < 0 || edad > 120) {
+                    showToast('La edad debe estar entre 0 y 120 años');
+                    return false;
+                }
+            }
             return true;
         }
 
@@ -878,10 +901,12 @@ ${result.notas}`;
                 return;
             }
             const params = getWizardParams();
+            const notas = document.getElementById('resumenMemoria')?.value || '';
             generateMemory({
                 paciente: params.paciente,
                 perfil: state.result.clasificacion,
-                resultado: state.result
+                resultado: state.result,
+                notas
             });
             showToast('Memoria guardada');
             renderMemorias();
