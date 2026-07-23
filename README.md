@@ -70,10 +70,45 @@ Pagina_web/
     ├── gecrai/
     │   ├── demo/            # Demo enterprise GECRAI (data.js, calculo.js, api.js)
     │   └── docs/            # Manual de usuario data-driven (data.js + manual-usuario.html)
-    └── glucai/
-        ├── README.md        # Propuesta y estado de fases (0-4 completadas)
-        ├── demo/            # Demo GlucAI (data.js, diagnostico.js, api.js) - motor KNN 33 biomarcadores
-        └── docs/            # Manual de usuario data-driven (data.js + manual-usuario.html)
+└── glucai/
+    ├── README.md
+    ├── demo/
+    │   ├── data.js
+    │   ├── diagnostico.js
+    │   └── api.js
+    ├── docs/
+    │   ├── data.js
+    │   └── manual-usuario.html
+    └── saiydd/
+        ├── README.md
+        ├── SDD_SaIyDD.md
+        └── demo/
+            ├── package.json
+            ├── vite.config.js
+            ├── index.html
+            └── src/
+                ├── css/
+                │   ├── styles.css
+                │   ├── variables.css
+                │   └── modules/
+                │       └── screens.css
+                ├── js/
+                │   ├── main.js
+                │   ├── modules/
+                │   │   ├── app.js
+                │   │   ├── bienvenida.js
+                │   │   ├── menu.js
+                │   │   ├── chatbot.js
+                │   │   ├── dashboard.js
+                │   │   ├── juego.js
+                │   │   ├── mascota.js
+                │   │   ├── voz.js
+                │   │   └── api.js
+                │   └── data/
+                │       └── data.js
+                └── assets/
+                    ├── images/
+                    └── audio/
 ```
 
 ## 🎨 Características
@@ -87,6 +122,7 @@ Pagina_web/
 - ✅ Imágenes en WebP y video en WebM (optimización)
 - ✅ Demo GECRAI: login, dashboard, wizard NOM-001, cálculos y capa API
 - ✅ Documentación interactiva GECRAI (tema claro/oscuro, búsqueda, TOC auto)
+- ✅ Demo SaIyDD: avatar guía, juego infantil, chatbot y dashboard para padres
 
 ## 📞 Contacto
 

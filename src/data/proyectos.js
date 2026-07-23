@@ -50,6 +50,8 @@ export default [
     "title": "SAIyDD 1.1",
     "description": "Sistema de Aprendizaje Inclusivo",
     "longDescription": "Plataforma educativa especializada en aprendizaje adaptativo para niños con diversidad cognitiva.",
+    "demoUrl": "./proyectos/saiydd/demo/",
+    "docsUrl": "./proyectos/saiydd/docs/manual-usuario.html",
     "features": [
       "Perfiles personalizados",
       "Desarrollo socioemocional",
