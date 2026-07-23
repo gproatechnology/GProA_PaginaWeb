@@ -3,7 +3,6 @@ import { createMascotaBar, updateMascotaUI } from './mascota-ui.js';
 import voz from './voz.js';
 import { escapeHtml, clampText, isSafeText } from '../utils/sanitize.js';
 import { allowAction } from '../utils/rate-limiter.js';
-import { api } from './api.js';
 
 export function showChatbot({ app, setView }) {
   const section = document.createElement('section');
@@ -44,6 +43,16 @@ export function showChatbot({ app, setView }) {
   const backBtn = section.querySelector('#backBtn');
   const micBtn = section.querySelector('#micBtn');
 
+  function matchCommand(text) {
+    const t = (text || '').trim().toLowerCase();
+    if (!t) return null;
+    const kb = { 'hola': '¡Hola! Soy Orion. ¿Querés jugar?', 'jugar': 'Podés elegir Juego o Mundo Bloques en el menú.', 'ayuda': 'Decí “jugar” para ir a jugar, “padres” para el panel, o “salir” para volver.', 'padres': 'Abrí “Para parents” en el menú para ver tu progreso.', 'salir': 'Volviendo al menú...', 'gracias': '¡De nada! 😊' };
+    for (const k of Object.keys(kb)) {
+      if (t.includes(k)) return k;
+    }
+    return null;
+  }
+
   function handleInput(text) {
     if (!isSafeText(text)) {
       addMsg('Mensaje no permitido.', 'bot');
@@ -57,14 +66,24 @@ export function showChatbot({ app, setView }) {
     addMsg(safe, 'user');
     input.value = '';
 
-    api.sendMessage(text, (window.dataMock?.childProfiles?.[0]?.id) || 'child_001').then(({ reply }) => {
-      addMsg(reply, 'bot');
+    const kb = { 'hola': '¡Hola! Soy Orion. ¿Querés jugar?', 'jugar': 'Podés elegir Juego o Mundo Bloques en el menú.', 'ayuda': 'Decí “jugar” para ir a jugar, “padres” para el panel, o “salir” para volver.', 'padres': 'Abrí “Para parents” en el menú para ver tu progreso.', 'salir': 'Volviendo al menú...', 'gracias': '¡De nada! 😊' };
+    const FALLBACK = 'Estoy aprendiendo, pero cuéntame más.';
+    const cmd = matchCommand(text);
+    if (cmd === 'salir') {
+      addMsg('Volviendo al menú...');
+      mascota.setExpression('neutral');
+      updateMascotaUI(mascota, mascotaUI);
+      mascota.say('Volviendo al menú.');
+      setTimeout(() => setView('menu'), 600);
+      return;
+    }
+    const reply = cmd ? kb[cmd] : FALLBACK;
+    setTimeout(() => {
+      addMsg(reply);
       mascota.setExpression('neutral');
       updateMascotaUI(mascota, mascotaUI);
       mascota.say(reply);
-    }).catch(() => {
-      addMsg('No pude conectarme con el asistente. Probá de nuevo.', 'bot');
-    });
+    }, 350);
   }
 
   sendBtn.addEventListener('click', () => handleInput(input.value));
