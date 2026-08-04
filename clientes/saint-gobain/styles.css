@@ -1593,6 +1593,32 @@ body::before {
    RESPONSIVE
    ============================================ */
 
+@media (max-width: 1024px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .dossier-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .armory-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .protocol-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+}
+
 @media (max-width: 768px) {
     .hud-nav {
         padding: 0 12px;
@@ -1629,6 +1655,14 @@ body::before {
     .tab-btn {
         white-space: nowrap;
     }
+
+    .hud-topbar-center {
+        display: none;
+    }
+
+    .dashboard-rank {
+        align-self: flex-start;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1656,10 +1690,6 @@ body::before {
         display: none;
     }
 
-    .hud-clock {
-        display: none;
-    }
-
     .hud-nav-item span {
         display: none;
     }
@@ -1667,29 +1697,112 @@ body::before {
     .hud-nav-item {
         padding: 10px 14px;
     }
+
+    .hud-nav-item i {
+        font-size: 1rem;
+    }
+
+    .content-area {
+        padding: 12px;
+    }
+
+    .kpi-value {
+        font-size: 1.5rem;
+    }
+
+    .kpi-label {
+        font-size: 0.75rem;
+    }
+
+    .dashboard-title {
+        font-size: 1.05rem;
+    }
+
+    .dashboard-subtitle {
+        font-size: 0.7rem;
+    }
+
+    .dossier-title {
+        font-size: 1rem;
+    }
+
+    .dossier-subtitle {
+        font-size: 0.7rem;
+    }
+
+    .armory-title {
+        font-size: 1rem;
+    }
+
+    .armory-subtitle {
+        font-size: 0.7rem;
+    }
+
+    .protocol-title {
+        font-size: 1rem;
+    }
+
+    .protocol-subtitle {
+        font-size: 0.7rem;
+    }
+
+    .doc-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .doc-action {
+        align-self: stretch;
+        text-align: center;
+        justify-content: center;
+    }
 }
 
 /* ============================================
-   ANIMATIONS / MICROINTERACTIONS
+   ACCESSIBILITY
    ============================================ */
 
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
+:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(0, 224, 255, 0.15);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
+.nav-item:focus-visible,
+.bottom-nav-item:focus-visible,
+.xbox-tile:focus-visible,
+.hud-nav-item:focus-visible,
+.tab-btn:focus-visible,
+.doc-action:focus-visible,
+.btn:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(0, 224, 255, 0.15);
 }
 
-/* Utility */
-.hud-flash {
-    animation: hudFlash 0.3s ease;
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
-@keyframes hudFlash {
-    0% { box-shadow: 0 0 0 rgba(0, 224, 255, 0); }
-    50% { box-shadow: 0 0 30px rgba(0, 224, 255, 0.3); }
-    100% { box-shadow: 0 0 0 rgba(0, 224, 255, 0); }
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    /* Mantener tema oscuro HUD por defecto; forzado para coherencia */
 }

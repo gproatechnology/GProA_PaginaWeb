@@ -105,6 +105,7 @@ function initNavigation() {
 
         document.querySelectorAll('.hud-nav-item').forEach(el => {
             el.classList.toggle('active', el.dataset.view === name);
+            el.setAttribute('aria-selected', el.dataset.view === name ? 'true' : 'false');
         });
 
         if (name === 'dashboard' && !chartsInitialized) {
@@ -119,6 +120,14 @@ function initNavigation() {
             const view = item.dataset.view;
             if (view) activateView(view);
         });
+
+        item.addEventListener('keydown', (e) => {
+            const view = item.dataset.view;
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                if (view) activateView(view);
+            }
+        });
     });
 }
 
@@ -127,14 +136,25 @@ function initTabs() {
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const tab = btn.dataset.tab;
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('active');
+                b.setAttribute('aria-selected', 'false');
+            });
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             btn.classList.add('active');
+            btn.setAttribute('aria-selected', 'true');
             const content = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1));
             if (content) {
                 content.classList.add('active');
                 content.classList.add('scan-flash');
                 setTimeout(() => content.classList.remove('scan-flash'), 600);
+            }
+        });
+
+        btn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                btn.click();
             }
         });
     });
