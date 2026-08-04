@@ -16,11 +16,17 @@ async function loadData() {
         appData = await res.json();
         renderAll();
         renderRank();
+        renderTimeline();
+        renderMetricsTable();
+        renderAlerts();
     } catch (e) {
         console.warn('No se pudo cargar data.json, usando placeholders.', e);
         appData = null;
         renderAll();
         renderRank();
+        renderTimeline();
+        renderMetricsTable();
+        renderAlerts();
     }
 }
 
@@ -113,9 +119,17 @@ function initNavigation() {
             el.setAttribute('aria-selected', el.dataset.view === name ? 'true' : 'false');
         });
 
-        if (name === 'dashboard' && !chartsInitialized) {
-            setTimeout(initCharts, 50);
-            renderKpis();
+        if (name === 'dashboard') {
+            if (!chartsInitialized) {
+                setTimeout(() => {
+                    initCharts();
+                    renderKpis();
+                    renderTimeline();
+                    renderMetricsTable();
+                    renderAlerts();
+                }, 50);
+                chartsInitialized = true;
+            }
         }
     }
 
@@ -192,6 +206,9 @@ function renderAll() {
     renderDocuments();
     renderLegal();
     renderKpis();
+    renderTimeline();
+    renderMetricsTable();
+    renderAlerts();
 }
 
 function renderDossier() {
@@ -451,6 +468,162 @@ function initCharts() {
             }
         });
     }
+
+    const radarCtx = document.getElementById('radarChart');
+    const radarData = (metrics && metrics.radar) || {};
+    if (radarCtx && typeof Chart !== 'undefined' && radarData.labels) {
+        new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: radarData.labels,
+                datasets: [
+                    {
+                        label: 'Actual',
+                        data: radarData.current,
+                        borderColor: '#00e0ff',
+                        backgroundColor: 'rgba(0, 224, 255, 0.15)',
+                        pointBackgroundColor: '#00e0ff'
+                    },
+                    {
+                        label: 'Objetivo',
+                        data: radarData.target,
+                        borderColor: '#8a2be2',
+                        backgroundColor: 'rgba(138, 43, 226, 0.1)',
+                        pointBackgroundColor: '#8a2be2'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#e8ecf1' }
+                    }
+                },
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(255,255,255,0.08)' },
+                        grid: { color: 'rgba(255,255,255,0.08)' },
+                        pointLabels: { color: '#b8c5d6' },
+                        ticks: { display: false }
+                    }
+                }
+            }
+        });
+    }
+
+    const doughnutCtx = document.getElementById('doughnutChart');
+    const dist = (metrics && metrics.distribution) || {};
+    if (doughnutCtx && typeof Chart !== 'undefined' && dist.labels && dist.values) {
+        new Chart(doughnutCtx, {
+            type: 'doughnut',
+            data: {
+                labels: dist.labels,
+                datasets: [
+                    {
+                        data: dist.values,
+                        backgroundColor: [
+                            'rgba(0, 224, 255, 0.7)',
+                            'rgba(138, 43, 226, 0.7)',
+                            'rgba(255, 0, 255, 0.7)',
+                            'rgba(255, 187, 0, 0.7)'
+                        ],
+                        borderColor: 'rgba(10, 10, 10, 0.8)',
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#e8ecf1' }
+                    }
+                }
+            }
+        });
+    }
+}
+
+function renderTimeline() {
+    const metrics = (appData && appData.metrics) || {};
+    const milestones = metrics.milestones || [];
+    const container = document.getElementById('milestoneTimeline');
+    if (!container) return;
+
+    if (!milestones.length) {
+        container.innerHTML = '<p class="muted">Sin hitos registrados.</p>';
+        return;
+    }
+
+    container.innerHTML = milestones.map(m => `
+        <div class="timeline-item ${m.status || 'pendiente'}">
+            <div class="timeline-dot">
+                <i class="fas ${m.status === 'completado' ? 'fa-check' : m.status === 'en-progreso' ? 'fa-spinner' : 'fa-clock'}"></i>
+            </div>
+            <div class="timeline-content">
+                <div class="timeline-title">${m.title}</div>
+                <div class="timeline-date">${m.date}</div>
+                <span class="timeline-status">${m.status || 'pendiente'}</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderMetricsTable() {
+    const metrics = (appData && appData.metrics) || {};
+    const kpis = metrics.kpi || [];
+    const tbody = document.querySelector('#metricsTable tbody');
+    if (!tbody) return;
+
+    if (!kpis.length) {
+        tbody.innerHTML = '<tr><td colspan="4">Sin métricas.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = kpis.map(k => {
+        const pct = Math.min(100, Math.max(0, k.value || 0));
+        const target = k.target || 100;
+        const unit = k.unit || '%';
+        return `
+            <tr>
+                <td>${k.label || 'Métrica'}</td>
+                <td>${pct}${unit}</td>
+                <td>${target}${unit}</td>
+                <td class="progress-cell">
+                    <div class="kpi-footer">
+                        <div class="kpi-bar" style="width:${pct}%"></div>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function renderAlerts() {
+    const metrics = (appData && appData.metrics) || {};
+    const alerts = metrics.alerts || [];
+    const container = document.getElementById('alertsList');
+    if (!container) return;
+
+    if (!alerts.length) {
+        container.innerHTML = '<p class="muted">Sin alertas por el momento.</p>';
+        return;
+    }
+
+    container.innerHTML = alerts.map(a => `
+        <div class="alert-item ${a.level || 'info'}">
+            <div class="alert-icon">
+                <i class="fas ${a.level === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'}"></i>
+            </div>
+            <div class="alert-body">
+                <div class="alert-title">${a.level === 'warning' ? 'Advertencia' : 'Información'}</div>
+                <div class="alert-msg">${a.msg}</div>
+            </div>
+        </div>
+    `).join('');
 }
 
 function initChartJs() {

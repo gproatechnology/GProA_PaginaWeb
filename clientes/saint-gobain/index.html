@@ -103,7 +103,7 @@
                         </div>
                         <div class="dashboard-rank">
                             <span class="rank-badge">LVL</span>
-                            <span class="rank-value">01</span>
+                            <span class="rank-value" id="rankValue">01</span>
                         </div>
                     </div>
 
@@ -126,6 +126,68 @@
                             </div>
                             <div class="hud-panel-body">
                                 <canvas id="trendChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="hud-panel">
+                            <div class="hud-panel-header">
+                                <span class="hud-panel-title"><i class="fas fa-spider"></i> Radar de capacidades</span>
+                                <span class="hud-panel-tag">RADAR</span>
+                            </div>
+                            <div class="hud-panel-body">
+                                <canvas id="radarChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="hud-panel">
+                            <div class="hud-panel-header">
+                                <span class="hud-panel-title"><i class="fas fa-chart-pie"></i> Distribución</span>
+                                <span class="hud-panel-tag">MIX</span>
+                            </div>
+                            <div class="hud-panel-body">
+                                <canvas id="doughnutChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-sections">
+                        <div class="hud-panel">
+                            <div class="hud-panel-header">
+                                <span class="hud-panel-title"><i class="fas fa-flag"></i> Hitos del proyecto</span>
+                                <span class="hud-panel-tag">MILESTONES</span>
+                            </div>
+                            <div class="hud-panel-body">
+                                <div class="timeline" id="milestoneTimeline"></div>
+                            </div>
+                        </div>
+
+                        <div class="hud-panel">
+                            <div class="hud-panel-header">
+                                <span class="hud-panel-title"><i class="fas fa-table"></i> Métricas detalladas</span>
+                                <span class="hud-panel-tag">DATA</span>
+                            </div>
+                            <div class="hud-panel-body">
+                                <div class="metrics-table-wrapper">
+                                    <table class="metrics-table" id="metricsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Métrica</th>
+                                                <th>Actual</th>
+                                                <th>Objetivo</th>
+                                                <th>Avance</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="hud-panel">
+                            <div class="hud-panel-header">
+                                <span class="hud-panel-title"><i class="fas fa-bell"></i> Alertas inteligentes</span>
+                                <span class="hud-panel-tag">ALERTS</span>
+                            </div>
+                            <div class="hud-panel-body">
+                                <div class="alerts-list" id="alertsList"></div>
                             </div>
                         </div>
                     </div>

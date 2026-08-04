@@ -38,7 +38,26 @@
       { "month": "Abr", "value": 42 },
       { "month": "May", "value": 55 },
       { "month": "Jun", "value": 62 }
-    ]
+    ],
+    "milestones": [
+      { "date": "2026-08", "title": "Inicio de proyecto", "status": "completado" },
+      { "date": "2026-09", "title": "Levantamiento de procesos", "status": "en-progreso" },
+      { "date": "2026-10", "title": "Demo piloto", "status": "pendiente" },
+      { "date": "2026-11", "title": "Propuesta de automatización", "status": "pendiente" }
+    ],
+    "alerts": [
+      { "level": "warning", "msg": "Eficiencia de línea por debajo del 80%" },
+      { "level": "info", "msg": "Nueva métrica disponible: tiempo de ciclo" }
+    ],
+    "distribution": {
+      "labels": ["Easi-Lite", "Easi-Lite Anti Moho", "M2TECH™", "TYPE X"],
+      "values": [35, 25, 20, 20]
+    },
+    "radar": {
+      "labels": ["Eficiencia", "Calidad", "Velocidad", "ROI", "Innovación"],
+      "current": [78, 34, 62, 45, 70],
+      "target": [90, 50, 80, 60, 85]
+    }
   },
   "legal": {
     "es": "La información contenida en este mensaje es confidencial y sólo puede ser usada por el destinatario indicado. En caso de que usted no sea el destinatario de este correo electrónico, cualquier lectura, difusión o copia se encuentra prohibido. Por favor hágalo saber al remitente y posteriormente destrúyalo.",
