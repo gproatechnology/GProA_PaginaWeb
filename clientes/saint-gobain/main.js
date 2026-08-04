@@ -1,5 +1,6 @@
 /**
  * GProA Technology - Cliente Access Page
+ * Gyproc - Saint-Gobain
  * Validación de código NDA y visualización de dossier
  */
 
