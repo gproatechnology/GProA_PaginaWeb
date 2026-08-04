@@ -14,6 +14,8 @@ const EXTRA_STATIC = [
   'clientes',
   'favicon.ico',
   'assets/fontawesome',
+  'assets/chartjs',
+  'assets/video',
   // Imágenes con nombre estable para OG/Twitter/favicon/apple-touch
   // (Vite hashea los assets referenciados en HTML, así que estas rutas
   //  no existirían en producción si solo usáramos las hasheadas).
