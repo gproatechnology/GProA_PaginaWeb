@@ -456,7 +456,7 @@ function initCharts() {
 function initChartJs() {
     if (typeof Chart !== 'undefined') return;
     const script = document.createElement('script');
-    script.src = '/assets/chartjs/chart.umd.min.js';
+    script.src = './assets/chartjs/chart.umd.min.js';
     script.onload = () => {
         const dashboard = document.getElementById('viewDashboard');
         if (dashboard && dashboard.classList.contains('active')) {
