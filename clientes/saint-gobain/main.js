@@ -1,18 +1,58 @@
 /**
  * GProA Technology - Cliente Access Page
  * Gyproc - Saint-Gobain
- * Validación de código NDA y visualización de dossier
+ * Enterprise HUD Sci-Fi SPA
  */
 
 const ACCESS_CODE = 'SG-NDA-2026';
+
+let appData = null;
+let chartsInitialized = false;
+
+async function loadData() {
+    try {
+        const res = await fetch('./data.json');
+        if (!res.ok) throw new Error('No data.json');
+        appData = await res.json();
+        renderAll();
+    } catch (e) {
+        console.warn('No se pudo cargar data.json, usando placeholders.', e);
+        appData = null;
+        renderAll();
+    }
+}
+
+function initBoot() {
+    const overlay = document.getElementById('bootOverlay');
+    if (!overlay) return;
+
+    setTimeout(() => {
+        overlay.classList.add('hidden');
+    }, 2200);
+}
+
+function initClock() {
+    const clockEl = document.getElementById('hudClock');
+    if (!clockEl) return;
+
+    function update() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        const s = String(now.getSeconds()).padStart(2, '0');
+        clockEl.textContent = `${h}:${m}:${s}`;
+    }
+
+    update();
+    setInterval(update, 1000);
+}
 
 function initAccess() {
     const form = document.getElementById('accessForm');
     const input = document.getElementById('accessCode');
     const errorEl = document.getElementById('accessError');
-    const accessBody = document.getElementById('accessBody');
-    const dossier = document.getElementById('accessDossier');
-    const logoutBtn = document.getElementById('logoutBtn');
+    const accessContainer = document.getElementById('accessContainer');
+    const appLayout = document.getElementById('appLayout');
 
     if (!form) return;
 
@@ -22,9 +62,12 @@ function initAccess() {
 
         if (code === ACCESS_CODE) {
             errorEl.textContent = '';
-            accessBody.style.display = 'none';
-            dossier.style.display = 'block';
+            accessContainer.style.display = 'none';
+            appLayout.style.display = 'flex';
             input.value = '';
+            initBoot();
+            initClock();
+            loadData();
         } else {
             errorEl.textContent = 'Código de acceso inválido. Verifica tu NDA.';
             input.classList.add('invalid');
@@ -36,16 +79,300 @@ function initAccess() {
         errorEl.textContent = '';
         input.classList.remove('invalid');
     });
+}
 
+function initNavigation() {
+    const navItems = document.querySelectorAll('.hud-nav-item[data-view]');
+    const sections = {
+        dashboard: document.getElementById('viewDashboard'),
+        dossier: document.getElementById('viewDossier'),
+        documents: document.getElementById('viewDocuments'),
+        legal: document.getElementById('viewLegal')
+    };
+    const titles = {
+        dashboard: 'Mission Control',
+        dossier: 'Intel Files',
+        documents: 'Armory',
+        legal: 'Protocol'
+    };
+
+    function activateView(name) {
+        Object.values(sections).forEach(el => el && el.classList.remove('active'));
+        const target = sections[name];
+        if (target) target.classList.add('active');
+
+        document.querySelectorAll('.hud-nav-item').forEach(el => {
+            el.classList.toggle('active', el.dataset.view === name);
+        });
+
+        if (name === 'dashboard' && !chartsInitialized) {
+            setTimeout(initCharts, 50);
+        }
+    }
+
+    navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const view = item.dataset.view;
+            if (view) activateView(view);
+        });
+    });
+}
+
+function initTabs() {
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tab = btn.dataset.tab;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            const content = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1));
+            if (content) content.classList.add('active');
+        });
+    });
+}
+
+function initLogout() {
+    const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
-            dossier.style.display = 'none';
-            accessBody.style.display = 'block';
-            input.value = '';
-            errorEl.textContent = '';
-            input.focus();
+            const appLayout = document.getElementById('appLayout');
+            const accessContainer = document.getElementById('accessContainer');
+            const accessCode = document.getElementById('accessCode');
+            const accessError = document.getElementById('accessError');
+
+            appLayout.style.display = 'none';
+            accessContainer.style.display = 'flex';
+            accessCode.value = '';
+            accessError.textContent = '';
+            chartsInitialized = false;
+
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+            const dashboard = document.getElementById('viewDashboard');
+            if (dashboard) dashboard.classList.add('active');
         });
     }
 }
 
-document.addEventListener('DOMContentLoaded', initAccess);
+function renderAll() {
+    renderDossier();
+    renderDocuments();
+    renderLegal();
+}
+
+function renderDossier() {
+    const data = appData || {};
+    const client = data.client || {};
+    const project = data.project || {};
+    const products = data.products || [];
+    const technologies = data.technologies || [];
+
+    const clientEl = document.getElementById('tabClient');
+    if (clientEl) {
+        clientEl.innerHTML = `
+            <div class="dossier-section">
+                <h3><i class="fas fa-building"></i> Cliente</h3>
+                <p><strong>${client.name || 'Saint-Gobain México'}</strong>${client.brand ? ' — Marca ' + client.brand : ''}</p>
+                <p>Contacto de planta: <strong>${client.contact || 'Eleazar'}</strong></p>
+                <p>Industria: ${client.industry || 'Construcción ligera, paneles de yeso y materiales de construcción.'}</p>
+            </div>
+        `;
+    }
+
+    const projectEl = document.getElementById('tabProject');
+    if (projectEl) {
+        projectEl.innerHTML = `
+            <div class="dossier-section">
+                <h3><i class="fas fa-lightbulb"></i> Proyecto</h3>
+                <p>${project.description || 'Desarrollo de soluciones de inteligencia artificial y automatización industrial aplicadas a procesos de manufactura.'}</p>
+                <p class="dossier-meta">${project.approach || 'GProA Technology se acercará por medio del contacto de planta Eleazar.'}</p>
+            </div>
+        `;
+    }
+
+    const productsEl = document.getElementById('tabProducts');
+    if (productsEl) {
+        const list = products.map(p => `
+            <li>
+                <i class="fas fa-check-circle"></i>
+                <div>
+                    <strong>${p.name}</strong>${p.desc ? ' — ' + p.desc : ''}
+                </div>
+            </li>
+        `).join('');
+        productsEl.innerHTML = `
+            <div class="dossier-section">
+                <h3><i class="fas fa-cubes"></i> Líneas de producto</h3>
+                <ul class="dossier-list dossier-products">${list || '<li>Sin datos</li>'}</ul>
+            </div>
+        `;
+    }
+
+    const techEl = document.getElementById('tabTechnologies');
+    if (techEl) {
+        const list = technologies.map(t => `<li><i class="fas fa-check"></i> ${t}</li>`).join('');
+        techEl.innerHTML = `
+            <div class="dossier-section">
+                <h3><i class="fas fa-cogs"></i> Tecnologías GProA aplicadas</h3>
+                <ul class="dossier-list">${list || '<li>Sin datos</li>'}</ul>
+            </div>
+        `;
+    }
+}
+
+function renderDocuments() {
+    const docs = (appData && appData.documents) || [];
+    const docsList = document.getElementById('docsList');
+    if (!docsList) return;
+
+    if (!docs.length) {
+        docsList.innerHTML = `
+            <div class="dossier-section">
+                <p>No hay documentos disponibles por el momento.</p>
+            </div>
+        `;
+        return;
+    }
+
+    docsList.innerHTML = docs.map(doc => `
+        <div class="doc-item">
+            <div class="doc-info">
+                <div class="doc-icon">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <div>
+                    <div class="doc-title">${doc.name}</div>
+                    <div class="doc-meta">PDF</div>
+                </div>
+            </div>
+            <a class="doc-action" href="${doc.file}" target="_blank" rel="noopener">
+                <i class="fas fa-download"></i> Abrir
+            </a>
+        </div>
+    `).join('');
+}
+
+function renderLegal() {
+    const legal = (appData && appData.legal) || {};
+    const esEl = document.getElementById('legalEs');
+    const enEl = document.getElementById('legalEn');
+    if (esEl) esEl.textContent = legal.es || '';
+    if (enEl) enEl.textContent = legal.en || '';
+}
+
+function initCharts() {
+    if (chartsInitialized) return;
+    chartsInitialized = true;
+
+    const metrics = (appData && appData.metrics) || {};
+    const kpi = metrics.kpi || [];
+    const timeline = metrics.timeline || [];
+
+    const kpiCtx = document.getElementById('kpiChart');
+    if (kpiCtx && typeof Chart !== 'undefined') {
+        new Chart(kpiCtx, {
+            type: 'bar',
+            data: {
+                labels: kpi.map(k => k.label),
+                datasets: [
+                    {
+                        label: 'Actual',
+                        data: kpi.map(k => k.value),
+                        backgroundColor: 'rgba(0, 224, 255, 0.7)',
+                        borderColor: 'rgba(0, 224, 255, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Objetivo',
+                        data: kpi.map(k => k.target),
+                        backgroundColor: 'rgba(138, 43, 226, 0.5)',
+                        borderColor: 'rgba(138, 43, 226, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#e8ecf1' }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#b8c5d6' },
+                        grid: { color: 'rgba(255,255,255,0.05)' }
+                    },
+                    x: {
+                        ticks: { color: '#b8c5d6' },
+                        grid: { color: 'rgba(255,255,255,0.05)' }
+                    }
+                }
+            }
+        });
+    }
+
+    const trendCtx = document.getElementById('trendChart');
+    if (trendCtx && typeof Chart !== 'undefined') {
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: timeline.map(t => t.month),
+                datasets: [
+                    {
+                        label: 'Avance',
+                        data: timeline.map(t => t.value),
+                        borderColor: '#00e0ff',
+                        backgroundColor: 'rgba(0, 224, 255, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#e8ecf1' }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#b8c5d6' },
+                        grid: { color: 'rgba(255,255,255,0.05)' }
+                    },
+                    x: {
+                        ticks: { color: '#b8c5d6' },
+                        grid: { color: 'rgba(255,255,255,0.05)' }
+                    }
+                }
+            }
+        });
+    }
+}
+
+function initChartJs() {
+    if (typeof Chart !== 'undefined') return;
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+    script.onload = () => {
+        const dashboard = document.getElementById('viewDashboard');
+        if (dashboard && dashboard.classList.contains('active')) {
+            initCharts();
+        }
+    };
+    document.head.appendChild(script);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initAccess();
+    initNavigation();
+    initTabs();
+    initLogout();
+    initChartJs();
+});

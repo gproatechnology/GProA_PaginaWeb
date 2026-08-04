@@ -1,0 +1,50 @@
+{
+  "client": {
+    "name": "Saint-Gobain México, S.A. de C.V.",
+    "brand": "Gyproc",
+    "industry": "Construcción ligera, paneles de yeso y materiales de construcción.",
+    "contact": "Eleazar",
+    "role": "Contacto de planta"
+  },
+  "project": {
+    "title": "Automatización e IA en manufactura de paneles de yeso",
+    "description": "Desarrollo de soluciones de inteligencia artificial y automatización industrial aplicadas a procesos de manufactura de paneles de yeso.",
+    "approach": "GProA Technology se acercará por medio del contacto de planta Eleazar para levantamiento de procesos y datos."
+  },
+  "products": [
+    { "name": "Easi-Lite", "desc": "Panel estándar de construcción ligera" },
+    { "name": "Easi-Lite Anti Moho", "desc": "Resistente a moho y humedad" },
+    { "name": "M2TECH™", "desc": "Tecnología avanzada en paneles" },
+    { "name": "TYPE X", "desc": "Resistente al fuego" }
+  ],
+  "technologies": [
+    "Automatización Cognitiva",
+    "IA Generativa Aplicada",
+    "Sistemas Autónomos Inteligentes",
+    "Visualización de Datos y Dashboards"
+  ],
+  "metrics": {
+    "kpi": [
+      { "label": "Eficiencia de línea", "value": 78, "unit": "%", "target": 90 },
+      { "label": "Defectos reducidos", "value": 34, "unit": "%", "target": 50 },
+      { "label": "Tiempo de ciclo", "value": 62, "unit": "%", "target": 80 },
+      { "label": "ROI estimado", "value": 45, "unit": "%", "target": 60 }
+    ],
+    "timeline": [
+      { "month": "Ene", "value": 20 },
+      { "month": "Feb", "value": 28 },
+      { "month": "Mar", "value": 35 },
+      { "month": "Abr", "value": 42 },
+      { "month": "May", "value": 55 },
+      { "month": "Jun", "value": 62 }
+    ]
+  },
+  "legal": {
+    "es": "La información contenida en este mensaje es confidencial y sólo puede ser usada por el destinatario indicado. En caso de que usted no sea el destinatario de este correo electrónico, cualquier lectura, difusión o copia se encuentra prohibido. Por favor hágalo saber al remitente y posteriormente destrúyalo.",
+    "en": "The information contained in this message is confidential and may only be used for the addressee named. In case you are not the intended recipient of this e-mail, any reading, dissemination, or copying is prohibited. Please notify the sender and then destroy it."
+  },
+  "documents": [
+    { "name": "NDA - Saint-Gobain", "file": "docs/nda-saint-gobain.pdf" },
+    { "name": "Dossier técnico", "file": "docs/dossier-tecnico.pdf" }
+  ]
+}
