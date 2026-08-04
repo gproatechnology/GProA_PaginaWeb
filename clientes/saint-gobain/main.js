@@ -28,9 +28,9 @@ function initBoot() {
     const overlay = document.getElementById('bootOverlay');
     if (!overlay) return;
 
-    setTimeout(() => {
-        overlay.classList.add('hidden');
-    }, 2200);
+    const hide = () => overlay.classList.add('hidden');
+    overlay.addEventListener('click', hide);
+    setTimeout(hide, 2200);
 }
 
 function initClock() {
@@ -67,7 +67,12 @@ function initAccess() {
             accessContainer.style.display = 'none';
             appLayout.style.display = 'flex';
             input.value = '';
-            initBoot();
+
+            const overlay = document.getElementById('bootOverlay');
+            if (overlay) {
+                overlay.classList.add('hidden');
+            }
+
             initClock();
             loadData();
         } else {
@@ -451,17 +456,21 @@ function initCharts() {
 function initChartJs() {
     if (typeof Chart !== 'undefined') return;
     const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+    script.src = '/assets/chartjs/chart.umd.min.js';
     script.onload = () => {
         const dashboard = document.getElementById('viewDashboard');
         if (dashboard && dashboard.classList.contains('active')) {
             initCharts();
         }
     };
+    script.onerror = () => {
+        console.warn('Chart.js no se pudo cargar desde assets locales.');
+    };
     document.head.appendChild(script);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    initBoot();
     initAccess();
     initNavigation();
     initTabs();
