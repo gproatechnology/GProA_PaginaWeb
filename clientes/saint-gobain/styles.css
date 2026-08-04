@@ -1115,34 +1115,162 @@ body::before {
     font-style: italic;
 }
 
-.dossier-legal .legal-box {
-    padding: 16px;
-    background: rgba(0, 224, 255, 0.03);
-    border-radius: 8px;
-    border-left: 4px solid var(--secondary);
+/* ============================================
+   LEGAL - PROTOCOL
+   ============================================ */
+
+.protocol-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding: 20px 24px;
+    background: linear-gradient(145deg, rgba(20, 30, 50, 0.95), rgba(10, 20, 35, 0.98));
+    border: 1px solid rgba(0, 224, 255, 0.12);
+    border-radius: 16px;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+    position: relative;
+    overflow: hidden;
 }
 
-.legal-es {
-    font-size: 0.9rem;
-    color: var(--text);
-    margin-bottom: 10px;
-    line-height: 1.6;
+.protocol-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
+    opacity: 0.8;
 }
 
-.legal-en {
-    font-size: 0.85rem;
+.protocol-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.protocol-classification {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 77, 77, 0.4);
+    background: rgba(255, 77, 77, 0.1);
+    color: var(--error);
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    width: fit-content;
+    box-shadow: 0 0 12px rgba(255, 77, 77, 0.15);
+}
+
+.protocol-title {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.protocol-title i {
+    color: var(--primary);
+    filter: drop-shadow(0 0 6px rgba(0, 224, 255, 0.5));
+}
+
+.protocol-subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
     color: var(--muted);
-    line-height: 1.6;
-    font-style: italic;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 
-.dossier-footer {
-    margin-top: 32px;
-    padding-top: 24px;
+.protocol-header-right {
+    display: flex;
+    align-items: center;
+}
+
+.protocol-code {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+}
+
+.protocol-code .mono {
+    color: var(--primary);
+}
+
+.protocol-panel {
+    position: relative;
+    background: linear-gradient(145deg, rgba(20, 30, 50, 0.95), rgba(10, 20, 35, 0.98));
+    border: 1px solid rgba(0, 224, 255, 0.12);
+    border-radius: 14px;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+    padding: 24px;
+}
+
+.protocol-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    opacity: 0.6;
+}
+
+.protocol-body {
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.protocol-body p {
+    margin-bottom: 12px;
+}
+
+.protocol-footer {
+    margin-top: 24px;
+    padding-top: 16px;
     border-top: 1px solid rgba(0, 224, 255, 0.1);
     display: flex;
     justify-content: flex-end;
-    gap: 12px;
+}
+
+.protocol-stamp {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    color: var(--primary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border: 1px solid rgba(0, 224, 255, 0.3);
+    border-radius: 8px;
+    background: rgba(0, 224, 255, 0.05);
+    box-shadow: 0 0 15px rgba(0, 224, 255, 0.08);
+}
+
+.legal-es {
+    font-size: 0.95rem;
+    color: var(--text);
+    margin-bottom: 12px;
+    line-height: 1.7;
+    font-family: var(--font-body);
+}
+
+.legal-en {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.7;
+    font-style: italic;
 }
 
 /* ============================================
