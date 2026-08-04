@@ -456,8 +456,7 @@ function initCharts() {
 function initChartJs() {
     if (typeof Chart !== 'undefined') return;
     const script = document.createElement('script');
-    const isDev = import.meta.env?.DEV;
-    script.src = isDev ? 'https://cdn.jsdelivr.net/npm/chart.js' : './assets/chartjs/chart.umd.min.js';
+    script.src = './assets/chartjs/chart.umd.min.js';
     script.onload = () => {
         const dashboard = document.getElementById('viewDashboard');
         if (dashboard && dashboard.classList.contains('active')) {
@@ -465,7 +464,7 @@ function initChartJs() {
         }
     };
     script.onerror = () => {
-        console.warn('Chart.js no se pudo cargar.');
+        console.warn('Chart.js no se pudo cargar desde assets locales.');
     };
     document.head.appendChild(script);
 }
