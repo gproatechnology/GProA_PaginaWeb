@@ -330,7 +330,10 @@ body::before {
     margin-top: 32px;
     padding-top: 24px;
     border-top: 1px solid rgba(0, 51, 102, 0.1);
-    text-align: right;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
 }
 
 .btn {
