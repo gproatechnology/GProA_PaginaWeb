@@ -24,11 +24,12 @@
     "Visualización de Datos y Dashboards"
   ],
   "metrics": {
+    "rank": "Operativo",
     "kpi": [
-      { "label": "Eficiencia de línea", "value": 78, "unit": "%", "target": 90 },
-      { "label": "Defectos reducidos", "value": 34, "unit": "%", "target": 50 },
-      { "label": "Tiempo de ciclo", "value": 62, "unit": "%", "target": 80 },
-      { "label": "ROI estimado", "value": 45, "unit": "%", "target": 60 }
+      { "label": "Eficiencia de línea", "value": 78, "unit": "%", "target": 90, "icon": "fa-bolt" },
+      { "label": "Defectos reducidos", "value": 34, "unit": "%", "target": 50, "icon": "fa-filter" },
+      { "label": "Tiempo de ciclo", "value": 62, "unit": "%", "target": 80, "icon": "fa-clock" },
+      { "label": "ROI estimado", "value": 45, "unit": "%", "target": 60, "icon": "fa-coins" }
     ],
     "timeline": [
       { "month": "Ene", "value": 20 },

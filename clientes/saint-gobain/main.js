@@ -15,10 +15,12 @@ async function loadData() {
         if (!res.ok) throw new Error('No data.json');
         appData = await res.json();
         renderAll();
+        renderRank();
     } catch (e) {
         console.warn('No se pudo cargar data.json, usando placeholders.', e);
         appData = null;
         renderAll();
+        renderRank();
     }
 }
 
@@ -107,6 +109,7 @@ function initNavigation() {
 
         if (name === 'dashboard' && !chartsInitialized) {
             setTimeout(initCharts, 50);
+            renderKpis();
         }
     }
 
@@ -159,6 +162,7 @@ function renderAll() {
     renderDossier();
     renderDocuments();
     renderLegal();
+    renderKpis();
 }
 
 function renderDossier() {
@@ -259,6 +263,55 @@ function renderLegal() {
     const enEl = document.getElementById('legalEn');
     if (esEl) esEl.textContent = legal.es || '';
     if (enEl) enEl.textContent = legal.en || '';
+}
+
+function renderKpis() {
+    const metrics = (appData && appData.metrics) || {};
+    const kpis = metrics.kpi || [];
+    const grid = document.getElementById('kpiGrid');
+    if (!grid) return;
+
+    if (!kpis.length) {
+        grid.innerHTML = '<p class="muted">Sin métricas disponibles.</p>';
+        return;
+    }
+
+    grid.innerHTML = kpis.map((kpi, index) => {
+        const pct = Math.min(100, Math.max(0, kpi.value || 0));
+        const target = kpi.target || 100;
+        const statusClass = pct >= 80 ? 'status-ok' : pct >= 50 ? 'status-warn' : 'status-crit';
+        const icon = kpi.icon || 'fa-chart-line';
+        const unit = kpi.unit || '%';
+
+        return `
+            <div class="kpi-card ${statusClass}">
+                <div class="kpi-header">
+                    <div class="kpi-icon"><i class="fas ${icon}"></i></div>
+                    <span class="kpi-badge">KPI ${String(index + 1).padStart(2, '0')}</span>
+                </div>
+                <div class="kpi-value">${pct}<span class="kpi-unit">${unit}</span></div>
+                <div class="kpi-label">${kpi.label || 'Métrica'}</div>
+                <div class="kpi-footer">
+                    <div class="kpi-bar" data-width="${pct}%"></div>
+                </div>
+                <div class="kpi-target">OBJ: ${target}${unit}</div>
+            </div>
+        `;
+    }).join('');
+
+    requestAnimationFrame(() => {
+        grid.querySelectorAll('.kpi-bar').forEach(bar => {
+            const width = bar.getAttribute('data-width');
+            if (width !== null) bar.style.width = width;
+        });
+    });
+}
+
+function renderRank() {
+    const rankEl = document.querySelector('.rank-value');
+    if (!rankEl) return;
+    const rank = (appData && appData.metrics && appData.metrics.rank) || 'Operativo';
+    rankEl.textContent = rank;
 }
 
 function initCharts() {

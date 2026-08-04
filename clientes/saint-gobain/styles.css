@@ -547,8 +547,89 @@ body::before {
 }
 
 /* ============================================
-   DASHBOARD
+   DASHBOARD - MISSION CONTROL
    ============================================ */
+
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding: 20px 24px;
+    background: linear-gradient(145deg, rgba(20, 30, 50, 0.95), rgba(10, 20, 35, 0.98));
+    border: 1px solid rgba(0, 224, 255, 0.12);
+    border-radius: 16px;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
+    opacity: 0.8;
+}
+
+.dashboard-title-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.dashboard-title {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dashboard-title i {
+    color: var(--primary);
+    filter: drop-shadow(0 0 8px rgba(0, 224, 255, 0.5));
+}
+
+.dashboard-subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.dashboard-rank {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 224, 255, 0.25);
+    background: rgba(0, 224, 255, 0.08);
+}
+
+.rank-badge {
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 0.1em;
+}
+
+.rank-value {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #ffffff;
+    text-shadow: 0 0 12px rgba(0, 224, 255, 0.4);
+}
 
 .kpi-grid {
     display: grid;
@@ -558,13 +639,13 @@ body::before {
 }
 
 .kpi-card {
+    position: relative;
     background: linear-gradient(145deg, rgba(20, 30, 50, 0.95), rgba(10, 20, 35, 0.98));
     border: 1px solid rgba(0, 224, 255, 0.12);
     border-radius: 16px;
     padding: 20px;
     box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    position: relative;
     overflow: hidden;
 }
 
@@ -580,61 +661,70 @@ body::before {
 }
 
 .kpi-card:hover {
-    transform: translateY(-2px);
-    border-color: rgba(0, 224, 255, 0.3);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 25px rgba(0, 224, 255, 0.06);
+    transform: translateY(-3px);
+    border-color: rgba(0, 224, 255, 0.35);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 30px rgba(0, 224, 255, 0.08);
 }
 
 .kpi-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
 }
 
 .kpi-icon {
-    width: 36px;
-    height: 36px;
+    width: 42px;
+    height: 42px;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1rem;
+    font-size: 1.1rem;
     background: rgba(0, 224, 255, 0.1);
     color: var(--primary);
     border: 1px solid rgba(0, 224, 255, 0.2);
+    box-shadow: 0 0 12px rgba(0, 224, 255, 0.08);
 }
 
 .kpi-badge {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--muted);
     padding: 4px 10px;
     border-radius: 6px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     background: rgba(255, 255, 255, 0.03);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
 }
 
 .kpi-value {
     font-family: var(--font-heading);
-    font-size: 1.8rem;
-    font-weight: 700;
+    font-size: 2rem;
+    font-weight: 800;
     color: #ffffff;
-    margin-bottom: 4px;
-    text-shadow: 0 0 18px rgba(0, 224, 255, 0.25);
+    margin-bottom: 6px;
+    text-shadow: 0 0 20px rgba(0, 224, 255, 0.3);
+    letter-spacing: 0.04em;
 }
 
 .kpi-label {
+    font-family: var(--font-body);
     font-size: 0.85rem;
     color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
 }
 
 .kpi-footer {
-    margin-top: 12px;
+    margin-top: 14px;
     height: 6px;
     background: rgba(255, 255, 255, 0.06);
     border-radius: 3px;
     overflow: hidden;
+    position: relative;
 }
 
 .kpi-bar {
@@ -642,7 +732,78 @@ body::before {
     background: linear-gradient(90deg, var(--primary), var(--secondary));
     border-radius: 3px;
     width: 0%;
-    transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+}
+
+.kpi-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: #ffffff;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+}
+
+.kpi-target {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 8px;
+    text-align: right;
+    letter-spacing: 0.06em;
+}
+
+.kpi-card.status-ok {
+    border-color: rgba(0, 255, 136, 0.25);
+}
+
+.kpi-card.status-ok .kpi-icon {
+    background: rgba(0, 255, 136, 0.12);
+    color: var(--accent-green);
+    border-color: rgba(0, 255, 136, 0.3);
+}
+
+.kpi-card.status-ok .kpi-bar {
+    background: linear-gradient(90deg, #00ff88, #00e0ff);
+}
+
+.kpi-card.status-warn {
+    border-color: rgba(255, 187, 0, 0.25);
+}
+
+.kpi-card.status-warn .kpi-icon {
+    background: rgba(255, 187, 0, 0.12);
+    color: #ffbb00;
+    border-color: rgba(255, 187, 0, 0.3);
+}
+
+.kpi-card.status-warn .kpi-bar {
+    background: linear-gradient(90deg, #ffbb00, #ff4d4d);
+}
+
+.kpi-card.status-crit {
+    border-color: rgba(255, 77, 77, 0.25);
+}
+
+.kpi-card.status-crit .kpi-icon {
+    background: rgba(255, 77, 77, 0.12);
+    color: var(--error);
+    border-color: rgba(255, 77, 77, 0.3);
+}
+
+.kpi-card.status-crit .kpi-bar {
+    background: linear-gradient(90deg, #ff4d4d, #ff00ff);
+}
+
+.kpi-unit {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--muted);
+    margin-left: 4px;
 }
 
 .charts-grid {
