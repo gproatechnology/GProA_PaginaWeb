@@ -107,58 +107,83 @@
                         </div>
                     </div>
 
-                    <div class="kpi-grid" id="kpiGrid"></div>
+                    <div class="bento-grid">
+                        <div class="bento-item bento-kpis" id="kpiGrid"></div>
 
-                    <div class="charts-grid">
-                        <div class="hud-panel">
-                            <div class="hud-panel-header">
-                                <span class="hud-panel-title"><i class="fas fa-chart-bar"></i> Progreso vs Objetivo</span>
-                                <span class="hud-panel-tag">KPI</span>
-                            </div>
-                            <div class="hud-panel-body">
-                                <canvas id="kpiChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="hud-panel">
-                            <div class="hud-panel-header">
-                                <span class="hud-panel-title"><i class="fas fa-chart-area"></i> Tendencia mensual</span>
-                                <span class="hud-panel-tag">TREND</span>
-                            </div>
-                            <div class="hud-panel-body">
-                                <canvas id="trendChart"></canvas>
+                        <div class="bento-item bento-wide">
+                            <div class="hud-panel">
+                                <div class="hud-panel-header">
+                                    <span class="hud-panel-title"><i class="fas fa-chart-bar"></i> Progreso vs Objetivo</span>
+                                    <span class="hud-panel-tag">KPI</span>
+                                </div>
+                                <div class="hud-panel-body">
+                                    <canvas id="kpiChart"></canvas>
+                                </div>
                             </div>
                         </div>
-                        <div class="hud-panel">
-                            <div class="hud-panel-header">
-                                <span class="hud-panel-title"><i class="fas fa-spider"></i> Radar de capacidades</span>
-                                <span class="hud-panel-tag">RADAR</span>
-                            </div>
-                            <div class="hud-panel-body">
-                                <canvas id="radarChart"></canvas>
+
+                        <div class="bento-item">
+                            <div class="hud-panel">
+                                <div class="hud-panel-header">
+                                    <span class="hud-panel-title"><i class="fas fa-spider"></i> Radar</span>
+                                    <span class="hud-panel-tag">RADAR</span>
+                                </div>
+                                <div class="hud-panel-body">
+                                    <canvas id="radarChart"></canvas>
+                                </div>
                             </div>
                         </div>
-                        <div class="hud-panel">
-                            <div class="hud-panel-header">
-                                <span class="hud-panel-title"><i class="fas fa-chart-pie"></i> Distribución</span>
-                                <span class="hud-panel-tag">MIX</span>
+
+                        <div class="bento-item">
+                            <div class="hud-panel">
+                                <div class="hud-panel-header">
+                                    <span class="hud-panel-title"><i class="fas fa-chart-pie"></i> Distribución</span>
+                                    <span class="hud-panel-tag">MIX</span>
+                                </div>
+                                <div class="hud-panel-body">
+                                    <canvas id="doughnutChart"></canvas>
+                                </div>
                             </div>
-                            <div class="hud-panel-body">
-                                <canvas id="doughnutChart"></canvas>
+                        </div>
+
+                        <div class="bento-item">
+                            <div class="hud-panel">
+                                <div class="hud-panel-header">
+                                    <span class="hud-panel-title"><i class="fas fa-chart-area"></i> Tendencia</span>
+                                    <span class="hud-panel-tag">TREND</span>
+                                </div>
+                                <div class="hud-panel-body">
+                                    <canvas id="trendChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bento-item bento-timeline">
+                            <div class="hud-panel">
+                                <div class="hud-panel-header">
+                                    <span class="hud-panel-title"><i class="fas fa-flag"></i> Hitos</span>
+                                    <span class="hud-panel-tag">MILESTONES</span>
+                                </div>
+                                <div class="hud-panel-body">
+                                    <div class="timeline" id="milestoneTimeline"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bento-item bento-alerts">
+                            <div class="hud-panel">
+                                <div class="hud-panel-header">
+                                    <span class="hud-panel-title"><i class="fas fa-bell"></i> Alertas</span>
+                                    <span class="hud-panel-tag">ALERTS</span>
+                                </div>
+                                <div class="hud-panel-body">
+                                    <div class="alerts-list" id="alertsList"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="dashboard-sections">
-                        <div class="hud-panel">
-                            <div class="hud-panel-header">
-                                <span class="hud-panel-title"><i class="fas fa-flag"></i> Hitos del proyecto</span>
-                                <span class="hud-panel-tag">MILESTONES</span>
-                            </div>
-                            <div class="hud-panel-body">
-                                <div class="timeline" id="milestoneTimeline"></div>
-                            </div>
-                        </div>
-
                         <div class="hud-panel">
                             <div class="hud-panel-header">
                                 <span class="hud-panel-title"><i class="fas fa-table"></i> Métricas detalladas</span>
@@ -178,16 +203,6 @@
                                         <tbody></tbody>
                                     </table>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="hud-panel">
-                            <div class="hud-panel-header">
-                                <span class="hud-panel-title"><i class="fas fa-bell"></i> Alertas inteligentes</span>
-                                <span class="hud-panel-tag">ALERTS</span>
-                            </div>
-                            <div class="hud-panel-body">
-                                <div class="alerts-list" id="alertsList"></div>
                             </div>
                         </div>
                     </div>

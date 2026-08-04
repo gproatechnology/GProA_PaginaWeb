@@ -847,10 +847,35 @@ body::before {
     gap: 16px;
 }
 
-.dashboard-sections {
+.bento-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: minmax(180px, auto);
     gap: 16px;
+    margin-top: 24px;
+}
+
+.bento-item {
+    min-height: 180px;
+}
+
+.bento-kpis {
+    grid-column: 1 / -1;
+}
+
+.bento-wide {
+    grid-column: span 2;
+}
+
+.bento-timeline {
+    grid-column: span 2;
+}
+
+.bento-alerts {
+    grid-column: span 2;
+}
+
+.dashboard-sections {
     margin-top: 24px;
 }
 
@@ -1865,6 +1890,22 @@ body::before {
         align-items: flex-start;
         gap: 12px;
     }
+
+    .bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .bento-wide {
+        grid-column: span 2;
+    }
+
+    .bento-timeline {
+        grid-column: span 2;
+    }
+
+    .bento-alerts {
+        grid-column: span 2;
+    }
 }
 
 @media (max-width: 768px) {
@@ -1912,8 +1953,14 @@ body::before {
         align-self: flex-start;
     }
 
-    .dashboard-sections {
+    .bento-grid {
         grid-template-columns: 1fr;
+    }
+
+    .bento-wide,
+    .bento-timeline,
+    .bento-alerts {
+        grid-column: span 1;
     }
 
     .timeline::before {
