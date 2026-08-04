@@ -397,6 +397,16 @@ body::before {
     to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes scanFlash {
+    0% { box-shadow: inset 0 0 0 rgba(0, 224, 255, 0); }
+    50% { box-shadow: inset 0 0 60px rgba(0, 224, 255, 0.15); }
+    100% { box-shadow: inset 0 0 0 rgba(0, 224, 255, 0); }
+}
+
+.scan-flash {
+    animation: scanFlash 0.6s ease;
+}
+
 /* ============================================
    ACCESS / LOGIN
    ============================================ */
@@ -876,8 +886,95 @@ body::before {
 }
 
 /* ============================================
-   TABS
+   DOSSIER - INTEL FILES
    ============================================ */
+
+.dossier-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding: 20px 24px;
+    background: linear-gradient(145deg, rgba(20, 30, 50, 0.95), rgba(10, 20, 35, 0.98));
+    border: 1px solid rgba(0, 224, 255, 0.12);
+    border-radius: 16px;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+    position: relative;
+    overflow: hidden;
+}
+
+.dossier-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
+    opacity: 0.8;
+}
+
+.dossier-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dossier-classified-stamp {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 77, 77, 0.4);
+    background: rgba(255, 77, 77, 0.1);
+    color: var(--error);
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    width: fit-content;
+    box-shadow: 0 0 12px rgba(255, 77, 77, 0.15);
+}
+
+.dossier-title {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dossier-title i {
+    color: var(--primary);
+    filter: drop-shadow(0 0 6px rgba(0, 224, 255, 0.5));
+}
+
+.dossier-subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.dossier-header-right {
+    display: flex;
+    align-items: center;
+}
+
+.dossier-id {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+}
+
+.dossier-id .mono {
+    color: var(--primary);
+}
 
 .dossier-tabs {
     display: flex;
@@ -897,6 +994,8 @@ body::before {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
 }
 
 .tab-btn:hover {
@@ -921,28 +1020,43 @@ body::before {
     animation: fadeIn 0.3s ease;
 }
 
-/* ============================================
-   DOSSIER
-   ============================================ */
-
 .dossier-section {
-    margin-bottom: 24px;
-    padding: 20px;
-    background: rgba(10, 15, 28, 0.5);
-    border: 1px solid rgba(0, 224, 255, 0.08);
-    border-radius: 12px;
+    position: relative;
+    background: linear-gradient(145deg, rgba(20, 30, 50, 0.95), rgba(10, 20, 35, 0.98));
+    border: 1px solid rgba(0, 224, 255, 0.12);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dossier-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    opacity: 0.6;
+}
+
+.dossier-section:hover {
+    border-color: rgba(0, 224, 255, 0.3);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 30px rgba(0, 224, 255, 0.08);
 }
 
 .dossier-section h3 {
     font-family: var(--font-heading);
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     color: var(--primary);
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     display: flex;
     align-items: center;
     gap: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.1em;
 }
 
 .dossier-section h3 i {
@@ -954,7 +1068,7 @@ body::before {
 .dossier-section li {
     color: var(--muted);
     line-height: 1.7;
-    font-size: 0.95rem;
+    margin-bottom: 10px;
 }
 
 .dossier-list {
@@ -963,29 +1077,37 @@ body::before {
 }
 
 .dossier-list li {
-    padding: 6px 0;
+    padding: 10px 0;
     display: flex;
-    align-items: center;
-    gap: 10px;
+    align-items: flex-start;
+    gap: 12px;
+    border-bottom: 1px solid rgba(0, 224, 255, 0.06);
+}
+
+.dossier-list li:last-child {
+    border-bottom: none;
 }
 
 .dossier-list li i {
     color: var(--primary);
-    font-size: 0.85rem;
+    margin-top: 4px;
+    filter: drop-shadow(0 0 6px rgba(0, 224, 255, 0.5));
 }
 
 .dossier-products li i {
     color: var(--accent-red);
+    filter: drop-shadow(0 0 6px rgba(255, 77, 77, 0.5));
 }
 
 .dossier-meta {
-    margin-top: 8px;
-    padding: 10px 14px;
-    background: rgba(0, 51, 102, 0.05);
-    border-left: 3px solid var(--accent-red);
-    border-radius: 6px;
-    font-size: 0.9rem;
+    margin-top: 14px;
+    padding: 12px 16px;
+    background: rgba(255, 0, 255, 0.06);
+    border-left: 3px solid var(--secondary);
+    border-radius: 8px;
+    font-size: 0.95rem;
     color: var(--text);
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.06);
 }
 
 .dossier-placeholder {

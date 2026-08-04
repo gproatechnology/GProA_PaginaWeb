@@ -131,7 +131,11 @@ function initTabs() {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             btn.classList.add('active');
             const content = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1));
-            if (content) content.classList.add('active');
+            if (content) {
+                content.classList.add('active');
+                content.classList.add('scan-flash');
+                setTimeout(() => content.classList.remove('scan-flash'), 600);
+            }
         });
     });
 }
