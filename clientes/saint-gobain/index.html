@@ -41,6 +41,26 @@
             <div class="app-video-overlay"></div>
         </div>
 
+        <!-- Magic Card Overlay -->
+        <div class="magic-card-overlay" id="magicCardOverlay">
+            <div class="magic-card" id="magicCard">
+                <button class="magic-card-close" id="magicCardClose" aria-label="Cerrar">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="magic-card-header">
+                    <div class="magic-card-icon" id="magicCardIcon"></div>
+                    <div>
+                        <h3 class="magic-card-title" id="magicCardTitle"></h3>
+                        <span class="magic-card-tag" id="magicCardTag"></span>
+                    </div>
+                </div>
+                <div class="magic-card-body" id="magicCardBody"></div>
+                <div class="magic-card-footer">
+                    <span class="magic-card-meta" id="magicCardMeta"></span>
+                </div>
+            </div>
+        </div>
+
         <!-- HUD Top Bar -->
         <header class="hud-topbar">
             <div class="hud-topbar-left">
@@ -108,9 +128,9 @@
                     </div>
 
                     <div class="bento-grid">
-                        <div class="bento-item bento-kpis" id="kpiGrid"></div>
+                        <div class="bento-item bento-kpis" id="kpiGrid" data-magic="kpis"></div>
 
-                        <div class="bento-item bento-wide">
+                        <div class="bento-item bento-wide" data-magic="kpi-chart">
                             <div class="hud-panel">
                                 <div class="hud-panel-header">
                                     <span class="hud-panel-title"><i class="fas fa-chart-bar"></i> Progreso vs Objetivo</span>
@@ -122,7 +142,7 @@
                             </div>
                         </div>
 
-                        <div class="bento-item">
+                        <div class="bento-item" data-magic="radar-chart">
                             <div class="hud-panel">
                                 <div class="hud-panel-header">
                                     <span class="hud-panel-title"><i class="fas fa-spider"></i> Radar</span>
@@ -134,7 +154,7 @@
                             </div>
                         </div>
 
-                        <div class="bento-item">
+                        <div class="bento-item" data-magic="distribution-chart">
                             <div class="hud-panel">
                                 <div class="hud-panel-header">
                                     <span class="hud-panel-title"><i class="fas fa-chart-pie"></i> Distribución</span>
@@ -146,7 +166,7 @@
                             </div>
                         </div>
 
-                        <div class="bento-item">
+                        <div class="bento-item" data-magic="trend-chart">
                             <div class="hud-panel">
                                 <div class="hud-panel-header">
                                     <span class="hud-panel-title"><i class="fas fa-chart-area"></i> Tendencia</span>
@@ -158,7 +178,7 @@
                             </div>
                         </div>
 
-                        <div class="bento-item bento-timeline">
+                        <div class="bento-item bento-timeline" data-magic="milestones">
                             <div class="hud-panel">
                                 <div class="hud-panel-header">
                                     <span class="hud-panel-title"><i class="fas fa-flag"></i> Hitos</span>
@@ -170,7 +190,7 @@
                             </div>
                         </div>
 
-                        <div class="bento-item bento-alerts">
+                        <div class="bento-item bento-alerts" data-magic="alerts">
                             <div class="hud-panel">
                                 <div class="hud-panel-header">
                                     <span class="hud-panel-title"><i class="fas fa-bell"></i> Alertas</span>
@@ -183,7 +203,7 @@
                         </div>
                     </div>
 
-                    <div class="dashboard-sections">
+                    <div class="dashboard-sections" data-magic="metrics-table">
                         <div class="hud-panel">
                             <div class="hud-panel-header">
                                 <span class="hud-panel-title"><i class="fas fa-table"></i> Métricas detalladas</span>

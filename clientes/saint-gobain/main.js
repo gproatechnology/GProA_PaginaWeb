@@ -642,6 +642,134 @@ function initChartJs() {
     document.head.appendChild(script);
 }
 
+function initMagicCards() {
+    const overlay = document.getElementById('magicCardOverlay');
+    const card = document.getElementById('magicCard');
+    const closeBtn = document.getElementById('magicCardClose');
+    if (!overlay || !card) return;
+
+    const iconEl = document.getElementById('magicCardIcon');
+    const titleEl = document.getElementById('magicCardTitle');
+    const tagEl = document.getElementById('magicCardTag');
+    const bodyEl = document.getElementById('magicCardBody');
+    const metaEl = document.getElementById('magicCardMeta');
+
+    const magicData = {
+        'kpis': {
+            title: 'Resumen de KPIs',
+            tag: 'KPI',
+            icon: 'fa-chart-line',
+            getBody: () => {
+                const metrics = (appData && appData.metrics) || {};
+                const kpis = metrics.kpi || [];
+                const list = kpis.map(k => {
+                    const pct = Math.min(100, Math.max(0, k.value || 0));
+                    return `<li><strong>${k.label || 'Métrica'}:</strong> ${pct}% (objetivo ${k.target || 100}%)</li>`;
+                }).join('');
+                return `<p>Indicadores clave del proyecto:</p><ul>${list || '<li>Sin datos</li>'}</ul>`;
+            },
+            getMeta: () => 'Fuente: sistema de medición interno'
+        },
+        'kpi-chart': {
+            title: 'Progreso vs Objetivo',
+            tag: 'KPI',
+            icon: 'fa-chart-bar',
+            getBody: () => '<p>Comparativa del avance actual contra las metas establecidas para el periodo en curso.</p>',
+            getMeta: () => 'Actualización: tiempo real'
+        },
+        'radar-chart': {
+            title: 'Análisis Radar',
+            tag: 'RADAR',
+            icon: 'fa-spider',
+            getBody: () => '<p>Vista multidimensional de capacidades y desempeño por eje estratégico.</p>',
+            getMeta: () => 'Dataset: Q3 2026'
+        },
+        'distribution-chart': {
+            title: 'Distribución',
+            tag: 'MIX',
+            icon: 'fa-chart-pie',
+            getBody: () => '<p>Distribución de esfuerzo y recursos por línea de producto o etapa del proyecto.</p>',
+            getMeta: () => 'Periodo: último trimestre'
+        },
+        'trend-chart': {
+            title: 'Tendencia',
+            tag: 'TREND',
+            icon: 'fa-chart-area',
+            getBody: () => '<p>Evolución temporal de los indicadores principales y su proyección.</p>',
+            getMeta: () => 'Rango: últimos 12 meses'
+        },
+        'milestones': {
+            title: 'Hitos del Proyecto',
+            tag: 'MILESTONES',
+            icon: 'fa-flag',
+            getBody: () => {
+                const metrics = (appData && appData.metrics) || {};
+                const milestones = metrics.milestones || [];
+                const list = milestones.map(m => `<li><strong>${m.title}</strong> — ${m.date} (${m.status || 'pendiente'})</li>`).join('');
+                return `<p>Hitos clave registrados:</p><ul>${list || '<li>Sin hitos</li>'}</ul>`;
+            },
+            getMeta: () => 'Seguimiento: PMO'
+        },
+        'alerts': {
+            title: 'Alertas',
+            tag: 'ALERTS',
+            icon: 'fa-bell',
+            getBody: () => {
+                const metrics = (appData && appData.metrics) || {};
+                const alerts = metrics.alerts || [];
+                const list = alerts.map(a => `<li>[${a.level || 'info'}] ${a.msg}</li>`).join('');
+                return `<p>Alertas activas:</p><ul>${list || '<li>Sin alertas</li>'}</ul>`;
+            },
+            getMeta: () => 'Monitoreo: automático'
+        },
+        'metrics-table': {
+            title: 'Métricas Detalladas',
+            tag: 'DATA',
+            icon: 'fa-table',
+            getBody: () => '<p>Tabla completa de métricas con valores actuales, objetivos y avance porcentual.</p>',
+            getMeta: () => 'Dataset: métricas institucionales'
+        }
+    };
+
+    function openMagicCard(key) {
+        const data = magicData[key];
+        if (!data) return;
+
+        if (iconEl) iconEl.innerHTML = `<i class="fas ${data.icon}"></i>`;
+        if (titleEl) titleEl.textContent = data.title;
+        if (tagEl) tagEl.textContent = data.tag;
+        if (bodyEl) bodyEl.innerHTML = data.getBody();
+        if (metaEl) metaEl.textContent = data.getMeta();
+
+        overlay.classList.add('visible');
+    }
+
+    function closeMagicCard() {
+        overlay.classList.remove('visible');
+    }
+
+    document.querySelectorAll('[data-magic]').forEach(el => {
+        el.addEventListener('click', () => {
+            openMagicCard(el.dataset.magic);
+        });
+
+        el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                openMagicCard(el.dataset.magic);
+            }
+        });
+    });
+
+    closeBtn.addEventListener('click', closeMagicCard);
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeMagicCard();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeMagicCard();
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initBoot();
     initAccess();
@@ -649,4 +777,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initTabs();
     initLogout();
     initChartJs();
+    initMagicCards();
 });
