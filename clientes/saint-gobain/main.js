@@ -232,7 +232,12 @@ function renderDossier() {
 function renderDocuments() {
     const docs = (appData && appData.documents) || [];
     const docsList = document.getElementById('docsList');
+    const countEl = document.getElementById('docCount');
     if (!docsList) return;
+
+    if (countEl) {
+        countEl.textContent = String(docs.length).padStart(2, '0');
+    }
 
     if (!docs.length) {
         docsList.innerHTML = `
@@ -243,22 +248,32 @@ function renderDocuments() {
         return;
     }
 
-    docsList.innerHTML = docs.map(doc => `
-        <div class="doc-item">
+    docsList.innerHTML = docs.map((doc, idx) => `
+        <div class="doc-item" data-index="${idx}">
             <div class="doc-info">
                 <div class="doc-icon">
                     <i class="fas fa-file-pdf"></i>
                 </div>
                 <div>
                     <div class="doc-title">${doc.name}</div>
-                    <div class="doc-meta">PDF</div>
+                    <div class="doc-meta">PDF // DOC-${String(idx + 1).padStart(3, '0')}</div>
                 </div>
             </div>
             <a class="doc-action" href="${doc.file}" target="_blank" rel="noopener">
-                <i class="fas fa-download"></i> Abrir
+                <i class="fas fa-crosshairs"></i> Abrir
             </a>
         </div>
     `).join('');
+
+    docsList.querySelectorAll('.doc-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            const action = item.querySelector('.doc-action');
+            if (e.target.closest('.doc-action')) return;
+
+            docsList.querySelectorAll('.doc-item').forEach(i => i.classList.remove('equipped'));
+            item.classList.toggle('equipped');
+        });
+    });
 }
 
 function renderLegal() {
