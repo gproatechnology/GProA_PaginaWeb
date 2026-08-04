@@ -1,0 +1,347 @@
+/* ============================================
+   GProA Technology - Cliente Access Page
+   Saint-Gobain NDA Dossier
+   ============================================ */
+
+:root {
+    --bg: #0a0f1c;
+    --dark: #0d1321;
+    --darker: #070b14;
+    --primary: #00e0ff;
+    --secondary: #8a2be2;
+    --text: #e8ecf1;
+    --muted: #b8c5d6;
+    --error: #ff4d4d;
+    --success: #00e0ff;
+    --font-heading: 'Orbitron', sans-serif;
+    --font-body: 'Exo 2', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: linear-gradient(180deg, var(--darker) 0%, var(--dark) 100%);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 50%, rgba(0, 224, 255, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(138, 43, 226, 0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.access-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 720px;
+}
+
+.access-card {
+    background: linear-gradient(145deg, rgba(20, 30, 50, 0.95), rgba(10, 20, 35, 0.98));
+    border: 1px solid rgba(0, 224, 255, 0.15);
+    border-radius: 20px;
+    padding: 48px;
+    box-shadow:
+        0 25px 50px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(0, 224, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.access-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+}
+
+.access-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.access-logo {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 2.2rem;
+    color: var(--darker);
+    box-shadow: 0 10px 30px rgba(0, 224, 255, 0.25);
+}
+
+.access-header h1 {
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    color: #ffffff;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.access-subtitle {
+    color: var(--muted);
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+}
+
+.access-form {
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text);
+    font-size: 0.95rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px 18px;
+    background: rgba(10, 15, 28, 0.8);
+    border: 2px solid rgba(0, 224, 255, 0.2);
+    border-radius: 12px;
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 20px rgba(0, 224, 255, 0.15);
+}
+
+.form-group input::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.form-error {
+    display: block;
+    margin-top: 8px;
+    color: var(--error);
+    font-size: 0.85rem;
+    min-height: 20px;
+}
+
+.btn-access {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.access-hint {
+    text-align: center;
+    margin-top: 24px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.access-hint i {
+    margin-right: 6px;
+    color: var(--primary);
+}
+
+/* Dossier */
+
+.dossier-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(0, 224, 255, 0.1);
+}
+
+.dossier-icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: var(--darker);
+    flex-shrink: 0;
+}
+
+.dossier-title h2 {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.dossier-client {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(0, 224, 255, 0.15);
+    border: 1px solid rgba(0, 224, 255, 0.3);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dossier-section {
+    margin-bottom: 24px;
+    padding: 20px;
+    background: rgba(10, 15, 28, 0.5);
+    border: 1px solid rgba(0, 224, 255, 0.08);
+    border-radius: 12px;
+}
+
+.dossier-section h3 {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    color: var(--primary);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dossier-section h3 i {
+    font-size: 0.9rem;
+}
+
+.dossier-section p,
+.dossier-section li {
+    color: var(--muted);
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+.dossier-list {
+    list-style: none;
+    padding: 0;
+}
+
+.dossier-list li {
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dossier-list li i {
+    color: var(--primary);
+    font-size: 0.85rem;
+}
+
+.dossier-placeholder {
+    color: rgba(255, 255, 255, 0.4);
+    font-style: italic;
+}
+
+.dossier-footer {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(0, 224, 255, 0.1);
+    text-align: right;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: var(--darker);
+    border-color: transparent;
+    box-shadow: 0 4px 15px rgba(0, 224, 255, 0.25);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 224, 255, 0.35);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--primary);
+    border-color: rgba(0, 224, 255, 0.4);
+}
+
+.btn-outline:hover {
+    background: rgba(0, 224, 255, 0.1);
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .access-card {
+        padding: 32px 24px;
+    }
+
+    .access-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .dossier-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .dossier-title h2 {
+        font-size: 1.15rem;
+    }
+}
