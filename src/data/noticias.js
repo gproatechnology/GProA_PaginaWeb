@@ -1,110 +1,110 @@
 export const NOTICIAS = [
   {
-    id: 'anthropic-jspace',
-    title: 'Anthropic descubre J-Space en Claude',
-    summary: 'Identificaron un espacio neuronal interno de razonamiento silencioso que emerge durante el entrenamiento.',
+    id: 'claude-opus-5-agosto-2026',
+    title: 'Anthropic lanza Claude Opus 5 con ventana de 1M tokens',
+    summary: 'Claude Opus 5 llega en Agosto 2026 con contexto de 1 millón de tokens, liderando análisis de documentos largos y flujos de investigación avanzada.',
     category: 'ia-generativa',
-    date: 'Jul 2026',
+    date: 'Ago 2026',
     icon: 'fa-brain',
-    url: 'https://news.google.com/search?q=Anthropic%20J-Space%20Claude%202026'
+    url: 'https://www.aiapps.com/blog/ai-news-august-breakthroughs-launches-trends-cant-miss/'
   },
   {
-    id: 'meta-ai-agents-delay',
-    title: 'Meta admite retraso en sus AI agents',
-    summary: 'Zuckerberg reconoce que la plataforma de agentes autónomos de Meta va atrasada pese a la inversión histórica.',
-    category: 'mercado',
-    date: 'Jul 2026',
-    icon: 'fa-chart-line',
-    url: 'https://news.google.com/search?q=Meta%20AI%20agents%202026'
+    id: 'openai-gpt56-precio-agosto',
+    title: 'OpenAI reduce 80% el precio de GPT-5.6 Luna',
+    summary: 'A finales de Julio OpenAI recortó el precio de GPT-5.6 Luna a $0.20 por millón de tokens de entrada, abaratando cargas de trabajo API a escala.',
+    category: 'ia-generativa',
+    date: 'Ago 2026',
+    icon: 'fa-brain',
+    url: 'https://techcrunch.com/2026/08/03/designarena-creators-raise-7-9-million-to-bring-taste-to-ai-models/'
   },
   {
-    id: 'google-privacy-ia-training',
-    title: 'Google usa medios personales para entrenar IA',
-    summary: 'Nueva política amplía el uso de imágenes, audio y video de usuarios en el entrenamiento de modelos.',
-    category: 'etica',
-    date: 'Jul 2026',
-    icon: 'fa-shield-halved',
-    url: 'https://news.google.com/search?q=Google%20privacidad%20entrenamiento%20IA%202026'
+    id: 'google-gemini-36-flash',
+    title: 'Google Gemini 3.6 Flash reduce costos en tareas agénticas',
+    summary: 'Google lanza Gemini 3.6 Flash con 17% menos costos de salida y hasta 65% de ahorro en tareas agénticas de largo horizonte.',
+    category: 'ia-generativa',
+    date: 'Ago 2026',
+    icon: 'fa-brain',
+    url: 'https://llm-stats.com/llm-updates'
   },
   {
-    id: 'amd-advancing-ai-2026',
-    title: 'AMD confirma su evento Advancing AI 2026',
-    summary: 'San Francisco será sede del lanzamiento esperado de aceleradores Instinct MI450 y CPUs EPYC Venice.',
+    id: 'huawei-ascend-950dt-agosto',
+    title: 'Huawei confirma lanzamiento de Ascend 950DT en cloud para Agosto 2026',
+    summary: 'El acelerador Ascend 950DT llega a Huawei Cloud en Agosto, enfocado en entrenamiento y decodificación con mejoras significativas sobre la generación anterior.',
     category: 'hardware',
-    date: 'Jul 2026',
+    date: 'Ago 2026',
     icon: 'fa-microchip',
-    url: 'https://news.google.com/search?q=AMD%20Advancing%20AI%202026'
+    url: 'https://abit.ee/en/processors/huawei-ascend-950dt-ai-chip-ai-accelerator-huawei-cloud-machine-learning-ascend-950-en'
   },
   {
-    id: 'ai-agentes-produccion',
-    title: 'Agentes autónomos pasan de demo a producción',
-    summary: 'Empresas despliegan agentes en operaciones industriales, soporte y automatización de ingeniería.',
-    category: 'industria',
-    date: 'Jun 2026',
-    icon: 'fa-industry',
-    url: 'https://news.google.com/search?q=agentes%20aut%C3%B3nomos%20IA%202026'
-  },
-  {
-    id: 'autos-openai-robot',
-    title: 'OpenAI y la robótica con IA de propósito general',
-    summary: 'Nuevos prototipos combinan modelos multimodales con control robótico para tareas industriales.',
-    category: 'industria',
-    date: 'Jun 2026',
-    icon: 'fa-robot',
-    url: 'https://news.google.com/search?q=OpenAI%20rob%C3%B3tica%20IA%202026'
-  },
-  {
-    id: 'eu-ai-act-compliance',
-    title: 'Cumplimiento del EU AI Act en empresas',
-    summary: 'Más compañías adoptan marcos de gobernanza para sistemas de IA de alto riesgo en operaciones.',
-    category: 'etica',
-    date: 'May 2026',
-    icon: 'fa-balance-scale',
-    url: 'https://news.google.com/search?q=EU%20AI%20Act%202026'
-  },
-  {
-    id: 'cobots-plantas-2026',
-    title: 'Cobots con visión adaptativa en plantas',
-    summary: 'Nueva generación de robots colaborativos percibe y se adapta a líneas de producción cambiantes.',
-    category: 'industria',
-    date: 'May 2026',
-    icon: 'fa-warehouse',
-    url: 'https://news.google.com/search?q=cobots%20industria%202026'
-  },
-  {
-    id: 'chip-ia-datacenter',
-    title: 'Nuevo chip reduce el consumo en centros de datos',
-    summary: 'Arquitectura especializada para IA logra eficiencias relevantes en entrenamiento e inferencia.',
+    id: 'nvidia-vera-rubin-produccion',
+    title: 'NVIDIA Vera Rubin entra en producción completa y envía en H2 2026',
+    summary: 'NVIDIA confirma producción completa de Vera Rubin con 5x el rendimiento de inferencia de Blackwell y envíos masivos en la segunda mitad de 2026.',
     category: 'hardware',
-    date: 'Abr 2026',
-    icon: 'fa-server',
-    url: 'https://news.google.com/search?q=chip%20IA%20centro%20datos%202026'
+    date: 'Ago 2026',
+    icon: 'fa-microchip',
+    url: 'https://www.techcompanynews.com/positron-secures-23-5m-and-delivers-energy-efficient-ai-chips-made-in-america'
   },
   {
-    id: 'inversion-ia-empresarial',
-    title: 'Inversión empresarial en IA sigue en alza',
-    summary: 'Corporativos aumentan inversión en IA aplicada a operaciones, productos y automatización industrial.',
+    id: 'amd-anthropic-5b-nvidia-ssi',
+    title: 'AMD invierte hasta $5B en Anthropic y NVIDIA respalda a SSI con $5B',
+    summary: 'AMD y NVIDIA realizan mega inversiones estratégicas en laboratorios de IA: AMD con Anthropic y NVIDIA con Safe Superintelligence de Ilya Sutskever.',
+    category: 'hardware',
+    date: 'Ago 2026',
+    icon: 'fa-microchip',
+    url: 'https://www.aiapps.com/blog/ai-news-august-breakthroughs-launches-trends-cant-miss/'
+  },
+  {
+    id: 'byd-humanoid-agosto-2026',
+    title: 'BYD presenta sus robots humanoides en Agosto 2026',
+    summary: 'BYD confirma el debut oficial de su robot humanoide en sus centros Di Space, explorando aplicaciones en servicios comerciales y manufactura.',
+    category: 'industria',
+    date: 'Ago 2026',
+    icon: 'fa-robot',
+    url: 'https://interestingengineering.com/ai-robotics/byd-enters-humanoid-robot-race-with-august-debut'
+  },
+  {
+    id: 'figure-03-1000-unidades',
+    title: 'Figure 03 supera las 1,000 unidades producidas en BotQ',
+    summary: 'Figure AI alcanza el hito de 1,000 unidades del Figure 03 fabricadas a ritmo de 1 robot por hora, expandiendo despliegues pagos con BMW.',
+    category: 'industria',
+    date: 'Ago 2026',
+    icon: 'fa-industry',
+    url: 'https://www.humanoid.press/humanoid-daily/'
+  },
+  {
+    id: 'agibot-15000-humanoides',
+    title: 'AgiBot llega a 15,000 humanoides acumulados en 2026',
+    summary: 'AgiBot celebra la producción de su unidad 15,000 mientras acelera despliegues en fábricas y pilotos de inspección de calidad en vivo.',
+    category: 'industria',
+    date: 'Ago 2026',
+    icon: 'fa-industry',
+    url: 'https://www.humanoid.press/humanoid-daily/'
+  },
+  {
+    id: 'amazon-3-billones-ia',
+    title: 'Amazon entra al club de los $3 billones impulsado por IA y cloud',
+    summary: 'Amazon alcanza una capitalización de $3 billones gracias al crecimiento de AWS y la expansión de sus servicios de inteligencia artificial.',
     category: 'mercado',
-    date: 'Abr 2026',
-    icon: 'fa-coins',
-    url: 'https://news.google.com/search?q=inversi%C3%B3n%20IA%202026'
+    date: 'Ago 2026',
+    icon: 'fa-chart-line',
+    url: 'https://www.reuters.com/technology/artificial-intelligence'
   },
   {
-    id: 'modelos-multimodales',
-    title: 'Modelos multimodales más compactos y rápidos',
-    summary: 'Nuevas arquitecturas reducen latencia en texto, imagen y video para aplicaciones industriales.',
-    category: 'ia-generativa',
-    date: 'Mar 2026',
-    icon: 'fa-image',
-    url: 'https://news.google.com/search?q=modelos%20multimodales%202026'
+    id: 'designarena-79m',
+    title: 'Design Arena recauda $7.9M para evaluar gusto en modelos de IA',
+    summary: 'La plataforma de evaluación humana para laboratorios de IA recibe inversión para escalar sus juicios de calidad a más de 5.3 millones de usuarios.',
+    category: 'mercado',
+    date: 'Ago 2026',
+    icon: 'fa-chart-line',
+    url: 'https://techcrunch.com/2026/08/03/designarena-creators-raise-7-9-million-to-bring-taste-to-ai-models/'
   },
   {
-    id: 'ai-medicina-diagnostico',
-    title: 'IA en diagnóstico médico en segundos',
-    summary: 'Sistemas multicanal interpretan exámenes y alertan emergencias con mayor precisión clínica.',
-    category: 'ia-generativa',
-    date: 'Mar 2026',
-    icon: 'fa-heartbeat',
-    url: 'https://news.google.com/search?q=IA%20diagn%C3%B3stico%20m%C3%A9dico%202026'
+    id: 'eu-ai-act-agosto-2026',
+    title: 'EU AI Act entra en fase de cumplimiento activo desde Agosto 2026',
+    summary: 'El 2 de Agosto la UE activa la aplicación del AI Act: multas de hasta €35M, obligaciones de transparencia y supervisión de modelos GPAI en vigor.',
+    category: 'etica',
+    date: 'Ago 2026',
+    icon: 'fa-balance-scale',
+    url: 'https://axis-intelligence.com/eu-ai-act-enforcement-statistics/'
   }
 ];
