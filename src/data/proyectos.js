@@ -48,15 +48,19 @@ export default [
   {
     "id": "saiydd",
     "title": "SAIyDD 1.1",
-    "description": "Sistema de Aprendizaje Inclusivo",
-    "longDescription": "Plataforma educativa especializada en aprendizaje adaptativo para niños con diversidad cognitiva.",
+    "description": "Plataforma para generar juegos educativos para Roblox",
+    "longDescription": "Plataforma completa para crear, configurar y desplegar juegos educativos interactivos para niÃ±os de 4 a 8 aÃ±os en Roblox Studio. Incluye diseÃ±ador web, backend FastAPI con autenticaciÃ³n JWT, integraciÃ³n con Roblox Studio vÃ­a Rojo (Luau), generaciÃ³n dinÃ¡mica del mundo 3D, GUI interactiva y seguimiento de progreso con enfoque kid-safe y cumplimiento COPPA.",
     "demoUrl": "./proyectos/saiydd/demo/",
     "docsUrl": "./proyectos/saiydd/docs/manual-usuario.html",
+    "repoUrl": "https://github.com/gproatechnology/GProA_SAIyDD",
     "features": [
-      "Perfiles personalizados",
-      "Desarrollo socioemocional",
-      "Interfaces adaptativas",
-      "Herramientas para terapeutas"
+      "DiseÃ±ador de plantillas, actividades y bloques",
+      "IntegraciÃ³n con Roblox Studio vÃ­a Rojo (Luau)",
+      "Backend FastAPI con autenticaciÃ³n JWT y rate limiting",
+      "Mundo 3D generado dinÃ¡micamente + GUI interactiva",
+      "Seguimiento de progreso y registro de sesiones",
+      "Enfoque kid-safe, moderaciÃ³n y cumplimiento COPPA",
+      "Cuenta de servicio + despliegue controlado vÃ­a rojo-manager.ps1"
     ],
     "icon": "fa-graduation-cap",
     "acronym": "SAIyDD"
