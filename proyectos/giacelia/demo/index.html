@@ -51,18 +51,32 @@
             </div>
             <div class="card-panel">
                 <div class="drop-zone" id="dropZone">
-                    <p>Arrastra un archivo plano o haz clic para seleccionar</p>
+                    <p>Arrastra un archivo plano DXF/JSON o haz clic para seleccionar</p>
                     <button class="btn-primary" id="btnCargarEjemplo">Cargar plano de ejemplo (Motor + Tablero)</button>
                 </div>
+                <input type="file" id="filePlano" accept=".dxf,.json" style="display:none;">
                 <div class="plano-preview" id="planoPreview" style="display:none;">
-                    <h3>Vista previa del plano</h3>
-                    <div class="svg-plano" id="svgPlano"></div>
+                    <h3>Vista previa del plano eléctrico</h3>
+                    <div class="svg-container">
+                        <svg id="svgPlano" viewBox="0 0 800 500" class="plano-svg" preserveAspectRatio="xMidYMid meet"></svg>
+                    </div>
+                    <div class="plano-info" id="planoInfo" style="margin-top: 15px;"></div>
                 </div>
                 <div class="componentes-detected" id="componentesDetected" style="display:none;">
-                    <h3>Componentes detectados</h3>
+                    <h3>Componentes detectados automáticamente</h3>
+                    <div class="filtros-componentes">
+                        <button class="filtro-btn active" data-tipo="todos">Todos</button>
+                        <button class="filtro-btn" data-tipo="disyuntor">Disyuntores</button>
+                        <button class="filtro-btn" data-tipo="contactor">Contactores</button>
+                        <button class="filtro-btn" data-tipo="rele_termico">Relés térmicos</button>
+                        <button class="filtro-btn" data-tipo="boton">Botones</button>
+                        <button class="filtro-btn" data-tipo="luz_indicadora">Luces indicadoras</button>
+                        <button class="filtro-btn" data-tipo="borne">Bornes</button>
+                        <button class="filtro-btn" data-tipo="motor">Motores</button>
+                    </div>
                     <table class="tabla-componentes">
                         <thead>
-                            <tr><th>Componente</th><th>Tipo</th><th>Referencia</th><th>Ubicación</th></tr>
+                            <tr><th>Componente</th><th>Tipo</th><th>Referencia</th><th>Ubicación</th><th>Simbolo</th></tr>
                         </thead>
                         <tbody id="tbodyComponentes"></tbody>
                     </table>

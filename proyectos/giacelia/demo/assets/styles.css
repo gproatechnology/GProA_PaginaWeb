@@ -358,3 +358,111 @@ body {
     .export-grid { grid-template-columns: 1fr; }
     .btn-export { justify-content: center; text-align: center; }
 }
+
+/* --- Sprint 2: Visor de planos SVG --- */
+.svg-container {
+    width: 100%;
+    max-width: 800px;
+    height: 400px;
+    background: linear-gradient(145deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6));
+    border: 1px solid rgba(0, 224, 255, 0.2);
+    border-radius: 10px;
+    margin: 0 auto 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.plano-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.componente-grupo {
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.componente-grupo:hover {
+    transform: scale(1.15);
+}
+
+.componente-grupo circle {
+    transition: stroke-width 0.2s ease;
+}
+
+/* Filtros de componentes */
+.filtros-componentes {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.filtro-btn {
+    padding: 6px 14px;
+    background: rgba(20, 30, 50, 0.6);
+    border: 1px solid rgba(0, 224, 255, 0.2);
+    border-radius: 20px;
+    color: #fff;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filtro-btn:hover { border-color: var(--primary); }
+
+.filtro-btn.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-color: transparent;
+    color: var(--dark);
+    font-weight: 700;
+}
+
+/* Badge de tipo en tabla */
+.badge-tipo {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    background: rgba(0, 224, 255, 0.15);
+    color: var(--primary);
+    border: 1px solid rgba(0, 224, 255, 0.3);
+}
+
+/* Info del plano */
+.plano-info {
+    font-size: 0.9rem;
+    color: var(--gray);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 12px 16px;
+    border-radius: 8px;
+    border-left: 3px solid var(--primary);
+}
+
+/* Tabla mejorada */
+.tabla-componentes tbody tr {
+    transition: background 0.2s ease;
+    cursor: pointer;
+}
+
+.tabla-componentes tbody tr:hover {
+    background: rgba(0, 224, 255, 0.05);
+}
+
+.tabla-componentes tbody tr.highlight {
+    background: rgba(0, 224, 255, 0.15);
+}
+
+.tabla-componentes code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--primary);
+}
+
+/* Responsive SVG */
+@media (max-width: 768px) {
+    .svg-container { height: 300px; }
+    .filtros-componentes { justify-content: center; }
+}
