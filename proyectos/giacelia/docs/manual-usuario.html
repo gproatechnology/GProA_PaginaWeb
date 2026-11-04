@@ -17,7 +17,7 @@
             <div class="manual-brand">
                 <span class="badge">GIACELIA 1.1</span>
                 <h1>Manual de Usuario</h1>
-                <p>Plataforma de Ingeniería Automatizada — Demo</p>
+                <p>Plataforma de Ingeniería Automatizada — Demo v1.0</p>
             </div>
         </div>
     </header>
@@ -28,66 +28,112 @@
             <p>GIACELIA 1.1 es una plataforma de ingeniería automatizada que permite diseñar, simular y validar sistemas de control eléctrico. Este demo simula el flujo de trabajo basado en planos de AutoCAD Electrical, sin necesidad de instalar software adicional.</p>
             <p><strong>Módulos disponibles:</strong></p>
             <ul>
-                <li><strong>Carga de Planos:</strong> Simula la lectura de planos eléctricos (.dwg/.dxf) y detecta componentes automáticamente.</li>
-                <li><strong>Migración:</strong> Compara versiones de un proyecto y detecta diferencias (añadidos, eliminados, modificados).</li>
-                <li><strong>Ingeniería de Detalle:</strong> Genera lista de materiales, cálculos de sección de cable y tabla de cableado.</li>
-                <li><strong>Validación NOM:</strong> Valida el diseño contra NOM-001-SEDE-2012 y genera alertas de incumplimiento.</li>
-                <li><strong>Exportación:</strong> Descarga reportes en PDF y CSV: BOM, tabla de cableado, diagrama unifilar y reporte de validación.</li>
+                <li><strong>1. Carga de Planos:</strong> Simula la lectura de planos eléctricos (.dwg/.dxf/.json) y detecta componentes automáticamente.</li>
+                <li><strong>2. Migración:</strong> Compara versiones de un proyecto y detecta diferencias (añadidos, eliminados, modificados).</li>
+                <li><strong>3. Ingeniería de Detalle:</strong> Genera lista de materiales (BOM), cálculos de sección de cable, protecciones y tabla de cableado.</li>
+                <li><strong>4. Validación NOM:</strong> Valida el diseño contra NOM-001-SEDE-2012 y genera alertas de incumplimiento.</li>
+                <li><strong>5. Exportación:</strong> Descarga reportes en CSV: BOM y tabla de cableado.</li>
             </ul>
         </section>
 
         <section id="carga-planos">
             <h2><i class="fas fa-file-upload"></i> 1. Carga de Planos Eléctricos</h2>
+            <p>Simula la carga de un plano eléctrico de control. El sistema detecta componentes, bornes y cableado automáticamente y los renderiza en un esquema SVG interactivo.</p>
             <ol>
-                <li>Haz clic en <strong>Cargar plano de ejemplo</strong> para cargar un proyecto de control de motor + tablero precargado.</li>
-                <li>El sistema renderizará una vista previa simplificada del plano en SVG.</li>
-                <li>Se mostrará una tabla con los componentes detectados: contacto, relé, térmico, borne, etc.</li>
+                <li>Haz clic en <strong>Cargar plano de ejemplo</strong> para cargar un proyecto de control de motor trifásico 10 HP / 440 V precargado.</li>
+                <li>O bien, carga tu propio archivo JSON con la estructura de componentes y cableado.</li>
+                <li>El sistema renderizará una vista previa simplificada del plano en SVG con símbolos diferenciados por tipo de componente.</li>
+                <li>Haz clic en cualquier componente del plano o en la tabla para destacarlo y ver sus detalles.</li>
+                <li>Usa los filtros por tipo (disyuntores, contactores, relés térmicos, botones, luces, bornes, motores) para ver solo una categoría.</li>
             </ol>
         </section>
 
         <section id="migracion">
             <h2><i class="fas fa-exchange-alt"></i> 2. Migración de Proyectos</h2>
+            <p>Compara dos versiones de un mismo proyecto eléctrico y detecta diferencias automáticamente entre la versión A (original) y la versión B (nueva).</p>
             <ol>
-                <li>Carga la versión A (original) y la versión B (nueva) del mismo proyecto.</li>
+                <li>Carga la versión A (original) usando el selector de archivo o el botón de ejemplo rápido.</li>
+                <li>Carga la versión B (nueva) de la misma manera.</li>
                 <li>Presiona <strong>Comparar versiones</strong>.</li>
-                <li>Se mostrará un reporte de diferencias con estado de cada componente.</li>
+                <li>Se mostrará un reporte de diferencias con:</li>
+                <ul>
+                    <li><strong>Contadores resumen:</strong> componentes sin cambios, añadidos, eliminados y modificados.</li>
+                    <li><strong>Componentes añadidos:</strong> presentes solo en la versión B.</li>
+                    <li><strong>Componentes eliminados:</strong> presentes solo en la versión A.</li>
+                    <li><strong>Componentes modificados:</strong> cambios en tipo, referencia, descripción, ubicación, símbolo o propiedades.</li>
+                </ul>
             </ol>
+            <p><strong>Nota:</strong> La comparación se hace por ID de componente. Los cambios en propiedades (por ejemplo, calibre de disyuntor 25A → 32A) se marcan como modificados con el valor anterior y actual.</p>
         </section>
 
         <section id="detalle">
             <h2><i class="fas fa-calculator"></i> 3. Ingeniería de Detalle</h2>
+            <p>Genera automáticamente la lista de materiales, cálculos de sección de cable, selecciones de protecciones y tabla de cableado a partir de los parámetros del motor.</p>
             <ol>
-                <li>Ingresa la potencia del motor (HP), voltaje y número de fases.</li>
+                <li>Ingresa la <strong>potencia del motor (HP)</strong>, el <strong>voltaje (V)</strong> y el número de <strong>fases</strong> (1F o 3F).</li>
                 <li>Presiona <strong>Generar ingeniería de detalle</strong>.</li>
-                <li>Se generará automáticamente:</li>
+                <li>El sistema calculará:</li>
                 <ul>
-                    <li>Lista de materiales (BOM) con cantidades y referencias.</li>
-                    <li>Cálculo de sección de cable y protecciones (disyuntor, térmico).</li>
-                    <li>Tabla de cableado (origen → destino, borne, sección).</li>
+                    <li><strong>Corriente nominal</strong> del motor (fórmula estándar con FP=0.85, eficiencia=0.90).</li>
+                    <li><strong>Corriente de arranque</strong> (aprox. 6× nominal).</li>
+                    <li><strong>Corriente de diseño</strong> (1.25× nominal para selección de protecciones).</li>
+                    <li><strong>Sección de cable</strong> mínima por ampacidad (tabla simplificada 75°C, cobre).</li>
+                    <li><strong>Disyuntor</strong> (calibre comercial estándar).</li>
+                    <li><strong>Contactor</strong> (corriente AC-3).</li>
+                    <li><strong>Relé térmico</strong> (rango de ajuste).</li>
                 </ul>
+                <li>Se generará una <strong>Lista de Materiales (BOM)</strong> con 12 ítems y las <strong>tablas de cableado</strong> de potencia y control.</li>
+                <li>Usa los botones de exportación para descargar los archivos CSV del BOM y del cableado.</li>
             </ol>
         </section>
 
         <section id="validacion">
-            <h2><i class="fas fa-shield-alt"></i> 4. Validación Normativa</h2>
+            <h2><i class="fas fa-shield-alt"></i> 4. Validación Normativa (NOM-001-SEDE-2012)</h2>
+            <p>Valida el diseño contra la Norma Oficial Mexicana NOM-001-SEDE-2012 y genera alertas de incumplimiento con ubicación en el plano.</p>
             <ol>
-                <li>Presiona <strong>Ejecutar validación</strong> (requiere haber cargado un plano).</li>
-                <li>El sistema evalúa el diseño contra NOM-001-SEDE-2012.</li>
-                <li>Se mostrarán alertas de incumplimiento con ubicación aproximada en el plano.</li>
+                <li>Asegúrate de haber cargado un plano eléctrico en el módulo 1.</li>
+                <li>Confirma los parámetros del motor (HP, voltaje, fases) en el módulo 3.</li>
+                <li>Presiona <strong>Ejecutar validación</strong>.</li>
+                <li>El sistema evaluará:</li>
+                <ul>
+                    <li><strong>Disyuntor:</strong> dimensionamiento entre 125% y 250% de la corriente nominal.</li>
+                    <li><strong>Sección de cable:</strong> ampacidad suficiente para la corriente de diseño.</li>
+                    <li><strong>Conductor de tierra:</strong> presencia de borne y conductor de puesta a tierra.</li>
+                    <li><strong>Relé térmico:</strong> rango de ajuste que incluya la corriente nominal (95%-115%).</li>
+                    <li><strong>Contactor:</strong> corriente AC-3 >= corriente nominal.</li>
+                    <li><strong>Espaciado:</strong> distancia mínima entre componentes en el plano.</li>
+                </ul>
+                <li>Se mostrarán alertas clasificadas como:</li>
+                <ul>
+                    <li><strong>Error (rojo):</strong> incumplimiento crítico que debe corregirse.</li>
+                    <li><strong>Advertencia (naranja):</strong> condición no óptima, revisar.</li>
+                    <li><strong>Informativo (azul):</strong> punto conforme a la norma.</li>
+                </ul>
+                <li>Haz clic en <strong>Destacar en plano</strong> sobre cualquier alerta para resaltar el componente correspondiente en el esquema SVG.</li>
             </ol>
         </section>
 
         <section id="exportar">
             <h2><i class="fas fa-download"></i> 5. Exportación de Reportes</h2>
+            <p>Descarga los reportes generados en formato CSV para su uso en herramientas de ingeniería o documentación.</p>
             <ol>
-                <li>Selecciona el tipo de reporte que deseas descargar:</li>
+                <li>Después de generar la ingeniería de detalle (módulo 3), usa los botones de exportación:</li>
                 <ul>
-                    <li><strong>Lista de Materiales (BOM):</strong> CSV con todos los componentes y cantidades.</li>
-                    <li><strong>Tabla de Cableado:</strong> CSV con conexiones origen-destino y sección de cable.</li>
-                    <li><strong>Reporte de Validación (PDF):</strong> Informe de cumplimiento normativo con alertas.</li>
-                    <li><strong>Diagrama Unifilar (PDF):</strong> Esquema simplificado del sistema eléctrico.</li>
+                    <li><strong>Exportar BOM a CSV:</strong> lista completa de materiales con ítem, descripción, referencia, cantidad, unidad y notas.</li>
+                    <li><strong>Exportar Cableado a CSV:</strong> conexiones de potencia y control con origen, destino, sección, color y borne.</li>
                 </ul>
+                <li>Los archivos se descargan automáticamente con nombres descriptivos (ej. <code>BOM_10HP_440V.csv</code>).</li>
             </ol>
+        </section>
+
+        <section id="limitaciones">
+            <h2><i class="fas fa-exclamation-triangle"></i> Limitaciones del Demo</h2>
+            <ul>
+                <li>Este es un <strong>demo funcional</strong>, no un software de ingeniería certificado. Los cálculos son de referencia y deben verificarse con el proyecto real.</li>
+                <li>La carga de archivos .dwg/.dxf reales no está soportada en el navegador; se usa JSON como formato de intercambio.</li>
+                <li>Las validaciones normativas son simplificadas y no reemplazan el dictamen de un ingeniero eléctrico certificado.</li>
+                <li>La exportación a PDF de reportes de validación y diagrama unifilar está planificada para versiones futuras.</li>
+            </ul>
         </section>
 
         <section id="soporte">
