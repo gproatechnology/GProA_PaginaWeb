@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Usuario — GIACELIA 1.1 | GProA Technology</title>
+    <link rel="stylesheet" href="../../../src/css/styles.css">
+    <link rel="stylesheet" href="manual.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="manual-header">
+        <div class="container">
+            <a href="../demo/index.html" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Volver al Demo
+            </a>
+            <div class="manual-brand">
+                <span class="badge">GIACELIA 1.1</span>
+                <h1>Manual de Usuario</h1>
+                <p>Plataforma de Ingeniería Automatizada — Demo</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="manual-main container">
+        <section id="introduccion">
+            <h2><i class="fas fa-info-circle"></i> Introducción</h2>
+            <p>GIACELIA 1.1 es una plataforma de ingeniería automatizada que permite diseñar, simular y validar sistemas de control eléctrico. Este demo simula el flujo de trabajo basado en planos de AutoCAD Electrical, sin necesidad de instalar software adicional.</p>
+            <p><strong>Módulos disponibles:</strong></p>
+            <ul>
+                <li><strong>Carga de Planos:</strong> Simula la lectura de planos eléctricos (.dwg/.dxf) y detecta componentes automáticamente.</li>
+                <li><strong>Migración:</strong> Compara versiones de un proyecto y detecta diferencias (añadidos, eliminados, modificados).</li>
+                <li><strong>Ingeniería de Detalle:</strong> Genera lista de materiales, cálculos de sección de cable y tabla de cableado.</li>
+                <li><strong>Validación NOM:</strong> Valida el diseño contra NOM-001-SEDE-2012 y genera alertas de incumplimiento.</li>
+                <li><strong>Exportación:</strong> Descarga reportes en PDF y CSV: BOM, tabla de cableado, diagrama unifilar y reporte de validación.</li>
+            </ul>
+        </section>
+
+        <section id="carga-planos">
+            <h2><i class="fas fa-file-upload"></i> 1. Carga de Planos Eléctricos</h2>
+            <ol>
+                <li>Haz clic en <strong>Cargar plano de ejemplo</strong> para cargar un proyecto de control de motor + tablero precargado.</li>
+                <li>El sistema renderizará una vista previa simplificada del plano en SVG.</li>
+                <li>Se mostrará una tabla con los componentes detectados: contacto, relé, térmico, borne, etc.</li>
+            </ol>
+        </section>
+
+        <section id="migracion">
+            <h2><i class="fas fa-exchange-alt"></i> 2. Migración de Proyectos</h2>
+            <ol>
+                <li>Carga la versión A (original) y la versión B (nueva) del mismo proyecto.</li>
+                <li>Presiona <strong>Comparar versiones</strong>.</li>
+                <li>Se mostrará un reporte de diferencias con estado de cada componente.</li>
+            </ol>
+        </section>
+
+        <section id="detalle">
+            <h2><i class="fas fa-calculator"></i> 3. Ingeniería de Detalle</h2>
+            <ol>
+                <li>Ingresa la potencia del motor (HP), voltaje y número de fases.</li>
+                <li>Presiona <strong>Generar ingeniería de detalle</strong>.</li>
+                <li>Se generará automáticamente:</li>
+                <ul>
+                    <li>Lista de materiales (BOM) con cantidades y referencias.</li>
+                    <li>Cálculo de sección de cable y protecciones (disyuntor, térmico).</li>
+                    <li>Tabla de cableado (origen → destino, borne, sección).</li>
+                </ul>
+            </ol>
+        </section>
+
+        <section id="validacion">
+            <h2><i class="fas fa-shield-alt"></i> 4. Validación Normativa</h2>
+            <ol>
+                <li>Presiona <strong>Ejecutar validación</strong> (requiere haber cargado un plano).</li>
+                <li>El sistema evalúa el diseño contra NOM-001-SEDE-2012.</li>
+                <li>Se mostrarán alertas de incumplimiento con ubicación aproximada en el plano.</li>
+            </ol>
+        </section>
+
+        <section id="exportar">
+            <h2><i class="fas fa-download"></i> 5. Exportación de Reportes</h2>
+            <ol>
+                <li>Selecciona el tipo de reporte que deseas descargar:</li>
+                <ul>
+                    <li><strong>Lista de Materiales (BOM):</strong> CSV con todos los componentes y cantidades.</li>
+                    <li><strong>Tabla de Cableado:</strong> CSV con conexiones origen-destino y sección de cable.</li>
+                    <li><strong>Reporte de Validación (PDF):</strong> Informe de cumplimiento normativo con alertas.</li>
+                    <li><strong>Diagrama Unifilar (PDF):</strong> Esquema simplificado del sistema eléctrico.</li>
+                </ul>
+            </ol>
+        </section>
+
+        <section id="soporte">
+            <h2><i class="fas fa-headset"></i> Soporte y Contacto</h2>
+            <p>Para dudas sobre el demo de GIACELIA, contacta a GProA Technology:</p>
+            <ul>
+                <li>Email: admin@gproatechnology.com</li>
+                <li>WhatsApp: <a href="https://wa.me/5214191296200" target="_blank" rel="noopener noreferrer">+52 1 419 129 6200</a></li>
+                <li>Ubicación: Calle Libramiento Norte No. 30, San José Iturbide, Guanajuato, C.P. 37980</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="manual-footer">
+        <div class="container">
+            <p>&copy; 2026 GProA Technology S. de R.L. de C.V. — Manual GIACELIA Demo v1.0</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIACELIA 1.1 — Demo | GProA Technology</title>
+    <link rel="stylesheet" href="../../../src/css/styles.css">
+    <link rel="stylesheet" href="assets/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="demo-header">
+        <div class="container">
+            <a href="../../../index.html#proyectos" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Volver a Proyectos
+            </a>
+            <div class="demo-brand">
+                <span class="badge">GIACELIA 1.1</span>
+                <h1>Plataforma de Ingeniería Automatizada</h1>
+                <p>Diseño, simulación y validación de sistemas de control eléctrico</p>
+            </div>
+        </div>
+    </header>
+
+    <nav class="demo-nav">
+        <div class="container">
+            <button class="nav-tab active" data-module="carga" aria-label="Carga y lectura de planos">
+                <i class="fas fa-file-upload"></i> Carga de Planos
+            </button>
+            <button class="nav-tab" data-module="migracion" aria-label="Migración de proyectos">
+                <i class="fas fa-exchange-alt"></i> Migración
+            </button>
+            <button class="nav-tab" data-module="detalle" aria-label="Generación de ingeniería de detalle">
+                <i class="fas fa-calculator"></i> Ingeniería de Detalle
+            </button>
+            <button class="nav-tab" data-module="validacion" aria-label="Validación normativa">
+                <i class="fas fa-shield-alt"></i> Validación NOM
+            </button>
+            <button class="nav-tab" data-module="exportar" aria-label="Exportación de reportes">
+                <i class="fas fa-download"></i> Exportar
+            </button>
+        </div>
+    </nav>
+
+    <main class="demo-main container">
+        <!-- Módulo 1: Carga de planos -->
+        <section id="modulo-carga" class="demo-module active">
+            <h2><i class="fas fa-file-upload"></i> Carga y Lectura de Planos Eléctricos</h2>
+            <div class="module-intro">
+                <p>Simula la carga de un plano eléctrico de control (formato .dwg/.dxf). El sistema detecta componentes, bornes y cableado automáticamente.</p>
+            </div>
+            <div class="card-panel">
+                <div class="drop-zone" id="dropZone">
+                    <p>Arrastra un archivo plano o haz clic para seleccionar</p>
+                    <button class="btn-primary" id="btnCargarEjemplo">Cargar plano de ejemplo (Motor + Tablero)</button>
+                </div>
+                <div class="plano-preview" id="planoPreview" style="display:none;">
+                    <h3>Vista previa del plano</h3>
+                    <div class="svg-plano" id="svgPlano"></div>
+                </div>
+                <div class="componentes-detected" id="componentesDetected" style="display:none;">
+                    <h3>Componentes detectados</h3>
+                    <table class="tabla-componentes">
+                        <thead>
+                            <tr><th>Componente</th><th>Tipo</th><th>Referencia</th><th>Ubicación</th></tr>
+                        </thead>
+                        <tbody id="tbodyComponentes"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Módulo 2: Migración -->
+        <section id="modulo-migracion" class="demo-module">
+            <h2><i class="fas fa-exchange-alt"></i> Migración de Proyectos</h2>
+            <div class="module-intro">
+                <p>Compara dos versiones de un mismo proyecto eléctrico y detecta diferencias automáticamente.</p>
+            </div>
+            <div class="card-panel">
+                <div class="migracion-grid">
+                    <div class="version-panel">
+                        <h4>Versión A (Original)</h4>
+                        <input type="file" id="fileVersionA" accept=".dwg,.dxf,.json">
+                        <div id="infoVersionA" class="version-info">Sin archivo cargado</div>
+                    </div>
+                    <div class="version-panel">
+                        <h4>Versión B (Nueva)</h4>
+                        <input type="file" id="fileVersionB" accept=".dwg,.dxf,.json">
+                        <div id="infoVersionB" class="version-info">Sin archivo cargado</div>
+                    </div>
+                </div>
+                <button class="btn-primary" id="btnComparar" disabled>Comparar versiones</button>
+                <div id="resultadoComparacion" style="display:none; margin-top: 20px;"></div>
+            </div>
+        </section>
+
+        <!-- Módulo 3: Ingeniería de detalle -->
+        <section id="modulo-detalle" class="demo-module">
+            <h2><i class="fas fa-calculator"></i> Generación de Ingeniería de Detalle</h2>
+            <div class="module-intro">
+                <p>Genera automáticamente la lista de materiales, cálculos de sección de cable y tabla de cableado a partir del plano cargado.</p>
+            </div>
+            <div class="card-panel">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Potencia del motor (HP)</label>
+                        <input type="number" id="hpMotor" value="10" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Voltaje (V)</label>
+                        <select id="voltajeMotor">
+                            <option value="220">220 V</option>
+                            <option value="440" selected>440 V</option>
+                            <option value="480">480 V</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Fases</label>
+                        <select id="fasesMotor">
+                            <option value="3" selected>Trifásico (3F)</option>
+                            <option value="1">Monofásico (1F)</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn-primary" id="btnGenerarDetalle">Generar ingeniería de detalle</button>
+                <div id="resultadoDetalle" style="display:none; margin-top: 20px;"></div>
+            </div>
+        </section>
+
+        <!-- Módulo 4: Validación normativa -->
+        <section id="modulo-validacion" class="demo-module">
+            <h2><i class="fas fa-shield-alt"></i> Validación Normativa (NOM-001-SEDE-2012)</h2>
+            <div class="module-intro">
+                <p>Valida el diseño contra la norma eléctrica mexicana y genera alertas de incumplimiento con ubicación en el plano.</p>
+            </div>
+            <div class="card-panel">
+                <div class="validacion-controles">
+                    <button class="btn-primary" id="btnValidar" disabled>Ejecutar validación</button>
+                    <span id="estadoValidacion" class="estado-badge">Pendiente</span>
+                </div>
+                <div id="alertasValidacion" style="display:none; margin-top: 20px;">
+                    <h3>Alertas detectadas</h3>
+                    <ul id="listaAlertas"></ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Módulo 5: Exportación -->
+        <section id="modulo-exportar" class="demo-module">
+            <h2><i class="fas fa-download"></i> Exportación de Reportes</h2>
+            <div class="module-intro">
+                <p>Descarga los reportes generados: lista de materiales, tabla de cableado, reporte de validación y diagrama unifilar.</p>
+            </div>
+            <div class="card-panel">
+                <div class="export-grid">
+                    <button class="btn-export" data-tipo="bom">
+                        <i class="fas fa-list"></i> Lista de Materiales (BOM)
+                    </button>
+                    <button class="btn-export" data-tipo="cableado">
+                        <i class="fas fa-stream"></i> Tabla de Cableado
+                    </button>
+                    <button class="btn-export" data-tipo="validacion">
+                        <i class="fas fa-file-pdf"></i> Reporte de Validación (PDF)
+                    </button>
+                    <button class="btn-export" data-tipo="unifilar">
+                        <i class="fas fa-project-diagram"></i> Diagrama Unifilar (PDF)
+                    </button>
+                </div>
+                <div id="mensajeExportacion" style="margin-top: 15px;"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="demo-footer">
+        <div class="container">
+            <p>&copy; 2026 GProA Technology S. de R.L. de C.V. — GIACELIA Demo v1.0</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
