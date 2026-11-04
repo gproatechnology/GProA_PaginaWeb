@@ -126,13 +126,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Botón validar (placeholder Sprint 5)
+    // Botón validar (Sprint 5: validación normativa NOM-001-SEDE-2012)
     const btnValidar = document.getElementById('btnValidar');
     if (btnValidar) {
         btnValidar.addEventListener('click', () => {
-            const alertas = document.getElementById('alertasValidacion');
-            if (alertas) alertas.style.display = 'block';
+            if (!componentesActuales || componentesActuales.length === 0) {
+                alert('Primero carga un plano eléctrico.');
+                return;
+            }
+            const hp = parseFloat(document.getElementById('hpMotor').value) || 10;
+            const voltaje = parseFloat(document.getElementById('voltajeMotor').value) || 440;
+            const fases = parseInt(document.getElementById('fasesMotor').value) || 3;
+            const alertas = validarNormativa(componentesActuales, dataCables, { hp, voltaje, fases });
+            renderizarAlertasValidacion(alertas);
         });
+    }
+});
     }
 
     // --- Ingeniería de detalle: generar cálculos ---
@@ -950,4 +959,309 @@ function exportarCSV(data, filename) {
     link.click();
     document.body.removeChild(link);
 }
+
+/* ============================================================
+   Sprint 5: Validación Normativa NOM-001-SEDE-2012
+   ============================================================ */
+
+const TABLA_AMPACIDAD = [
+    { mm2: '1.5mm²', maxA: 18 },
+    { mm2: '2.5mm²', maxA: 26 },
+    { mm2: '4mm²', maxA: 34 },
+    { mm2: '6mm²', maxA: 45 },
+    { mm2: '10mm²', maxA: 62 },
+    { mm2: '16mm²', maxA: 83 },
+    { mm2: '25mm²', maxA: 110 }
+];
+
+const AMPACIDAD_TIERRA = {
+    '1.5mm²': 18,
+    '2.5mm²': 26,
+    '4mm²': 34,
+    '6mm²': 45
+};
+
+/**
+ * Ejecuta validación normativa NOM-001-SEDE-2012 sobre el plano cargado.
+ * @param {Array} componentes - Componentes detectados en el plano
+ * @param {Array} cableado - Conexiones de cableado
+ * @param {Object} parametros - { hp, voltaje, fases }
+ * @returns {Array} Lista de alertas { tipo, mensaje, componente, ubicacion, norma, sugerencia }
+ */
+function validarNormativa(componentes, cableado, parametros) {
+    const alertas = [];
+    const { hp, voltaje, fases } = parametros;
+
+    // Índices rápidos por referencia
+    const porReferencia = {};
+    componentes.forEach(c => { porReferencia[c.referencia] = c; });
+
+    const porId = {};
+    componentes.forEach(c => { porId[c.id] = c; });
+
+    // ---- 1. Corriente del motor y diseño ----
+    const potenciaW = hp * 746;
+    const raiz3 = Math.sqrt(3);
+    const FP = 0.85;
+    const EF = 0.90;
+    const denominador = (fases === 3) ? raiz3 * voltaje * FP * EF : voltaje * FP * EF;
+    const I_nominal = potenciaW / denominador;
+    const I_diseno = I_nominal * 1.25;
+
+    // ---- 2. Validar disyuntor (Q1) ----
+    const disyuntor = porReferencia['Q1'];
+    if (disyuntor) {
+        const m = /(\d+)A/.exec(disyuntor.referencia || '');
+        const calibreDisyuntor = m ? parseInt(m[1]) : null;
+        if (calibreDisyuntor) {
+            const minProteccion = I_diseno;
+            const maxProteccion = I_nominal * 2.5;
+            if (calibreDisyuntor < minProteccion) {
+                alertas.push({
+                    tipo: 'error',
+                    mensaje: `Disyuntor ${disyuntor.referencia} subdimensionado para la corriente de diseño (${I_diseno.toFixed(1)} A).`,
+                    componente: disyuntor.referencia,
+                    ubicacion: disyuntor.ubicacion,
+                    norma: 'NOM-001-SEDE-2012, Art. 430.52',
+                    sugerencia: `Usar disyuntor de al menos ${Math.ceil(minProteccion / 5) * 5} A.`
+                });
+            } else if (calibreDisyuntor > maxProteccion) {
+                alertas.push({
+                    tipo: 'warning',
+                    mensaje: `Disyuntor ${disyuntor.referencia} sobredimensionado (${calibreDisyuntor} A > ${maxProteccion.toFixed(1)} A máx).`,
+                    componente: disyuntor.referencia,
+                    ubicacion: disyuntor.ubicacion,
+                    norma: 'NOM-001-SEDE-2012, Art. 430.52',
+                    sugerencia: `Considerar calibre entre ${Math.ceil(minProteccion / 5) * 5} A y ${Math.floor(maxProteccion / 5) * 5} A.`
+                });
+            } else {
+                alertas.push({
+                    tipo: 'info',
+                    mensaje: `Disyuntor ${disyuntor.referencia} correctamente dimensionado.`,
+                    componente: disyuntor.referencia,
+                    ubicacion: disyuntor.ubicacion,
+                    norma: 'NOM-001-SEDE-2012, Art. 430.52',
+                    sugerencia: 'Sin acción requerida.'
+                });
+            }
+        }
+    }
+
+    // ---- 3. Validar sección de cable de potencia ----
+    const cablesPotencia = cableado.filter(c => c.color === 'Negro' || c.color === 'Rojo');
+    cablesPotencia.forEach(cable => {
+        const seccion = cable.seccion || '';
+        const filaAmp = TABLA_AMPACIDAD.find(t => seccion.includes(t.mm2));
+        const maxA = filaAmp ? filaAmp.maxA : 0;
+        if (maxA > 0 && I_diseno > maxA) {
+            alertas.push({
+                tipo: 'error',
+                mensaje: `Cable ${seccion} insuficiente para corriente de diseño ${I_diseno.toFixed(1)} A (ampacidad: ${maxA} A).`,
+                componente: `Cable ${cable.origen} → ${cable.destino}`,
+                ubicacion: 'Trayecto de potencia',
+                norma: 'NOM-001-SEDE-2012, Tablas de ampacidad',
+                sugerencia: `Usar sección mínima ${obtenerSeccionMinima(I_diseno)}.`
+            });
+        }
+    });
+
+    // ---- 4. Validar conductor de tierra ----
+    const cableTierra = cableado.find(c => c.color === 'Amarillo' || c.seccion.includes('tierra') || c.origen.includes('tierra') || c.destino.includes('tierra'));
+    const borneTierra = componentes.find(c => c.tipo === 'borne' && (c.propiedades && c.propiedades.color === 'verde'));
+    if (!cableTierra && !borneTierra) {
+        alertas.push({
+            tipo: 'error',
+            mensaje: 'No se detectó conductor de tierra ni borne de tierra en el plano.',
+            componente: 'Sistema de puesta a tierra',
+            ubicacion: 'Tablero principal',
+            norma: 'NOM-001-SEDE-2012, Art. 250',
+            sugerencia: 'Añadir conductor de tierra y borne de conexión a tierra.'
+        });
+    } else {
+        alertas.push({
+            tipo: 'info',
+            mensaje: 'Conductor de tierra y borne de conexión detectados.',
+            componente: 'Sistema de puesta a tierra',
+            ubicacion: 'Tablero principal',
+            norma: 'NOM-001-SEDE-2012, Art. 250',
+            sugerencia: 'Verificar continuidad a tierra.'
+        });
+    }
+
+    // ---- 5. Validar relé térmico (FR1) ----
+    const releTermico = porReferencia['FR1'];
+    if (releTermico) {
+        const m = /(\d+(?:\.\d+)?)-(\d+(?:\.\d+)?)A/.exec(releTermico.referencia || '');
+        if (m) {
+            const min = parseFloat(m[1]);
+            const max = parseFloat(m[2]);
+            if (I_nominal < min * 0.95 || I_nominal > max * 1.15) {
+                alertas.push({
+                    tipo: 'warning',
+                    mensaje: `Relé térmico ${releTermico.referencia} rango ${min}-${max} A no cubre la corriente nominal ${I_nominal.toFixed(1)} A.`,
+                    componente: releTermico.referencia,
+                    ubicacion: releTermico.ubicacion,
+                    norma: 'NOM-001-SEDE-2012, Art. 430.32',
+                    sugerencia: `Seleccionar relé con rango que incluya ${I_nominal.toFixed(1)} A (ajustar a 115-125% del nominal).`
+                });
+            } else {
+                alertas.push({
+                    tipo: 'info',
+                    mensaje: `Relé térmico ${releTermico.referencia} correctamente ajustado para ${I_nominal.toFixed(1)} A.`,
+                    componente: releTermico.referencia,
+                    ubicacion: releTermico.ubicacion,
+                    norma: 'NOM-001-SEDE-2012, Art. 430.32',
+                    sugerencia: 'Verificar ajuste en campo.'
+                });
+            }
+        }
+    }
+
+    // ---- 6. Validar contactor (K1) ----
+    const contactor = porReferencia['K1'];
+    if (contactor) {
+        const m = /(\d+)A/.exec(contactor.referencia || '');
+        if (m) {
+            calibreContactor = parseInt(m[1]);
+            if (calibreContactor < I_nominal) {
+                alertas.push({
+                    tipo: 'warning',
+                    mensaje: `Contactor ${contactor.referencia} (${calibreContactor} A AC-3) menor a corriente nominal ${I_nominal.toFixed(1)} A.`,
+                    componente: contactor.referencia,
+                    ubicacion: contactor.ubicacion,
+                    norma: 'NOM-001-SEDE-2012, Art. 430.83',
+                    sugerencia: `Seleccionar contactor de al menos ${Math.ceil(I_nominal / 5) * 5} A.`
+                });
+            } else {
+                alertas.push({
+                    tipo: 'info',
+                    mensaje: `Contactor ${contactor.referencia} adecuado para ${I_nominal.toFixed(1)} A.`,
+                    componente: contactor.referencia,
+                    ubicacion: contactor.ubicacion,
+                    norma: 'NOM-001-SEDE-2012, Art. 430.83',
+                    sugerencia: 'Sin acción requerida.'
+                });
+            }
+        }
+    }
+
+    // ---- 7. Validar espaciado entre componentes (simulado por coordenadas) ----
+    componentes.forEach(c1 => {
+        componentes.forEach(c2 => {
+            if (c1.id >= c2.id) return;
+            const dx = (c1.coordenadas.x || 0) - (c2.coordenadas.x || 0);
+            const dy = (c1.coordenadas.y || 0) - (c2.coordenadas.y || 0);
+            const distancia = Math.sqrt(dx * dx + dy * dy);
+            if (distancia > 0 && distancia < 60) {
+                alertas.push({
+                    tipo: 'warning',
+                    mensaje: `Componentes ${c1.referencia} y ${c2.referencia} muy cercanos (${distancia.toFixed(0)} px).`,
+                    componente: `${c1.referencia} + ${c2.referencia}`,
+                    ubicacion: `${c1.ubicacion} / ${c2.ubicacion}`,
+                    norma: 'NOM-001-SEDE-2012, Espaciado mínimo',
+                    sugerencia: 'Separar al menos 60 px en el plano para facilitar cableado y mantenimiento.'
+                });
+            }
+        });
+    });
+
+    // ---- 8. Resumen ----
+    const errores = alertas.filter(a => a.tipo === 'error').length;
+    const advertencias = alertas.filter(a => a.tipo === 'warning').length;
+    const informativos = alertas.filter(a => a.tipo === 'info').length;
+
+    alertas.unshift({
+        tipo: 'resumen',
+        mensaje: `Validación completada: ${errores} error(es), ${advertencias} advertencia(s), ${informativos} punto(s) conforme.`,
+        componente: 'Resumen',
+        ubicacion: 'Todo el plano',
+        norma: 'NOM-001-SEDE-2012',
+        sugerencia: errores > 0 ? 'Corregir errores antes de aprobar el diseño.' : 'Diseño conforme a la norma.'
+    });
+
+    return alertas;
+}
+
+/**
+ * Obtiene sección mínima de cable para una corriente dada.
+ */
+function obtenerSeccionMinima(amperios) {
+    for (const t of TABLA_AMPACIDAD) {
+        if (amperios <= t.maxA) return t.mm2;
+    }
+    return '35mm²+';
+}
+
+/**
+ * Renderiza las alertas de validación en el módulo 4.
+ */
+function renderizarAlertasValidacion(alertas) {
+    const contenedor = document.getElementById('alertasValidacion');
+    const lista = document.getElementById('listaAlertas');
+    const estado = document.getElementById('estadoValidacion');
+    if (!contenedor || !lista || !estado) return;
+
+    const resumen = alertas[0];
+    const detalle = alertas.slice(1);
+
+    // Actualizar badge de estado
+    const errores = detalle.filter(a => a.tipo === 'error').length;
+    const advertencias = detalle.filter(a => a.tipo === 'warning').length;
+    const conformes = detalle.filter(a => a.tipo === 'info').length;
+
+    estado.textContent = errores > 0 ? 'NO CONFORME' : (advertencias > 0 ? 'CONFORME CON ADVERTENCIAS' : 'CONFORME');
+    estado.className = 'estado-badge ' + (errores > 0 ? 'estado-error' : (advertencias > 0 ? 'estado-warning' : 'estado-ok'));
+
+    contenedor.style.display = 'block';
+    lista.innerHTML = '';
+
+    // Mostrar resumen primero
+    const liResumen = document.createElement('li');
+    liResumen.className = 'alerta-resumen';
+    liResumen.innerHTML = `
+        <strong>${resumen.mensaje}</strong>
+        <span class="conteos">Errores: ${errores} | Advertencias: ${advertencias} | Conforme: ${conformes}</span>
+    `;
+    lista.appendChild(liResumen);
+
+    // Mostrar cada alerta
+    detalle.forEach((alerta, i) => {
+        const li = document.createElement('li');
+        li.className = `alerta-item alerta-${alerta.tipo}`;
+        li.innerHTML = `
+            <div class="alerta-header">
+                <span class="alerta-tipo">${alerta.tipo.toUpperCase()}</span>
+                <span class="alerta-norma">${alerta.norma}</span>
+            </div>
+            <div class="alerta-mensaje">${alerta.mensaje}</div>
+            <div class="alerta-detalle">
+                <span><strong>Componente:</strong> ${alerta.componente}</span>
+                <span><strong>Ubicación:</strong> ${alerta.ubicacion}</span>
+            </div>
+            <div class="alerta-sugerencia">
+                <strong>Sugerencia:</strong> ${alerta.sugerencia}
+            </div>
+            <button class="btn-destacardesdealerta" data-id="${alerta.componente}" data-idx="${i}" style="display:none;">Destacar en plano</button>
+        `;
+
+        // Si el componente existe en el plano, mostrar botón de destacar
+        const comp = componentesActuales.find(c => c.referencia === alerta.componente || c.id === alerta.componente || c.descripcion.includes(alerta.componente));
+        if (comp) {
+            const btn = li.querySelector('.btn-destacardesdealerta');
+            if (btn) {
+                btn.style.display = 'inline-block';
+                btn.addEventListener('click', () => destacarComponente(comp.id));
+            }
+        }
+
+        lista.appendChild(li);
+    });
+
+    // Scroll al módulo de validación
+    const modulo = document.getElementById('modulo-validacion');
+    if (modulo) modulo.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* Fin Sprint 5 */
+
 
