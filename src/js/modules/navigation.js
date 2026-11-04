@@ -22,8 +22,8 @@ export function initNavigation() {
     // Mobile menu toggle
     if (navToggle) {
         navToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            navToggle.classList.toggle('active');
+            navLinks.classList.add('active');
+            navToggle.classList.add('active');
             
             // Update aria-expanded for accessibility
             const isExpanded = navToggle.classList.contains('active');
