@@ -43,7 +43,7 @@ export function initNoticiasIA() {
             article.setAttribute('aria-label', `Ver noticia: ${noticia.title}`);
 
             const linkHtml = noticia.url
-                ? `<span class="noticia-link"><i class="fas fa-external-link-alt"></i> Ver más</span>`
+                ? `<a href="${noticia.url}" target="_blank" rel="noopener noreferrer" class="noticia-link-btn"><i class="fas fa-external-link-alt"></i> Ver noticia</a>`
                 : '';
 
             article.innerHTML = `
@@ -192,4 +192,31 @@ export function initNoticiasIA() {
 
     renderCards();
     updateCarousel();
+    renderEtiquetasPasarela();
+}
+
+function renderEtiquetasPasarela() {
+    const track = document.querySelector('.etiquetas-track');
+    if (!track) return;
+
+    // Extraer categorías únicas de las noticias
+    const categorias = [...new Set(NOTICIAS.map(n => n.category))];
+    const etiquetasMap = {
+        'ia-generativa': 'IA Generativa',
+        'hardware': 'Hardware',
+        'industria': 'Industria',
+        'mercado': 'Mercado',
+        'etica': 'Ética',
+        'robotica': 'Robótica',
+        'machine-learning': 'Machine Learning',
+        'nlp': 'NLP',
+        'computer-vision': 'Computer Vision'
+    };
+
+    // Crear etiquetas duplicadas para efecto de bucle infinito
+    const etiquetasHTML = categorias
+        .map(cat => `<span class="etiqueta">${etiquetasMap[cat] || capitalize(cat)}</span>`)
+        .join('');
+
+    track.innerHTML = etiquetasHTML + etiquetasHTML;
 }

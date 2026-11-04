@@ -59,7 +59,7 @@
     border: 2px solid rgba(0, 224, 255, 0.3);
     border-radius: 30px;
     color: #ffffff;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -98,7 +98,7 @@
 }
 
 .filter-btn i {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 .noticias-carousel {
@@ -197,15 +197,15 @@
 }
 
 .noticia-icon {
-    width: 70px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 20px;
-    font-size: 1.8rem;
+    font-size: 1.2rem;
     color: #0a0f1c;
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
@@ -245,7 +245,7 @@
     background: rgba(0, 224, 255, 0.2);
     border: 1px solid rgba(0, 224, 255, 0.3);
     border-radius: 20px;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 700;
     color: #00e0ff;
     text-transform: uppercase;
@@ -255,7 +255,7 @@
 
 .noticia-content h3 {
     font-family: var(--font-heading);
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     color: #ffffff;
     margin-bottom: 12px;
     transition: all 0.3s ease;
@@ -270,7 +270,7 @@
 
 .noticia-content p {
     color: #b8c5d6;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     line-height: 1.7;
     margin-bottom: 15px;
     transition: color 0.3s ease;
@@ -285,7 +285,7 @@
     align-items: center;
     gap: 8px;
     color: #00e0ff;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
     padding: 6px 14px;
     background: rgba(0, 224, 255, 0.15);
@@ -295,13 +295,42 @@
 }
 
 .noticia-date i {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
 }
 
 .noticia-card:hover .noticia-date {
     background: rgba(0, 224, 255, 0.25);
     border-color: rgba(0, 224, 255, 0.4);
     transform: translateX(5px);
+}
+
+/* Botón de enlace de noticia */
+.noticia-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding: 8px 16px;
+    background: rgba(0, 224, 255, 0.15);
+    border: 1px solid rgba(0, 224, 255, 0.3);
+    border-radius: 20px;
+    color: #00e0ff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.noticia-link-btn:hover {
+    background: var(--gproa-primary);
+    color: #0a0f1c;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 224, 255, 0.3);
+}
+
+.noticia-link-btn i {
+    font-size: 0.8rem;
 }
 
 /* Navegación por puntos */
@@ -317,7 +346,7 @@
     border: 2px solid rgba(0, 224, 255, 0.4);
     border-radius: 50%;
     color: #00e0ff;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
@@ -408,7 +437,7 @@
 
     .filter-btn {
         padding: 10px 18px;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
 }
 
@@ -428,13 +457,13 @@
     }
 
     .noticia-icon {
-        width: 60px;
-        height: 60px;
-        font-size: 1.5rem;
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
     }
 
     .noticia-content h3 {
-        font-size: 1.15rem;
+        font-size: 1.05rem;
     }
 
     .noticias-filters {
@@ -443,7 +472,7 @@
 
     .filter-btn {
         padding: 8px 14px;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
     }
 
     .filter-btn i {
@@ -502,4 +531,45 @@
     .noticia-dot.active {
         animation: none;
     }
+}
+
+/* Etiquetas pasarela - ocultas */
+.etiquetas-pasarela {
+    display: none;
+}
+
+.etiquetas-track {
+    display: inline-flex;
+    gap: 2rem;
+    animation: pasarela 20s linear infinite;
+}
+
+.etiqueta {
+    color: var(--gproa-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    padding: 4px 12px;
+    background: rgba(0, 224, 255, 0.1);
+    border: 1px solid rgba(0, 224, 255, 0.2);
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.etiqueta:hover {
+    background: var(--gproa-primary);
+    color: #0a0f1c;
+    transform: scale(1.1);
+}
+
+@keyframes pasarela {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* Ocultar filtros originales si aún existen en el DOM */
+.noticias-filters {
+    display: none !important;
 }

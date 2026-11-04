@@ -123,7 +123,8 @@
         historial: [],
         modelo: CONFIG.MODELO_PREDETERMINADO,
         escribiendo: false,
-        modoGemini: false
+        modoGemini: false,
+        clienteAutenticado: false
     };
 
     // Elementos DOM
@@ -160,8 +161,12 @@
                 <!-- Pestañas -->
                 <div class="gemini-tabs">
                     <button class="gemini-tab active" id="tab-chat">Chat</button>
-                    <button class="gemini-tab" id="tab-auditar">Auditar Archivo</button>
-                    <button class="gemini-tab" id="tab-proyecto">Auditar Proyecto</button>
+                    <button class="gemini-tab audit-locked" id="tab-auditar" aria-label="Acceso solo para clientes GProa">
+                        <span class="tab-lock">🔒</span> Auditar Archivo
+                    </button>
+                    <button class="gemini-tab audit-locked" id="tab-proyecto" aria-label="Acceso solo para clientes GProa">
+                        <span class="tab-lock">🔒</span> Auditar Proyecto
+                    </button>
                 </div>
                 
                 <!-- Contenido de pestañas -->
@@ -317,7 +322,7 @@
                 gap: 8px;
                 color: #ffffff;
                 font-family: 'Orbitron', monospace;
-                font-size: 1.1rem;
+                font-size: 1rem;
                 font-weight: 700;
                 letter-spacing: 1px;
             }
@@ -341,11 +346,11 @@
             }
             .gemini-tab {
                 flex: 1;
-                padding: 0.8rem;
+                padding: 0.4rem;
                 background: rgba(0, 0, 0, 0.2);
                 border: none;
                 color: var(--gproa-gray);
-                font-size: 0.85rem;
+                font-size: 0.7rem;
                 font-weight: 600;
                 cursor: pointer;
                 transition: all 0.3s ease;
@@ -356,6 +361,25 @@
                 background: rgba(0, 224, 255, 0.15);
                 color: var(--gproa-primary);
                 border-bottom: 2px solid var(--gproa-primary);
+            }
+            .gemini-tab.audit-locked {
+                opacity: 0.6;
+                cursor: not-allowed;
+                background: rgba(255, 255, 255, 0.05);
+                color: var(--gproa-gray);
+            }
+            .gemini-tab.audit-locked:hover {
+                background: rgba(255, 255, 255, 0.05);
+                color: var(--gproa-gray);
+            }
+            .gemini-tab.audit-locked.active {
+                background: rgba(255, 255, 255, 0.05);
+                color: var(--gproa-gray);
+                border-bottom: 2px solid var(--gproa-border);
+            }
+            .tab-lock {
+                margin-right: 0.5rem;
+                font-size: 0.9rem;
             }
             
             /* Contenido de pestañas */
@@ -641,6 +665,12 @@
         // Pestañas
         elementos.pestañas.forEach(btn => {
             btn.addEventListener('click', function() {
+                // Verificar si la pestaña está bloqueada y el cliente no está autenticado
+                if (btn.classList.contains('audit-locked') && !estado.clienteAutenticado) {
+                    mostrarAccesoRestringido();
+                    return;
+                }
+
                 // Remover clase activa de todas
                 elementos.pestañas.forEach(p => p.classList.remove('active'));
                 elementos.contenidos.forEach(c => c.classList.remove('activo'));
@@ -654,6 +684,34 @@
                 estado.pestaña = tabId;
             });
         });
+
+        // Mostrar mensaje de acceso restringido
+        function mostrarAccesoRestringido() {
+            const mensajes = document.getElementById('gproa-mensajes');
+            // Limpiar estado vacío si existe
+            const empty = mensajes.querySelector('.gemini-empty');
+            if (empty) empty.style.display = 'none';
+            
+            // Agregar mensaje de acceso restringido
+            const div = document.createElement('div');
+            div.className = 'gemini-msg-assistant';
+            div.innerHTML = `
+                <div class="msg-avatar">🔒</div>
+                <div class="msg-content">
+                    <strong>Acceso restringido</strong><br>
+                    Las auditorías de archivo y proyecto están disponibles solo para clientes de GProa Technology.<br>
+                    <br>
+                    <strong>Para acceder:</strong><br>
+                    1. Regístrate como cliente en nuestra página web<br>
+                    2. Inicia sesión con tus credenciales GProa<br>
+                    3. Vuelve aquí y podrás usar las herramientas de auditoría<br>
+                    <br>
+                    <small>Contacto: admin@gproatechnology.com</small>
+                </div>
+            `;
+            mensajes.appendChild(div);
+            scrollAlFinal();
+        }
 
         // Enviar mensaje con Enter
         elementos.input.addEventListener('keypress', function(e) {
