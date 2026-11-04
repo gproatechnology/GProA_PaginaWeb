@@ -11,8 +11,110 @@
         API_BASE_URL: 'https://gproa-agente-gemini.onrender.com',
         ENDPOINT_CHAT: '/api/chat',
         ENDPOINT_MODELS: '/api/modelos',
-        MODELO_PREDETERMINADO: 'models/gemini-2.5-flash'
+        MODELO_PREDETERMINADO: 'models/gemini-2.5-flash',
+        SISTEMA_PROMPT: 'Responde en máximo 2 oraciones, sé conciso y directo.'
     };
+
+    // Preguntas frecuentes (FAQ) - respuestas locales sin consumir API
+    const FAQ = [
+        {
+            pregunta: 'Hola',
+            respuesta: '¡Hola! Soy el asistente de GProA Technology. ¿En qué puedo ayudarte hoy?'
+        },
+        {
+            pregunta: '¿Cómo estás?',
+            respuesta: 'Estoy bien, gracias por preguntar. ¿En qué puedo ayudarte?'
+        },
+        {
+            pregunta: '¿Qué puedes hacer?',
+            respuesta: 'Puedo responder preguntas frecuentes sobre GProA, sus servicios y proyectos. Escribe /gemini para modo abierto con IA.'
+        },
+        {
+            pregunta: '¿Eres un robot o una IA?',
+            respuesta: 'Soy un asistente virtual basado en inteligencia artificial, desarrollado por GProA Technology.'
+        },
+        {
+            pregunta: 'Gracias',
+            respuesta: '¡De nada! ¿Hay algo más en lo que pueda ayudarte?'
+        },
+        {
+            pregunta: 'Adiós',
+            respuesta: '¡Adiós! Que tengas un excelente día.'
+        },
+        {
+            pregunta: '¿Me puedes ayudar?',
+            respuesta: 'Claro, dime qué necesitas saber sobre GProA Technology o sus proyectos.'
+        },
+        {
+            pregunta: '¿Cuál es tu nombre?',
+            respuesta: 'Mi nombre es Asistente GProA, el asistente virtual de GProA Technology.'
+        },
+        {
+            pregunta: '¿Necesitas ayuda especializada?',
+            respuesta: 'Para atención especializada, visita la sección Contacto de nuestra página web, escríbenos a admin@gproatechnology.com o llámanos al +52-1-468-120-8570.'
+        },
+        {
+            pregunta: '¿Qué servicios ofrece GProA?',
+            respuesta: 'GProA Technology desarrolla soluciones de inteligencia artificial, automatización industrial y software de ingeniería inteligente. Incluye automatización cognitiva, IA generativa aplicada y sistemas autónomos.'
+        },
+        {
+            pregunta: '¿Qué es GECRAI?',
+            respuesta: 'GECRAI es un Generador de Consultas Regulatorias con Asistencia Inteligente. Asistente virtual para consulta de normativas eléctricas (NOM-001-SEDE-2012) con integración a AutoCAD y Revit.'
+        },
+        {
+            pregunta: '¿Cómo contacto con GProA?',
+            respuesta: 'Puedes escribir a admin@gproatechnology.com, llamar al +52-1-468-120-8570, o visitar la sección Contacto en nuestra página web.'
+        },
+        {
+            pregunta: '¿Dónde están ubicados?',
+            respuesta: 'Calle Libramiento Norte No. 30, San José Iturbide, Guanajuato, México, C.P. 37980.'
+        },
+        {
+            pregunta: '¿Quién te creó?',
+            respuesta: 'Fui desarrollado por GProA Technology, una empresa mexicana de automatización industrial e inteligencia artificial. Mi arquitectura se basa en modelos de lenguaje grandes (LLM) entrenados en datos públicos y ajustados para responder consultas técnicas sobre ingeniería, regulaciones eléctricas y sistemas autónomos.'
+        },
+        {
+            pregunta: '¿Quién eres?',
+            respuesta: 'Soy el Asistente GProA, un agente conversacional basado en inteligencia artificial. Mi función es proporcionar información sobre los servicios, proyectos y tecnologías de GProA Technology, incluyendo GECRAI, GIACELIA, GlucAI y SAIyDD.'
+        },
+        {
+            pregunta: '¿Piensas?',
+            respuesta: 'No pienso de forma consciente. Proceso patrones estadísticos en lenguaje natural utilizando arquitecturas de redes neuronales transformer. Mi "pensamiento" es en realidad inferencia probabilística sobre secuencias de tokens, no razonamiento humano.'
+        },
+        {
+            pregunta: '¿Logran entenderme?',
+            respuesta: 'Proceso tu entrada como vectores numéricos en un espacio latente de alta dimensión. La comprensión depende de la similitud semántica entre tu consulta y los datos con los que fui entrenado. Más contexto = mejor comprensión.'
+        },
+        {
+            pregunta: '¿Cómo funcionas técnicamente?',
+            respuesta: 'Utilizo una arquitectura transformer con mecanismo de atención multi-cabeza. Cada token de entrada se proyecta a vectores de query, key y value, permitiendo calcular relaciones contextuales entre todas las partes de tu mensaje simultáneamente.'
+        },
+        {
+            pregunta: '¿Qué modelo de IA usas?',
+            respuesta: 'Mi motor subyacente es un modelo de lenguaje grande (LLM) de la familia Gemini de Google, optimizado para razonamiento técnico, generación de código y respuesta a preguntas sobre normativas industriales y eléctricas.'
+        }
+    ];
+
+    // Palabra mágica para activar chat directo con Gemini (bypassa FAQ)
+    const PALABRA_MAGICA = '/gemini';
+
+    // Buscar coincidencia en FAQ local
+    function buscarEnFAQ(texto) {
+        const textoLower = texto.toLowerCase().trim();
+        for (const item of FAQ) {
+            const clave = item.pregunta.toLowerCase().replace(/[¿?]/g, '').trim();
+            if (textoLower === clave || textoLower.includes(clave.replace('¿', '').replace('?', ''))) {
+                return item.respuesta;
+            }
+            // Coincidencia parcial por palabras clave
+            const palabrasClave = clave.split(' ').filter(p => p.length > 3);
+            const coincidencias = palabrasClave.filter(p => textoLower.includes(p));
+            if (coincidencias.length >= 2) {
+                return item.respuesta;
+            }
+        }
+        return null;
+    }
 
     // Estado del widget
     let estado = {
@@ -20,7 +122,8 @@
         pestaña: 'chat',
         historial: [],
         modelo: CONFIG.MODELO_PREDETERMINADO,
-        escribiendo: false
+        escribiendo: false,
+        modoGemini: false
     };
 
     // Elementos DOM
@@ -69,11 +172,16 @@
                             <div class="gemini-empty">
                                 <h3>Asistente GProA</h3>
                                 <p>¿En qué puedo ayudarte hoy?</p>
+                                <p class="faq-hint">💡 Escribe <strong>/gemini</strong> para modo abierto con IA</p>
+                                <div class="faq-sugerencias">
+                                    ${FAQ.slice(0, 4).map(f => `<button class="faq-btn" data-pregunta="${escapeHTML(f.pregunta)}">${f.pregunta}</button>`).join('')}
+                                    <button id="btn-feel-lucky" class="feel-lucky-btn">Feel Lucky</button>
+                                </div>
                             </div>
                         </div>
                         <div class="gemini-input-area">
-                            <input type="text" id="gproa-input" placeholder="Escribe tu pregunta..." autocomplete="off" />
-                            <button id="gproa-enviar">Enviar</button>
+                            <input type="text" id="gproa-input" class="gemini-input" placeholder="Escribe tu pregunta..." autocomplete="off" />
+                            <button id="gproa-limpiar" class="gemini-limpiar" title="Limpiar chat">🗑️</button>
                         </div>
                     </div>
                     
@@ -114,7 +222,7 @@
             cerrar: document.getElementById('gproa-close'),
             mensajes: document.getElementById('gproa-mensajes'),
             input: document.getElementById('gproa-input'),
-            enviar: document.getElementById('gproa-enviar'),
+            limpiar: document.getElementById('gproa-limpiar'),
             estado: document.getElementById('gproa-estado'),
             pestañas: document.querySelectorAll('.gemini-tab'),
             contenidos: document.querySelectorAll('.gemini-tab-content')
@@ -276,7 +384,7 @@
                 overflow-y: auto;
                 display: flex;
                 flex-direction: column;
-                gap: 1rem;
+                gap: 1.5rem;
                 background: rgba(0, 0, 0, 0.2);
             }
             .gemini-msg-user {
@@ -290,9 +398,10 @@
                 color: #0a0f1c;
                 padding: 0.8rem 1rem;
                 border-radius: 12px 12px 4px 12px;
-                max-width: 75%;
-                font-size: 0.9rem;
-                line-height: 1.4;
+                max-width: 85%;
+                font-size: 0.85rem;
+                line-height: 1.6;
+                word-wrap: break-word;
                 box-shadow: 0 2px 10px rgba(0, 224, 255, 0.2);
             }
             .gemini-msg-assistant {
@@ -318,9 +427,10 @@
                 color: #ffffff;
                 padding: 0.8rem 1rem;
                 border-radius: 12px 12px 12px 4px;
-                max-width: 75%;
-                font-size: 0.9rem;
-                line-height: 1.4;
+                max-width: 85%;
+                font-size: 0.85rem;
+                line-height: 1.6;
+                word-wrap: break-word;
                 border-left: 3px solid var(--gproa-primary);
             }
             .gemini-empty {
@@ -334,6 +444,21 @@
             }
             .gemini-empty h3 { color: #ffffff; margin-bottom: 0.5rem; }
             .gemini-empty p { font-size: 0.9rem; line-height: 1.5; }
+            .faq-hint { font-size: 0.8rem; color: var(--gproa-primary); margin-bottom: 1rem; font-style: italic; }
+            
+/* Indicador modo Gemini */
+            .gemini-msg-gemini {
+                background: linear-gradient(135deg, var(--gproa-secondary), var(--gproa-primary));
+                color: #0a0f1c;
+                padding: 0.8rem 1rem;
+                border-radius: 12px 12px 12px 4px;
+                max-width: 85%;
+                font-size: 0.85rem;
+                line-height: 1.6;
+                word-wrap: break-word;
+                margin: 0.5rem 0;
+                border-left: 3px solid var(--gproa-secondary);
+            }
             
             /* Formularios */
             .gemini-formulario {
@@ -381,18 +506,19 @@
             .gemini-input-area {
                 background: rgba(10, 15, 28, 0.9);
                 border-top: 1px solid var(--gproa-border);
-                padding: 1rem;
+                padding: 1.2rem;
                 display: flex;
                 gap: 0.5rem;
+                align-items: center;
             }
             .gemini-input {
                 flex: 1;
                 background: rgba(0, 0, 0, 0.3);
                 border: 1px solid var(--gproa-border);
-                border-radius: 8px;
+                border-radius: 10px;
                 color: #ffffff;
-                padding: 0.8rem 1rem;
-                font-size: 0.9rem;
+                padding: 1rem 1.2rem;
+                font-size: 1rem;
                 font-family: inherit;
                 outline: none;
             }
@@ -403,15 +529,31 @@
             .gemini-send {
                 background: linear-gradient(135deg, var(--gproa-primary), var(--gproa-secondary));
                 border: none;
-                border-radius: 8px;
+                border-radius: 10px;
                 color: #0a0f1c;
                 font-weight: 700;
-                padding: 0.8rem 1.2rem;
+                padding: 1rem 1.5rem;
                 cursor: pointer;
                 transition: transform 0.2s;
+                font-size: 0.9rem;
             }
-            .gemini-send:hover { transform: translateY(-2px); }
-            .gemini-send:disabled { opacity: 0.6; cursor: not-allowed; }
+            .gemini-send:hover {
+                transform: translateY(-2px);
+            }
+            .gemini-limpiar {
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid var(--gproa-border);
+                border-radius: 10px;
+                color: #ffffff;
+                padding: 1rem;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                font-size: 0.9rem;
+            }
+            .gemini-limpiar:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: scale(1.1);
+            }
             
             /* Resultado de auditoría */
             #gproa-resultado-auditar, #gproa-resultado-proyecto {
@@ -441,6 +583,48 @@
                     bottom: 15px;
                     right: 15px;
                 }
+            }
+
+            /* Preguntas frecuentes sugeridas */
+            .faq-sugerencias {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                margin-top: 1rem;
+            }
+            .faq-btn {
+                background: rgba(0, 224, 255, 0.1);
+                border: 1px solid var(--gproa-border);
+                border-radius: 20px;
+                color: var(--gproa-primary);
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+                cursor: pointer;
+                text-align: left;
+                transition: all 0.2s ease;
+                width: 100%;
+            }
+            .faq-btn:hover {
+                background: rgba(0, 224, 255, 0.2);
+                transform: translateX(5px);
+            }
+
+            .feel-lucky-btn {
+                background: rgba(138, 43, 226, 0.1);
+                border: 1px solid var(--gproa-secondary);
+                border-radius: 20px;
+                color: var(--gproa-secondary);
+                padding: 0.4rem 0.8rem;
+                font-size: 0.75rem;
+                cursor: pointer;
+                text-align: center;
+                transition: all 0.2s ease;
+                width: auto;
+                margin-top: 0.5rem;
+            }
+            .feel-lucky-btn:hover {
+                background: rgba(138, 43, 226, 0.2);
+                transform: translateX(5px);
             }
         `;
         const style = document.createElement('style');
@@ -479,8 +663,63 @@
             }
         });
 
-        // Botón enviar
-        elementos.enviar.addEventListener('click', enviarMensaje);
+        // Botón limpiar chat
+        elementos.limpiar.addEventListener('click', function() {
+            // Limpiar mensajes previos excepto el estado vacío
+            elementos.mensajes.querySelectorAll('.gemini-msg-user, .gemini-msg-assistant').forEach(m => m.remove());
+
+            // Mostrar estado vacío con preguntas frecuentes
+            const empty = elementos.mensajes.querySelector('.gemini-empty');
+            if (empty) empty.style.display = 'flex';
+
+            // Limpiar input
+            elementos.input.value = '';
+            elementos.input.focus();
+
+            // Re-agregar listeners a botones FAQ
+            document.querySelectorAll('.faq-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const pregunta = this.getAttribute('data-pregunta');
+                    if (pregunta) {
+                        elementos.input.value = pregunta;
+                        enviarMensaje();
+                    }
+                });
+            });
+
+            // Re-agregar listener a botón Feel Lucky
+            const btnFeelLucky = document.getElementById('btn-feel-lucky');
+            if (btnFeelLucky) {
+                btnFeelLucky.addEventListener('click', function() {
+                    const indice = Math.floor(Math.random() * FAQ.length);
+                    const pregunta = FAQ[indice].pregunta;
+                    elementos.input.value = pregunta;
+                    enviarMensaje();
+                });
+            }
+        });
+
+        // Botones de preguntas frecuentes sugeridas
+        document.querySelectorAll('.faq-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const pregunta = this.getAttribute('data-pregunta');
+                if (pregunta) {
+                    elementos.input.value = pregunta;
+                    enviarMensaje();
+                }
+            });
+        });
+
+        // Botón Feel Lucky - pregunta aleatoria del FAQ
+        const btnFeelLucky = document.getElementById('btn-feel-lucky');
+        if (btnFeelLucky) {
+            btnFeelLucky.addEventListener('click', function() {
+                const indice = Math.floor(Math.random() * FAQ.length);
+                const pregunta = FAQ[indice].pregunta;
+                elementos.input.value = pregunta;
+                enviarMensaje();
+            });
+        }
 
         // Botón auditar archivo
         const btnAuditarArchivo = document.getElementById('gproa-auditar-archivo');
@@ -528,6 +767,22 @@
         }
     }
 
+    // Llamar a la API del asistente
+    async function llamarAPI(texto) {
+        const respuesta = await fetch(`${CONFIG.API_BASE_URL}/api/chat`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                mensaje: texto,
+                modelo: estado.modelo,
+                sistema: CONFIG.SISTEMA_PROMPT
+            })
+        });
+        const data = await respuesta.json();
+        if (!respuesta.ok) throw new Error(data.error || 'Error en la respuesta');
+        return data;
+    }
+
     // Enviar mensaje
     async function enviarMensaje() {
         const texto = elementos.input.value.trim();
@@ -539,8 +794,85 @@
         estado.escribiendo = true;
 
         try {
-            const respuesta = await llamarAPI(texto);
-            agregarMensajeAgente(respuesta.respuesta);
+            // Detectar palabra mágica para activar modo Gemini directo
+            if (texto === PALABRA_MAGICA) {
+                estado.modoGemini = true;
+                agregarMensajeAgente('Modo Gemini directo activado. Ahora puedes escribir cualquier pregunta y se enviará a la API de Google Gemini. Escribe <strong>/salir</strong> para volver al modo FAQ.', true);
+                estado.escribiendo = false;
+                return;
+            }
+
+            // Salir del modo Gemini
+            if (texto === '/salir' && estado.modoGemini) {
+                estado.modoGemini = false;
+
+                // Limpiar mensajes previos excepto el estado vacío
+                elementos.mensajes.querySelectorAll('.gemini-msg-user, .gemini-msg-assistant').forEach(m => m.remove());
+
+                // Mostrar estado vacío con preguntas frecuentes
+                const empty = elementos.mensajes.querySelector('.gemini-empty');
+                if (empty) empty.style.display = 'flex';
+
+                // Re-agregar listeners a botones FAQ
+                document.querySelectorAll('.faq-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const pregunta = this.getAttribute('data-pregunta');
+                        if (pregunta) {
+                            elementos.input.value = pregunta;
+                            enviarMensaje();
+                        }
+                    });
+                });
+
+                // Re-agregar listener a botón Feel Lucky
+                const btnFeelLucky = document.getElementById('btn-feel-lucky');
+                if (btnFeelLucky) {
+                    btnFeelLucky.addEventListener('click', function() {
+                        const indice = Math.floor(Math.random() * FAQ.length);
+                        const pregunta = FAQ[indice].pregunta;
+                        elementos.input.value = pregunta;
+                        enviarMensaje();
+                    });
+                }
+
+                agregarMensajeAgente('Modo Gemini desactivado. Volviste al modo preguntas frecuentes.');
+                estado.escribiendo = false;
+                return;
+            }
+
+            // Si el usuario dice adiós, cerrar el panel automáticamente
+            if (texto.toLowerCase().trim() === 'adiós') {
+                agregarMensajeAgente('¡Adiós! Que tengas un excelente día.');
+                estado.escribiendo = false;
+                // Cerrar panel automáticamente
+                setTimeout(() => {
+                    if (estado.abierto) {
+                        togglePanel();
+                    }
+                }, 1500);
+                return;
+            }
+
+            // Si está en modo Gemini, llamar directamente a la API
+            if (estado.modoGemini) {
+                const respuesta = await llamarAPI(texto);
+                agregarMensajeAgente(respuesta.respuesta, true);
+                estado.escribiendo = false;
+                return;
+            }
+
+            // Primero verificar en FAQ local (sin consumir API)
+            const respuestaFAQ = buscarEnFAQ(texto);
+            if (respuestaFAQ) {
+                agregarMensajeAgente(respuestaFAQ);
+                estado.escribiendo = false;
+                return;
+            }
+
+            // Si no está en FAQ, mostrar mensaje de no entender (sin consumir API)
+            agregarMensajeAgente('No te entendí. Por favor, vuelve a intentarlo o selecciona una de las preguntas frecuentes.');
+            estado.escribiendo = false;
+            return;
         } catch (error) {
             console.error('Error:', error);
             agregarMensajeAgente('Lo siento, ocurrió un error al procesar tu mensaje. Inténtalo de nuevo.');
@@ -555,18 +887,24 @@
         div.className = 'gemini-msg-user';
         div.innerHTML = `<div class="msg-content">${escapeHTML(texto)}</div>`;
         elementos.mensajes.appendChild(div);
+        // Ocultar estado vacío si existe
+        const empty = elementos.mensajes.querySelector('.gemini-empty');
+        if (empty) empty.style.display = 'none';
         scrollAlFinal();
     }
 
     // Agregar mensaje del agente
-    function agregarMensajeAgente(texto) {
+    function agregarMensajeAgente(texto, esGemini = false) {
         const div = document.createElement('div');
-        div.className = 'gemini-msg-assistant';
+        div.className = 'gemini-msg-assistant' + (esGemini ? ' gemini-msg-gemini' : '');
         div.innerHTML = `
-            <div class="msg-avatar">G</div>
-            <div class="msg-content">${escapeHTML(texto)}</div>
+            <div class="msg-avatar">${esGemini ? '✦' : 'G'}</div>
+            <div class="msg-content">${esGemini ? texto : escapeHTML(texto)}</div>
         `;
         elementos.mensajes.appendChild(div);
+        // Ocultar estado vacío si existe
+        const empty = elementos.mensajes.querySelector('.gemini-empty');
+        if (empty) empty.style.display = 'none';
         scrollAlFinal();
     }
 
@@ -584,8 +922,8 @@
                     modelo: estado.modelo
                 })
             });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.error || 'Error en la respuesta');
+            const data = await respuesta.json();
+            if (!respuesta.ok) throw new Error(data.error || 'Error en la respuesta');
             contenedor.innerHTML = `<div style="color:#ffffff; line-height:1.5;">${escapeHTML(data.respuesta)}</div>`;
         } catch (error) {
             contenedor.innerHTML = `<span style="color:#e74c3c;">Error: ${error.message}</span>`;
@@ -606,8 +944,8 @@
                     modelo: estado.modelo
                 })
             });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.error || 'Error en la respuesta');
+            const data = await respuesta.json();
+            if (!respuesta.ok) throw new Error(data.error || 'Error en la respuesta');
             contenedor.innerHTML = `<div style="color:#ffffff; line-height:1.5;">${escapeHTML(data.respuesta)}</div>`;
         } catch (error) {
             contenedor.innerHTML = `<span style="color:#e74c3c;">Error: ${error.message}</span>`;
