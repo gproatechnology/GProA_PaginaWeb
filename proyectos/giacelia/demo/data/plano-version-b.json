@@ -1,0 +1,169 @@
+{
+  "proyecto": {
+    "nombre": "Control Motor Trifásico 10 HP",
+    "cliente": "Demo GIACELIA",
+    "fecha": "2026-11-05",
+    "version": "1.1",
+    "plano": "P-001-CMD-MTR-01",
+    "descripcion": "Esquema de control de motor trifásico con arranque directo, protección térmica y señalización de marcha/paro — Versión revisada"
+  },
+  "componentes": [
+    {
+      "id": "C1",
+      "tipo": "disyuntor",
+      "referencia": "Q1",
+      "descripcion": "Disyuntor principal 3P 40A",
+      "ubicacion": "Panel principal - Zona superior izquierda",
+      "coordenadas": { "x": 80, "y": 60 },
+      "simbolo": "Q1",
+      "propiedades": { "polos": 3, "corriente": "40A", "tension": "440V" }
+    },
+    {
+      "id": "C2",
+      "tipo": "fusible",
+      "referencia": "F1",
+      "descripcion": "Fusible de control 2A",
+      "ubicacion": "Tablero de control - Zona superior",
+      "coordenadas": { "x": 80, "y": 140 },
+      "simbolo": "F1",
+      "propiedades": { "corriente": "2A", "tension": "220V" }
+    },
+    {
+      "id": "C3",
+      "tipo": "contactor",
+      "referencia": "K1",
+      "descripcion": "Contactor principal 3P 32A",
+      "ubicacion": "Panel de potencia - Centro",
+      "coordenadas": { "x": 300, "y": 120 },
+      "simbolo": "K1",
+      "propiedades": { "polos": 3, "corriente": "32A", "tension": "220V", "contactos_aux": "2NA+2NC" }
+    },
+    {
+      "id": "C4",
+      "tipo": "rele_termico",
+      "referencia": "FR1",
+      "descripcion": "Relé térmico de sobrecarga 14-20A",
+      "ubicacion": "Panel de potencia - Bajo contactor",
+      "coordenadas": { "x": 300, "y": 220 },
+      "simbolo": "FR1",
+      "propiedades": { "rango": "14-20A", "fases": 3, "tipo": "termico" }
+    },
+    {
+      "id": "C5",
+      "tipo": "rele_control",
+      "referencia": "K2",
+      "descripcion": "Relé de control 220V 2NA+2NC",
+      "ubicacion": "Tablero de control - Zona derecha",
+      "coordenadas": { "x": 520, "y": 120 },
+      "simbolo": "K2",
+      "propiedades": { "tension": "220V", "contactos": "2NA+2NC" }
+    },
+    {
+      "id": "C6",
+      "tipo": "boton",
+      "referencia": "SB1",
+      "descripcion": "Botón arranque (Start) NA verde",
+      "ubicacion": "Panel de control - Izquierda",
+      "coordenadas": { "x": 80, "y": 320 },
+      "simbolo": "SB1",
+      "propiedades": { "color": "verde", "tipo": "NA", "funcion": "arranque" }
+    },
+    {
+      "id": "C7",
+      "tipo": "boton",
+      "referencia": "SB2",
+      "descripcion": "Botón parada (Stop) NC rojo",
+      "ubicacion": "Panel de control - Izquierda",
+      "coordenadas": { "x": 160, "y": 320 },
+      "simbolo": "SB2",
+      "propiedades": { "color": "rojo", "tipo": "NC", "funcion": "parada" }
+    },
+    {
+      "id": "C8",
+      "tipo": "luz_indicadora",
+      "referencia": "PL1",
+      "descripcion": "Luz indicadora marcha verde 220V",
+      "ubicacion": "Panel de control - Derecha",
+      "coordenadas": { "x": 520, "y": 320 },
+      "simbolo": "PL1",
+      "propiedades": { "color": "verde", "tension": "220V", "funcion": "marcha" }
+    },
+    {
+      "id": "C9",
+      "tipo": "luz_indicadora",
+      "referencia": "PL2",
+      "descripcion": "Luz indicadora paro rojo 220V",
+      "ubicacion": "Panel de control - Derecha",
+      "coordenadas": { "x": 600, "y": 320 },
+      "simbolo": "PL2",
+      "propiedades": { "color": "rojo", "tension": "220V", "funcion": "paro" }
+    },
+    {
+      "id": "C10",
+      "tipo": "borne",
+      "referencia": "X1",
+      "descripcion": "Borne de conexión 2.5mm²",
+      "ubicacion": "Bornes inferiores - Fila A",
+      "coordenadas": { "x": 200, "y": 420 },
+      "simbolo": "X1",
+      "propiedades": { "seccion": "2.5mm²", "tipo": "pasante", "color": "gris" }
+    },
+    {
+      "id": "C11",
+      "tipo": "borne",
+      "referencia": "X3",
+      "descripcion": "Borne de conexión 4mm²",
+      "ubicacion": "Bornes inferiores - Fila B",
+      "coordenadas": { "x": 280, "y": 420 },
+      "simbolo": "X3",
+      "propiedades": { "seccion": "4mm²", "tipo": "tierra", "color": "verde" }
+    },
+    {
+      "id": "C12",
+      "tipo": "contacto_auxiliar",
+      "referencia": "KM1",
+      "descripcion": "Contacto auxiliar NO contactor K1",
+      "ubicacion": "Contactor principal - Contacto aux",
+      "coordenadas": { "x": 420, "y": 120 },
+      "simbolo": "KM1",
+      "propiedades": { "tipo": "NO", "asociado": "K1", "funcion": "señalización" }
+    },
+    {
+      "id": "C13",
+      "tipo": "motor",
+      "referencia": "M1",
+      "descripcion": "Motor trifásico 10 HP 440V",
+      "ubicacion": "Planta - Zona maquinaria",
+      "coordenadas": { "x": 700, "y": 200 },
+      "simbolo": "M1",
+      "propiedades": { "potencia": "10HP", "tension": "440V", "fases": 3, "corriente": "14A" }
+    },
+    {
+      "id": "C14",
+      "tipo": "luz_indicadora",
+      "referencia": "PL3",
+      "descripcion": "Luz indicadora falla amarilla 220V",
+      "ubicacion": "Panel de control - Derecha",
+      "coordenadas": { "x": 680, "y": 320 },
+      "simbolo": "PL3",
+      "propiedades": { "color": "amarillo", "tension": "220V", "funcion": "falla" }
+    }
+  ],
+  "cableado": [
+    { "origen": "Q1", "destino": "F1", "seccion": "6mm²", "color": "negro", "bornes": ["L1", "L2"] },
+    { "origen": "F1", "destino": "K1(A1)", "seccion": "1.5mm²", "color": "rojo", "bornes": ["13", "14"] },
+    { "origen": "K1(A2)", "destino": "SB2", "seccion": "1.5mm²", "color": "azul", "bornes": ["A2", "2"] },
+    { "origen": "SB2", "destino": "SB1", "seccion": "1.5mm²", "color": "azul", "bornes": ["1", "2"] },
+    { "origen": "SB1", "destino": "K1(A1)", "seccion": "1.5mm²", "color": "azul", "bornes": ["3", "4"] },
+    { "origen": "K1", "destino": "FR1", "seccion": "6mm²", "color": "negro", "bornes": ["T1", "T2", "T3"] },
+    { "origen": "FR1", "destino": "M1", "seccion": "6mm²", "color": "negro", "bornes": ["T1", "T2", "T3"] },
+    { "origen": "FR1", "destino": "PL3", "seccion": "1.5mm²", "color": "amarillo", "bornes": ["5", "6"] }
+  ],
+  "metadatos": {
+    "total_componentes": 14,
+    "total_cables": 8,
+    "norma_referencia": "NOM-001-SEDE-2012",
+    "tension_sistema": "440V",
+    "corriente_diseno": "14A"
+  }
+}
