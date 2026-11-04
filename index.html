@@ -845,39 +845,39 @@
     </div>
     -->
 
-    <!-- Widget asistente GProA Gemini -->
-    <script src="https://gproa-agente-gemini.onrender.com/widget.js"></script>
-
     <!-- Menú hamburguesa móvil -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const navToggle = document.getElementById('navToggle');
             const navLinks = document.getElementById('navLinks');
             
-            if (navToggle && navLinks) {
-                navToggle.addEventListener('click', () => {
-                    const isOpen = navLinks.classList.contains('active');
-                    
-                    if (isOpen) {
-                        navLinks.classList.remove('active');
-                        navToggle.classList.remove('active');
-                    } else {
-                        navLinks.classList.add('active');
-                        navToggle.classList.add('active');
-                    }
-                    
-                    const isExpanded = navLinks.classList.contains('active');
-                    navToggle.setAttribute('aria-expanded', isExpanded);
-                    navToggle.setAttribute('aria-label', isExpanded ? 'Cerrar menú' : 'Abrir menú');
-                });
+            if (!navToggle || !navLinks) return;
+            
+            navToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                const isOpen = navLinks.classList.contains('active');
                 
-                document.querySelectorAll('.nav-link').forEach(link => {
-                    link.addEventListener('click', () => {
-                        navLinks.classList.remove('active');
-                        navToggle.classList.remove('active');
-                    });
+                if (isOpen) {
+                    navLinks.classList.remove('active');
+                    navToggle.classList.remove('active');
+                    navToggle.setAttribute('aria-expanded', 'false');
+                    navToggle.setAttribute('aria-label', 'Abrir menú');
+                } else {
+                    navLinks.classList.add('active');
+                    navToggle.classList.add('active');
+                    navToggle.setAttribute('aria-expanded', 'true');
+                    navToggle.setAttribute('aria-label', 'Cerrar menú');
+                }
+            });
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    navToggle.classList.remove('active');
+                    navToggle.setAttribute('aria-expanded', 'false');
+                    navToggle.setAttribute('aria-label', 'Abrir menú');
                 });
-            }
+            });
         });
     </script>
 </body>
