@@ -847,6 +847,28 @@
 
     <!-- Widget asistente GProA Gemini -->
     <script src="https://gproa-agente-gemini.onrender.com/widget.js"></script>
-</body>
 
+    <!-- Menú hamburguesa móvil -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navToggle = document.getElementById('navToggle');
+            const navLinks = document.getElementById('navLinks');
+            
+            if (navToggle && navLinks) {
+                navToggle.addEventListener('click', () => {
+                    navLinks.classList.add('active');
+                    navToggle.classList.add('active');
+                });
+                
+                // Cerrar al hacer clic en un enlace
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navLinks.classList.remove('active');
+                        navToggle.classList.remove('active');
+                    });
+                });
+            }
+        });
+    </script>
+</body>
 </html>
