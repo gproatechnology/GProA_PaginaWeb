@@ -135,6 +135,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Ingeniería de detalle: generar cálculos ---
+    const btnGenerarDetalle = document.getElementById('btnGenerarDetalle');
+    if (btnGenerarDetalle) {
+        btnGenerarDetalle.addEventListener('click', () => {
+            const hp = parseFloat(document.getElementById('hpMotor').value) || 0;
+            const voltaje = parseFloat(document.getElementById('voltajeMotor').value) || 0;
+            const fases = parseInt(document.getElementById('fasesMotor').value) || 3;
+            if (hp <= 0 || voltaje <= 0) {
+                alert('Ingresa valores válidos de potencia y voltaje.');
+                return;
+            }
+            const detalle = calcularIngenieríaDetalle(hp, voltaje, fases);
+            renderizarResultadoDetalle(detalle);
+        });
+    }
+});
+    }
+
     // Botones de carga rápida para migración (ejemplos)
     const btnCargarA = document.getElementById('btnCargarVersionA');
     const btnCargarB = document.getElementById('btnCargarVersionB');
@@ -593,3 +611,343 @@ function scrollToTabla(id) {
     const fila = document.querySelector(`#tbodyComponentes tr[data-id="${id}"]`);
     if (fila) fila.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
+
+/* ============================================================
+   Sprint 4: Ingeniería de Detalle
+   ============================================================ */
+
+const FP_DEFAULT = 0.85;
+const EFICIENCIA_DEFAULT = 0.90;
+
+/**
+ * Calcula ingeniería de detalle a partir de HP, voltaje y fases.
+ */
+function calcularIngenieríaDetalle(hp, voltaje, fases) {
+    const potenciaW = hp * 746;
+    const raiz3 = Math.sqrt(3);
+
+    // Corriente nominal del motor
+    let denominador;
+    if (fases === 3) {
+        denominador = raiz3 * voltaje * FP_DEFAULT * EFICIENCIA_DEFAULT;
+    } else {
+        denominador = voltaje * FP_DEFAULT * EFICIENCIA_DEFAULT;
+    }
+    const corrienteNominal = potenciaW / denominador;
+
+    // Corriente de arranque (aprox 6x nominal)
+    const corrienteArranque = corrienteNominal * 6;
+
+    // Corriente de diseño (125% del nominal para protecciones)
+    const corrienteDiseno = corrienteNominal * 1.25;
+
+    // Selección de sección de cable (mm²) simplificada por ampacidad
+    const seccionCable = seleccionarSeccionCable(corrienteDiseno);
+
+    // Selección de disyuntor (calibre comercial estándar)
+    const disyuntor = seleccionarDisyuntor(corrienteDiseno);
+
+    // Selección de relé térmico (rango cercano al nominal)
+    const releTermico = seleccionarReleTermico(corrienteNominal);
+
+    // Selección de contactor (corriente AC-3 aproximada)
+    const contactor = seleccionarContactor(corrienteNominal);
+
+    // Sección de cable de control
+    const seccionControl = '1.5mm²';
+
+    // BOM (Lista de materiales)
+    const bom = [
+        { item: 1, descripcion: 'Disyuntor principal 3P', referencia: disyuntor.referencia, cantidad: 1, unidad: 'pza', notas: `${disyuntor.calibre}A, ${voltaje}V` },
+        { item: 2, descripcion: 'Contactor principal 3P', referencia: contactor.referencia, cantidad: 1, unidad: 'pza', notas: `${contactor.calibre}A, bobina ${voltaje}V` },
+        { item: 3, descripcion: 'Relé térmico de sobrecarga', referencia: releTermico.referencia, cantidad: 1, unidad: 'pza', notas: `Rango ${releTermico.rango}A` },
+        { item: 4, descripcion: 'Relé de control', referencia: 'K2', cantidad: 1, unidad: 'pza', notas: `220V, 2NA+2NC` },
+        { item: 5, descripcion: 'Botón arranque (Start)', referencia: 'SB1', cantidad: 1, unidad: 'pza', notas: 'NA, verde' },
+        { item: 6, descripcion: 'Botón parada (Stop)', referencia: 'SB2', cantidad: 1, unidad: 'pza', notas: 'NC, rojo' },
+        { item: 7, descripcion: 'Luz indicadora marcha', referencia: 'PL1', cantidad: 1, unidad: 'pza', notas: 'Verde, 220V' },
+        { item: 8, descripcion: 'Luz indicadora paro', referencia: 'PL2', cantidad: 1, unidad: 'pza', notas: 'Rojo, 220V' },
+        { item: 9, descripcion: `Cable potencia ${seccionCable}`, referencia: 'CABLE-POT', cantidad: Math.ceil(hp * 1.5), unidad: 'm', notas: `Sección ${seccionCable}, color negro` },
+        { item: 10, descripcion: `Cable control ${seccionControl}`, referencia: 'CABLE-CTL', cantidad: Math.ceil(hp * 1.0), unidad: 'm', notas: `Sección ${seccionControl}, colores varios` },
+        { item: 11, descripcion: 'Bornes de conexión 2.5mm²', referencia: 'X1-Xn', cantidad: 6, unidad: 'pza', notas: 'Pasantes, gris' },
+        { item: 12, descripcion: 'Motor trifásico', referencia: 'M1', cantidad: 1, unidad: 'pza', notas: `${hp}HP, ${voltaje}V, ${fases === 3 ? '3F' : '1F'}` }
+    ];
+
+    // Tabla de cableado (potencia)
+    const cableadoPotencia = [
+        { origen: 'Q1 (L1)', destino: 'F1', seccion: seccionCable, color: 'Negro', borne: 'L1' },
+        { origen: 'Q1 (L2)', destino: 'F1', seccion: seccionCable, color: 'Negro', borne: 'L2' },
+        { origen: 'Q1 (L3)', destino: 'F1', seccion: seccionCable, color: 'Negro', borne: 'L3' },
+        { origen: 'F1', destino: 'K1(A1)', seccion: seccionCable, color: 'Rojo', borne: '13-14' },
+        { origen: 'K1(T1)', destino: 'FR1(L1)', seccion: seccionCable, color: 'Negro', borne: 'T1' },
+        { origen: 'K1(T2)', destino: 'FR1(L2)', seccion: seccionCable, color: 'Negro', borne: 'T2' },
+        { origen: 'K1(T3)', destino: 'FR1(L3)', seccion: seccionCable, color: 'Negro', borne: 'T3' },
+        { origen: 'FR1(T1)', destino: 'M1(U)', seccion: seccionCable, color: 'Negro', borne: 'T1' },
+        { origen: 'FR1(T2)', destino: 'M1(V)', seccion: seccionCable, color: 'Negro', borne: 'T2' },
+        { origen: 'FR1(T3)', destino: 'M1(W)', seccion: seccionCable, color: 'Negro', borne: 'T3' }
+    ];
+
+    // Tabla de cableado (control)
+    const cableadoControl = [
+        { origen: 'K1(A2)', destino: 'SB2', seccion: seccionControl, color: 'Azul', borne: 'A2' },
+        { origen: 'SB2', destino: 'SB1', seccion: seccionControl, color: 'Azul', borne: '1-2' },
+        { origen: 'SB1', destino: 'K1(A1)', seccion: seccionControl, color: 'Azul', borne: '3-4' },
+        { origen: 'K1(NO aux)', destino: 'PL1', seccion: seccionControl, color: 'Rojo', borne: '13-14' },
+        { origen: 'FR1(NC)', destino: 'PL2', seccion: seccionControl, color: 'Amarillo', borne: '95-96' }
+    ];
+
+    return {
+        hp,
+        voltaje,
+        fases: fases === 3 ? 'Trifásico (3F)' : 'Monofásico (1F)',
+        potenciaW: Math.round(potenciaW),
+        corrienteNominal: Math.round(corrienteNominal * 100) / 100,
+        corrienteArranque: Math.round(corrienteArranque * 100) / 100,
+        corrienteDiseno: Math.round(corrienteDiseno * 100) / 100,
+        seccionCable,
+        seccionControl,
+        disyuntor,
+        contactor,
+        releTermico,
+        bom,
+        cableadoPotencia,
+        cableadoControl,
+        fecha: new Date().toISOString().split('T')[0]
+    };
+}
+
+/**
+ * Selecciona sección de cable (mm²) por ampacidad simplificada (75°C, cobre)
+ */
+function seleccionarSeccionCable(amperios) {
+    const tabla = [
+        { mm2: '1.5mm²', maxA: 18 },
+        { mm2: '2.5mm²', maxA: 26 },
+        { mm2: '4mm²', maxA: 34 },
+        { mm2: '6mm²', maxA: 45 },
+        { mm2: '10mm²', maxA: 62 },
+        { mm2: '16mm²', maxA: 83 },
+        { mm2: '25mm²', maxA: 110 }
+    ];
+    for (const t of tabla) {
+        if (amperios <= t.maxA) return t.mm2;
+    }
+    return '35mm²+';
+}
+
+/**
+ * Selecciona calibre de disyuntor (estándar comercial)
+ */
+function seleccionarDisyuntor(amperios) {
+    const escalas = [10, 16, 20, 25, 32, 40, 50, 63, 80, 100];
+    let calibre = 10;
+    for (const e of escalas) {
+        if (amperios <= e) { calibre = e; break; }
+        calibre = e;
+    }
+    if (amperios > 100) calibre = Math.ceil(amperios / 10) * 10;
+    return {
+        referencia: `Q1-${calibre}A`,
+        calibre,
+        tipo: 'Disyuntor termomagnético 3P'
+    };
+}
+
+/**
+ * Selecciona relé térmico (rango de ajuste)
+ */
+function seleccionarReleTermico(corrienteNominal) {
+    const rangos = [
+        { min: 0.1, max: 0.16, texto: '0.10-0.16A' },
+        { min: 0.16, max: 0.25, texto: '0.16-0.25A' },
+        { min: 0.25, max: 0.40, texto: '0.25-0.40A' },
+        { min: 0.40, max: 0.63, texto: '0.40-0.63A' },
+        { min: 0.63, max: 1.0, texto: '0.63-1.0A' },
+        { min: 1.0, max: 1.6, texto: '1.0-1.6A' },
+        { min: 1.6, max: 2.5, texto: '1.6-2.5A' },
+        { min: 2.5, max: 4.0, texto: '2.5-4.0A' },
+        { min: 4.0, max: 6.3, texto: '4.0-6.3A' },
+        { min: 6.3, max: 10, texto: '6.3-10A' },
+        { min: 10, max: 16, texto: '10-16A' },
+        { min: 16, max: 25, texto: '16-25A' },
+        { min: 25, max: 40, texto: '25-40A' }
+    ];
+    for (const r of rangos) {
+        if (corrienteNominal >= r.min && corrienteNominal <= r.max) {
+            return { referencia: `FR1-${r.texto}`, rango: r.texto };
+        }
+    }
+    return { referencia: 'FR1->40A', rango: '>40A (consultar tabla)' };
+}
+
+/**
+ * Selecciona contactor (corriente AC-3)
+ */
+function seleccionarContactor(corrienteNominal) {
+    const escalas = [9, 12, 18, 25, 32, 40, 50, 65, 80, 95];
+    let calibre = 9;
+    for (const e of escalas) {
+        if (corrienteNominal <= e) { calibre = e; break; }
+        calibre = e;
+    }
+    if (corrienteNominal > 95) calibre = Math.ceil(corrienteNominal / 5) * 5;
+    return {
+        referencia: `K1-${calibre}A`,
+        calibre,
+        tipo: 'Contactor 3P, bobina 220V'
+    };
+}
+
+/**
+ * Renderiza el resultado de ingeniería de detalle en el DOM
+ */
+function renderizarResultadoDetalle(d) {
+    const contenedor = document.getElementById('resultadoDetalle');
+    if (!contenedor) return;
+    contenedor.style.display = 'block';
+
+    let html = `
+        <div class="detalle-resumen">
+            <div class="detalle-tarjeta">
+                <h4>Parámetros de diseño</h4>
+                <p><strong>Motor:</strong> ${d.hp} HP</p>
+                <p><strong>Voltaje:</strong> ${d.voltaje} V</p>
+                <p><strong>Fases:</strong> ${d.fases}</p>
+                <p><strong>Potencia:</strong> ${d.potenciaW} W</p>
+            </div>
+            <div class="detalle-tarjeta">
+                <h4>Corrientes calculadas</h4>
+                <p><strong>Nominal:</strong> ${d.corrienteNominal} A</p>
+                <p><strong>Arranque (≈6×):</strong> ${d.corrienteArranque} A</p>
+                <p><strong>Diseño (1.25×):</strong> ${d.corrienteDiseno} A</p>
+            </div>
+            <div class="detalle-tarjeta">
+                <h4>Selección de componentes</h4>
+                <p><strong>Cable potencia:</strong> ${d.seccionCable}</p>
+                <p><strong>Cable control:</strong> ${d.seccionControl}</p>
+                <p><strong>Disyuntor:</strong> ${d.disyuntor.referencia}</p>
+                <p><strong>Contactor:</strong> ${d.contactor.referencia}</p>
+                <p><strong>Relé térmico:</strong> ${d.releTermico.referencia}</p>
+            </div>
+        </div>
+    `;
+
+    // BOM
+    html += `
+        <h3 style="color:#00e0ff; margin-top: 25px;"><i class="fas fa-list"></i> Lista de Materiales (BOM)</h3>
+        <table class="tabla-componentes tabla-detalle">
+            <thead>
+                <tr><th>Ítem</th><th>Descripción</th><th>Referencia</th><th>Cant.</th><th>Unidad</th><th>Notas</th></tr>
+            </thead>
+            <tbody>
+    `;
+    d.bom.forEach(item => {
+        html += `
+            <tr>
+                <td>${item.item}</td>
+                <td>${item.descripcion}</td>
+                <td><strong>${item.referencia}</strong></td>
+                <td>${item.cantidad}</td>
+                <td>${item.unidad}</td>
+                <td>${item.notas}</td>
+            </tr>
+        `;
+    });
+    html += `</tbody></table>`;
+
+    // Cableado potencia
+    html += `
+        <h3 style="color:#3498db; margin-top: 25px;"><i class="fas fa-stream"></i> Cableado de Potencia</h3>
+        <table class="tabla-componentes tabla-detalle">
+            <thead>
+                <tr><th>Origen</th><th>Destino</th><th>Sección</th><th>Color</th><th>Borne</th></tr>
+            </thead>
+            <tbody>
+    `;
+    d.cableadoPotencia.forEach(c => {
+        html += `
+            <tr>
+                <td>${c.origen}</td>
+                <td>${c.destino}</td>
+                <td>${c.seccion}</td>
+                <td>${c.color}</td>
+                <td>${c.borne}</td>
+            </tr>
+        `;
+    });
+    html += `</tbody></table>`;
+
+    // Cableado control
+    html += `
+        <h3 style="color:#e67e22; margin-top: 25px;"><i class="fas fa-project-diagram"></i> Cableado de Control</h3>
+        <table class="tabla-componentes tabla-detalle">
+            <thead>
+                <tr><th>Origen</th><th>Destino</th><th>Sección</th><th>Color</th><th>Borne</th></tr>
+            </thead>
+            <tbody>
+    `;
+    d.cableadoControl.forEach(c => {
+        html += `
+            <tr>
+                <td>${c.origen}</td>
+                <td>${c.destino}</td>
+                <td>${c.seccion}</td>
+                <td>${c.color}</td>
+                <td>${c.borne}</td>
+            </tr>
+        `;
+    });
+    html += `</tbody></table>`;
+
+    // Botón exportar CSV
+    html += `
+        <div style="margin-top: 25px;">
+            <button class="btn-primary" id="btnExportarBOM">
+                <i class="fas fa-download"></i> Exportar BOM a CSV
+            </button>
+            <button class="btn-primary" id="btnExportarCableado">
+                <i class="fas fa-download"></i> Exportar Cableado a CSV
+            </button>
+        </div>
+    `;
+
+    contenedor.innerHTML = html;
+
+    // Conectar botones de exportación
+    const btnBOM = document.getElementById('btnExportarBOM');
+    const btnCableado = document.getElementById('btnExportarCableado');
+    if (btnBOM) {
+        btnBOM.addEventListener('click', () => exportarCSV(d.bom, `BOM_${d.hp}HP_${d.voltaje}V.csv`));
+    }
+    if (btnCableado) {
+        btnCableado.addEventListener('click', () => {
+            const todo = [...d.cableadoPotencia, ...d.cableadoControl];
+            exportarCSV(todo, `Cableado_${d.hp}HP_${d.voltaje}V.csv`);
+        });
+    }
+}
+
+/**
+ * Exporta un array de objetos a CSV
+ */
+function exportarCSV(data, filename) {
+    if (!data || data.length === 0) return;
+    const keys = Object.keys(data[0]);
+    const csv = [
+        keys.join(','),
+        ...data.map(row => keys.map(k => {
+            const cell = row[k] !== undefined ? row[k] : '';
+            return `"${String(cell).replace(/"/g, '""')}"`;
+        }).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
