@@ -856,11 +856,21 @@
             
             if (navToggle && navLinks) {
                 navToggle.addEventListener('click', () => {
-                    navLinks.classList.add('active');
-                    navToggle.classList.add('active');
+                    const isOpen = navLinks.classList.contains('active');
+                    
+                    if (isOpen) {
+                        navLinks.classList.remove('active');
+                        navToggle.classList.remove('active');
+                    } else {
+                        navLinks.classList.add('active');
+                        navToggle.classList.add('active');
+                    }
+                    
+                    const isExpanded = navLinks.classList.contains('active');
+                    navToggle.setAttribute('aria-expanded', isExpanded);
+                    navToggle.setAttribute('aria-label', isExpanded ? 'Cerrar menú' : 'Abrir menú');
                 });
                 
-                // Cerrar al hacer clic en un enlace
                 document.querySelectorAll('.nav-link').forEach(link => {
                     link.addEventListener('click', () => {
                         navLinks.classList.remove('active');
