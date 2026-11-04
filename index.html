@@ -548,7 +548,7 @@
                         <button class="metric-category-btn" data-view="evolution"
                             aria-label="Ver Evolución - Crecimiento en IA">
                             <div class="metric-icon">
-                                <i class="fas fa-trending-up"></i>
+                                <i class="fas fa-chart-line"></i>
                             </div>
                             <div class="metric-info">
                                 <h3>Evolución</h3>
@@ -835,50 +835,10 @@
 
     <!-- JavaScript -->
     <script type="module" src="./src/js/main.js"></script>
-    <!-- Botón flotante de WhatsApp desactivado (contacto disponible en sección Contacto)
-    <div class="whatsapp-float" id="whatsappFloat">
-        <a href="https://wa.me/5214191296200?text=Hola%20GProA%20Technology,%20deseo%20más%20información..."
-            target="_blank" rel="noopener noreferrer" class="whatsapp-btn" aria-label="Contactar por WhatsApp">
-            <i class="fab fa-whatsapp"></i>
-        </a>
-        <span class="whatsapp-tooltip">¡Escríbenos!</span>
-    </div>
-    -->
 
-    <!-- Menú hamburguesa móvil -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const navToggle = document.getElementById('navToggle');
-            const navLinks = document.getElementById('navLinks');
-            
-            if (!navToggle || !navLinks) return;
-            
-            navToggle.addEventListener('click', (e) => {
-                e.preventDefault();
-                const isOpen = navLinks.classList.contains('active');
-                
-                if (isOpen) {
-                    navLinks.classList.remove('active');
-                    navToggle.classList.remove('active');
-                    navToggle.setAttribute('aria-expanded', 'false');
-                    navToggle.setAttribute('aria-label', 'Abrir menú');
-                } else {
-                    navLinks.classList.add('active');
-                    navToggle.classList.add('active');
-                    navToggle.setAttribute('aria-expanded', 'true');
-                    navToggle.setAttribute('aria-label', 'Cerrar menú');
-                }
-            });
-            
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', () => {
-                    navLinks.classList.remove('active');
-                    navToggle.classList.remove('active');
-                    navToggle.setAttribute('aria-expanded', 'false');
-                    navToggle.setAttribute('aria-label', 'Abrir menú');
-                });
-            });
-        });
-    </script>
+    <!-- Widget asistente GProA Gemini -->
+    <script src="./src/js/modules/widget.js"></script>
+
+    <!-- Menú hamburguesa móvil (gestionado por src/js/modules/navigation.js) -->
 </body>
 </html>

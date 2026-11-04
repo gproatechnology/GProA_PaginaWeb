@@ -4,7 +4,7 @@
  * Enterprise HUD Sci-Fi SPA
  */
 
-const ACCESS_CODE = 'SG-NDA-2026';
+const ACCESS_CODE = null;
 
 let appData = null;
 let chartsInitialized = false;
@@ -68,7 +68,7 @@ function initAccess() {
         e.preventDefault();
         const code = input.value.trim();
 
-        if (code === ACCESS_CODE) {
+        if (ACCESS_CODE && code === ACCESS_CODE) {
             errorEl.textContent = '';
             accessContainer.style.display = 'none';
             appLayout.style.display = 'flex';
@@ -82,7 +82,7 @@ function initAccess() {
             initClock();
             loadData();
         } else {
-            errorEl.textContent = 'Código de acceso inválido. Verifica tu NDA.';
+            errorEl.textContent = 'Acceso restringido. Credenciales requeridas.';
             input.classList.add('invalid');
             input.focus();
         }

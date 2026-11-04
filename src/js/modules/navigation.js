@@ -22,9 +22,16 @@ export function initNavigation() {
     // Mobile menu toggle
     if (navToggle) {
         navToggle.addEventListener('click', () => {
-            navLinks.classList.add('active');
-            navToggle.classList.add('active');
-            
+            const isOpen = navLinks.classList.contains('active');
+
+            if (isOpen) {
+                navLinks.classList.remove('active');
+                navToggle.classList.remove('active');
+            } else {
+                navLinks.classList.add('active');
+                navToggle.classList.add('active');
+            }
+
             // Update aria-expanded for accessibility
             const isExpanded = navToggle.classList.contains('active');
             navToggle.setAttribute('aria-expanded', isExpanded);
