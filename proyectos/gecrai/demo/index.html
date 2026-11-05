@@ -160,32 +160,6 @@
             display: none;
         }
         .result.show { display: block; }
-        .login-screen {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .login-card {
-            width: 100%;
-            max-width: 420px;
-            background: linear-gradient(145deg, rgba(20,30,50,0.95), rgba(10,20,35,0.95));
-            border: 1px solid rgba(0,224,255,0.2);
-            border-radius: 18px;
-            padding: 30px;
-            box-shadow: 0 0 40px rgba(0,224,255,0.15);
-        }
-        .login-card h1 {
-            color: #00e0ff;
-            text-align: center;
-            margin-bottom: 6px;
-        }
-        .login-card p {
-            text-align: center;
-            color: #94a3b8;
-            margin-bottom: 20px;
-        }
         .toast {
             position: fixed;
             right: 18px;
@@ -228,28 +202,12 @@
 </head>
 <body>
     <div class="app" id="app">
-        <div class="login-screen" id="loginScreen">
-            <form class="login-card" id="loginForm">
-                <h1>GECRAI 1.1</h1>
-                <p>Demo Enterprise</p>
-                <div class="form-group">
-                    <label>Usuario</label>
-                    <input type="text" id="loginUser" value="demo@gecrai.app" autocomplete="username">
-                </div>
-                <div class="form-group">
-                    <label>Contraseña</label>
-                    <input type="password" id="loginPass" autocomplete="current-password">
-                </div>
-                <button type="submit" class="btn" style="width:100%">Ingresar</button>
-            </form>
-        </div>
-
-        <div id="mainApp" style="display:none;">
+        <div id="mainApp">
             <div class="topbar">
                 <div class="brand">GECRAI <span style="color:#94a3b8;font-weight:500;">Enterprise</span></div>
                 <div class="topbar-actions">
                     <span class="badge" id="envBadge">Producción</span>
-                    <button class="btn btn-outline" id="logoutBtn">Cerrar sesión</button>
+
                 </div>
             </div>
             <div class="layout">
@@ -873,19 +831,6 @@ Estado: ${result.aprobado ? 'Aprobado' : 'Revisar'}`;
             renderMemorias();
         }
 
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'block';
-            initDashboard();
-        });
-
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            document.getElementById('mainApp').style.display = 'none';
-            document.getElementById('loginScreen').style.display = 'flex';
-            showToast('Sesión cerrada');
-        });
-
         document.querySelectorAll('.nav-item').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
@@ -928,6 +873,7 @@ Estado: ${result.aprobado ? 'Aprobado' : 'Revisar'}`;
         poblarVoltaje();
         poblarHp();
         validarEntradas();
+        initDashboard();
 
         document.getElementById('btnPrintMemory')?.addEventListener('click', () => {
             window.print();
