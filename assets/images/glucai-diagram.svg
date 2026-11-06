@@ -1,0 +1,135 @@
+<svg class="proyecto-svg" viewBox="0 0 500 360" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Filtros de resplandor médico -->
+    <filter id="glucaiGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="softGlowGlucai" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3.5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Degradados temáticos de salud e IA -->
+    <linearGradient id="bioGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="50%" stop-color="#00e0ff" />
+      <stop offset="100%" stop-color="#0066ff" />
+    </linearGradient>
+
+    <linearGradient id="ecgGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="rgba(0, 224, 255, 0.1)" />
+      <stop offset="25%" stop-color="#00e0ff" />
+      <stop offset="50%" stop-color="#f43f5e" />
+      <stop offset="75%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="rgba(16, 185, 129, 0.2)" />
+    </linearGradient>
+
+    <radialGradient id="bioAura" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#00e0ff" stop-opacity="0.22" />
+      <stop offset="50%" stop-color="#10b981" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Aura central bio-tecnológica -->
+  <circle cx="250" cy="155" r="150" fill="url(#bioAura)" />
+
+  <!-- Radar de análisis y anillos concéntricos de biomarcadores -->
+  <g stroke="rgba(0, 224, 255, 0.12)" stroke-width="1" fill="none">
+    <circle cx="250" cy="155" r="135" stroke-dasharray="3 6" />
+    <circle cx="250" cy="155" r="105" />
+    <!-- Ejes coordenados de espacio vectorial KNN -->
+    <line x1="115" y1="155" x2="385" y2="155" stroke-dasharray="2 4" />
+    <line x1="250" y1="20" x2="250" y2="290" stroke-dasharray="2 4" />
+  </g>
+
+  <!-- Radio de Clasificación KNN (Horizonte de Vecinos k=5) -->
+  <circle cx="250" cy="155" r="72" fill="rgba(0, 224, 255, 0.03)" stroke="rgba(0, 224, 255, 0.4)" stroke-width="1.5" stroke-dasharray="5 5" />
+
+  <!-- Vectores de distancia euclidiana hacia los vecinos K más cercanos -->
+  <g stroke="rgba(0, 224, 255, 0.35)" stroke-width="1.2" stroke-dasharray="2 3">
+    <line x1="250" y1="155" x2="205" y2="120" />
+    <line x1="250" y1="155" x2="210" y2="190" />
+    <line x1="250" y1="155" x2="295" y2="125" />
+    <line x1="250" y1="155" x2="290" y2="185" />
+    <line x1="250" y1="155" x2="235" y2="95" />
+  </g>
+
+  <!-- CLÚSTERES DE BIOMARCADORES (Espacio de Entrenamiento) -->
+  <!-- Clúster Normal (Verde #10b981) -->
+  <circle cx="205" cy="120" r="5" fill="#10b981" filter="url(#softGlowGlucai)" />
+  <circle cx="210" cy="190" r="5" fill="#10b981" filter="url(#softGlowGlucai)" />
+  <circle cx="235" cy="95" r="4.5" fill="#10b981" filter="url(#softGlowGlucai)" />
+  <circle cx="160" cy="110" r="4" fill="#10b981" opacity="0.6" />
+  <circle cx="140" cy="155" r="4" fill="#10b981" opacity="0.6" />
+  <circle cx="155" cy="195" r="4" fill="#10b981" opacity="0.6" />
+
+  <!-- Clúster Prediabetes (Ámbar #f59e0b) -->
+  <circle cx="295" cy="125" r="5" fill="#f59e0b" filter="url(#softGlowGlucai)" />
+  <circle cx="290" cy="185" r="5" fill="#f59e0b" filter="url(#softGlowGlucai)" />
+  <circle cx="340" cy="115" r="4" fill="#f59e0b" opacity="0.6" />
+  <circle cx="345" cy="165" r="4" fill="#f59e0b" opacity="0.6" />
+
+  <!-- Clúster Riesgo Glucosa (Rojo/Rosa #f43f5e) -->
+  <circle cx="370" cy="90" r="4" fill="#f43f5e" opacity="0.7" />
+  <circle cx="390" cy="135" r="4.5" fill="#f43f5e" filter="url(#softGlowGlucai)" />
+  <circle cx="375" cy="195" r="4" fill="#f43f5e" opacity="0.7" />
+
+  <!-- NÚCLEO CENTRAL: Anillo Molecular de Glucosa (Hexágono de Carbono) -->
+  <polygon points="292,155 271,191 229,191 208,155 229,119 271,119" 
+           fill="#0a1526" 
+           stroke="url(#bioGrad)" 
+           stroke-width="2.5" 
+           filter="url(#glucaiGlow)" />
+  
+  <!-- Enlaces moleculares interiores -->
+  <circle cx="292" cy="155" r="3" fill="#00e0ff" />
+  <circle cx="271" cy="191" r="3" fill="#10b981" />
+  <circle cx="229" cy="191" r="3" fill="#00e0ff" />
+  <circle cx="208" cy="155" r="3" fill="#10b981" />
+  <circle cx="229" cy="119" r="3" fill="#00e0ff" />
+  <circle cx="271" cy="119" r="3" fill="#10b981" />
+
+  <!-- Gota de Química Sanguínea / Bio-Cruz Central -->
+  <path d="M 250,132 C 250,132 235,151 235,161 C 235,169 242,176 250,176 C 258,176 265,169 265,161 C 265,151 250,132 250,132 Z" 
+        fill="url(#bioGrad)" 
+        filter="url(#softGlowGlucai)" />
+  <circle cx="250" cy="161" r="2.5" fill="#ffffff" />
+
+  <!-- ONDA DE MONITOREO MÉDICO (ECG / Telemetría Wearable) -->
+  <g transform="translate(0, 35)">
+    <path d="M 50,210 L 120,210 L 132,210 L 142,192 L 152,228 L 165,165 L 178,255 L 190,198 L 200,210 L 450,210" 
+          fill="none" 
+          stroke="url(#ecgGrad)" 
+          stroke-width="2.5" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"
+          filter="url(#softGlowGlucai)" />
+    <!-- Punto de pulso activo -->
+    <circle cx="165" cy="165" r="3.5" fill="#f43f5e" filter="url(#softGlowGlucai)" />
+  </g>
+
+  <!-- Telemetría superior pequeña -->
+  <g transform="translate(320, 48)">
+    <rect x="0" y="0" width="115" height="22" rx="4" fill="rgba(10, 21, 38, 0.85)" stroke="rgba(0, 224, 255, 0.25)" stroke-width="1" />
+    <circle cx="12" cy="11" r="3" fill="#10b981" />
+    <text x="22" y="15" fill="#e0f2fe" font-family="'JetBrains Mono', monospace" font-size="9.5">GLU: 95 mg/dL</text>
+  </g>
+
+  <!-- Badge inferior: KNN ENGINE · 33 BIOMARKERS -->
+  <g transform="translate(140, 275)">
+    <rect x="0" y="0" width="220" height="26" rx="13" fill="rgba(10, 20, 38, 0.9)" stroke="rgba(0, 224, 255, 0.4)" stroke-width="1" />
+    <text x="110" y="17" fill="#00e0ff" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" text-anchor="middle" letter-spacing="1">KNN ENGINE · 33 BIOMARKERS</text>
+  </g>
+
+  <!-- Logotipo tipográfico GlucAI -->
+  <text x="250" y="330" fill="#ffffff" font-family="'Orbitron', sans-serif" font-size="18" font-weight="700" text-anchor="middle" letter-spacing="4">GlucAI <tspan fill="#00e0ff" font-size="14">2.0</tspan></text>
+</svg>

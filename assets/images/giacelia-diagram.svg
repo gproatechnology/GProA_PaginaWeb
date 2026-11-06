@@ -1,0 +1,155 @@
+<svg class="proyecto-svg" viewBox="0 0 500 360" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Filtros de resplandor (Glow) -->
+    <filter id="giaceliaGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="7" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="softGlowGiacelia" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3.5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Degradados de color de marca -->
+    <linearGradient id="giaceliaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00e0ff" />
+      <stop offset="60%" stop-color="#0066ff" />
+      <stop offset="100%" stop-color="#6366f1" />
+    </linearGradient>
+
+    <linearGradient id="gearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#00e0ff" />
+    </linearGradient>
+
+    <linearGradient id="waveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="rgba(0, 224, 255, 0.2)" />
+      <stop offset="40%" stop-color="#00e0ff" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+
+    <radialGradient id="giaceliaAura" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#0066ff" stop-opacity="0.25" />
+      <stop offset="55%" stop-color="#00e0ff" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Fondo Aura Luminosa -->
+  <circle cx="240" cy="165" r="150" fill="url(#giaceliaAura)" />
+
+  <!-- Cuadrícula técnica tipo Plano CAD / Blueprint -->
+  <g stroke="rgba(0, 224, 255, 0.12)" stroke-width="1" fill="none">
+    <circle cx="215" cy="155" r="130" stroke-dasharray="4 6" />
+    <line x1="60" y1="155" x2="440" y2="155" stroke-dasharray="2 4" />
+    <line x1="215" y1="35" x2="215" y2="275" stroke-dasharray="2 4" />
+
+    <!-- Miras técnicas (crosshairs) de ingeniería -->
+    <path d="M 60,60 L 75,60 M 60,60 L 60,75" />
+    <path d="M 440,60 L 425,60 M 440,60 L 440,75" />
+    <path d="M 60,270 L 75,270 M 60,270 L 60,255" />
+    <path d="M 440,270 L 425,270 M 440,270 L 440,255" />
+  </g>
+
+  <!-- Lazo de control cerrado (Feedback Loop Vector) -->
+  <path d="M 120,155 C 120,65 310,65 310,115" 
+        fill="none" 
+        stroke="rgba(0, 224, 255, 0.25)" 
+        stroke-width="1.5" 
+        stroke-dasharray="6 4" />
+  <polygon points="310,118 305,108 315,108" fill="#00e0ff" />
+
+  <!-- ENGRAJE SECUNDARIO SATÉLITE (CAD Gear Superior) -->
+  <g transform="translate(315, 115)">
+    <!-- Dientes satélite -->
+    <g fill="url(#gearGrad)" opacity="0.85">
+      <rect x="-5" y="-38" width="10" height="12" rx="2" transform="rotate(0)" />
+      <rect x="-5" y="-38" width="10" height="12" rx="2" transform="rotate(45)" />
+      <rect x="-5" y="-38" width="10" height="12" rx="2" transform="rotate(90)" />
+      <rect x="-5" y="-38" width="10" height="12" rx="2" transform="rotate(135)" />
+      <rect x="-5" y="-38" width="10" height="12" rx="2" transform="rotate(180)" />
+      <rect x="-5" y="-38" width="10" height="12" rx="2" transform="rotate(225)" />
+      <rect x="-5" y="-38" width="10" height="12" rx="2" transform="rotate(270)" />
+      <rect x="-5" y="-38" width="10" height="12" rx="2" transform="rotate(315)" />
+    </g>
+    <circle r="30" fill="#091322" stroke="#00e0ff" stroke-width="2" />
+    <circle r="14" fill="#050a14" stroke="rgba(0, 224, 255, 0.4)" stroke-width="1.5" />
+    <circle r="5" fill="#38bdf8" filter="url(#softGlowGiacelia)" />
+  </g>
+
+  <!-- ENGRANAJE PRINCIPAL (Core de Automatización) -->
+  <g transform="translate(215, 155)">
+    <!-- 8 Dientes macizos biselados -->
+    <g fill="url(#giaceliaGrad)">
+      <rect x="-8" y="-62" width="16" height="18" rx="3" transform="rotate(0)" />
+      <rect x="-8" y="-62" width="16" height="18" rx="3" transform="rotate(45)" />
+      <rect x="-8" y="-62" width="16" height="18" rx="3" transform="rotate(90)" />
+      <rect x="-8" y="-62" width="16" height="18" rx="3" transform="rotate(135)" />
+      <rect x="-8" y="-62" width="16" height="18" rx="3" transform="rotate(180)" />
+      <rect x="-8" y="-62" width="16" height="18" rx="3" transform="rotate(225)" />
+      <rect x="-8" y="-62" width="16" height="18" rx="3" transform="rotate(270)" />
+      <rect x="-8" y="-62" width="16" height="18" rx="3" transform="rotate(315)" />
+    </g>
+    <!-- Cuerpo y pista interna -->
+    <circle r="52" fill="#0b172a" stroke="url(#giaceliaGrad)" stroke-width="2.5" />
+    <circle r="38" fill="none" stroke="#00e0ff" stroke-width="1.5" stroke-dasharray="5 5" opacity="0.6" />
+    
+    <!-- Centro de Procesamiento de IA (Microchip de Control) -->
+    <rect x="-18" y="-18" width="36" height="36" rx="6" fill="#060c18" stroke="#00e0ff" stroke-width="2" filter="url(#softGlowGiacelia)" />
+    <rect x="-9" y="-9" width="18" height="18" rx="3" fill="url(#gearGrad)" transform="rotate(45)" />
+    
+    <!-- Pines del Microchip -->
+    <line x1="-18" y1="-8" x2="-25" y2="-8" stroke="#00e0ff" stroke-width="1.5" />
+    <line x1="-18" y1="8" x2="-25" y2="8" stroke="#00e0ff" stroke-width="1.5" />
+    <line x1="18" y1="-8" x2="25" y2="-8" stroke="#00e0ff" stroke-width="1.5" />
+    <line x1="18" y1="8" x2="25" y2="8" stroke="#00e0ff" stroke-width="1.5" />
+  </g>
+
+  <!-- TERCER ENGRANAJE DE TRANSMISIÓN (Inferior derecho) -->
+  <g transform="translate(325, 205)">
+    <g fill="#0066ff" opacity="0.75">
+      <rect x="-4" y="-28" width="8" height="10" rx="2" transform="rotate(22.5)" />
+      <rect x="-4" y="-28" width="8" height="10" rx="2" transform="rotate(82.5)" />
+      <rect x="-4" y="-28" width="8" height="10" rx="2" transform="rotate(142.5)" />
+      <rect x="-4" y="-28" width="8" height="10" rx="2" transform="rotate(202.5)" />
+      <rect x="-4" y="-28" width="8" height="10" rx="2" transform="rotate(262.5)" />
+      <rect x="-4" y="-28" width="8" height="10" rx="2" transform="rotate(322.5)" />
+    </g>
+    <circle r="22" fill="#0a1220" stroke="#0066ff" stroke-width="1.5" />
+    <circle r="8" fill="#050a14" stroke="#00e0ff" stroke-width="1" />
+  </g>
+
+  <!-- Curva de Simulación Dinámica (Respuesta transitoria amortiguada PID) -->
+  <g transform="translate(0, 30)">
+    <!-- Línea de Setpoint / Consigna -->
+    <line x1="80" y1="210" x2="420" y2="210" stroke="rgba(16, 185, 129, 0.3)" stroke-width="1.5" stroke-dasharray="4 4" />
+    <text x="75" y="213" fill="#10b981" font-family="'JetBrains Mono', monospace" font-size="9" text-anchor="end">SP</text>
+
+    <!-- Curva de respuesta oscilatoria estabilizada -->
+    <path d="M 85,210 Q 120,210 140,165 T 180,230 T 225,200 T 265,214 T 310,210 L 420,210" 
+          fill="none" 
+          stroke="url(#waveGrad)" 
+          stroke-width="2.5" 
+          stroke-linecap="round"
+          filter="url(#softGlowGiacelia)" />
+    
+    <!-- Punto de convergencia óptimo -->
+    <circle cx="410" cy="210" r="3.5" fill="#10b981" filter="url(#softGlowGiacelia)" />
+  </g>
+
+  <!-- Badge Inferior: CAD/CAE & CONTROL SYSTEMS -->
+  <g transform="translate(145, 275)">
+    <rect x="0" y="0" width="210" height="26" rx="13" fill="rgba(10, 20, 38, 0.9)" stroke="rgba(0, 224, 255, 0.4)" stroke-width="1" />
+    <text x="105" y="17" fill="#00e0ff" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" text-anchor="middle" letter-spacing="1">CAD/CAE · CONTROL SYSTEMS</text>
+  </g>
+
+  <!-- Logotipo tipográfico GIACELIA -->
+  <text x="250" y="330" fill="#ffffff" font-family="'Orbitron', sans-serif" font-size="18" font-weight="700" text-anchor="middle" letter-spacing="4">GIACELIA <tspan fill="#00e0ff" font-size="14">1.1</tspan></text>
+</svg>

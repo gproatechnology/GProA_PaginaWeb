@@ -1,10 +1,8 @@
 $ErrorActionPreference = 'Stop'
-$project = 'Pagina_web'
-$repoRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
-$siteDir = Join-Path $repoRoot $project
+$siteDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 if (-not (Test-Path -LiteralPath $siteDir)) {
-    Write-Host "No se encontró la carpeta '$project' en '$repoRoot'." -ForegroundColor Red
+    Write-Host "No se encontró la carpeta '$siteDir'." -ForegroundColor Red
     exit 1
 }
 

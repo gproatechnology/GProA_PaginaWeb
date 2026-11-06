@@ -168,6 +168,23 @@
     letter-spacing: 2px;
 }
 
+.proyecto-image .proyecto-svg,
+.proyecto-image .proyecto-img-asset {
+    max-width: 100%;
+    max-height: 320px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.proyecto-card:hover .proyecto-image .proyecto-svg,
+.proyecto-card:hover .proyecto-image .proyecto-img-asset {
+    transform: scale(1.03);
+    filter: drop-shadow(0 0 15px rgba(0, 224, 255, 0.3));
+}
+
 /* Estilo similar al ejemplo - Proyecto destacado */
 .proyecto-card.active .proyecto-info {
     position: relative;

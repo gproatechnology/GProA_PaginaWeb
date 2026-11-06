@@ -47,10 +47,13 @@ export function initProjectTabs() {
                 </div>
             </div>
             <div class="proyecto-image">
-                <div class="proyecto-placeholder">
-                    <i class="fas ${proyecto.icon}"></i>
-                    <span>${proyecto.acronym}</span>
-                </div>
+                ${proyecto.image 
+                    ? `<img src="${proyecto.image}" alt="${proyecto.title}" class="proyecto-img-asset" loading="lazy">`
+                    : `<div class="proyecto-placeholder">
+                            <i class="fas ${proyecto.icon}"></i>
+                            <span>${proyecto.acronym}</span>
+                        </div>`
+                }
             </div>
         `;
 
