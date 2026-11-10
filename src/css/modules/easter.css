@@ -34,7 +34,7 @@
     z-index: 1;
     width: 96%;
     max-width: 1000px;
-    max-height: 96vh;
+    max-height: 98vh;
     background: #ffffff;
     border-radius: 24px;
     overflow: hidden;
@@ -105,7 +105,7 @@
 @media (max-width: 768px) {
     .easter-modal-content {
         width: 98%;
-        max-height: 97vh;
+        max-height: 98vh;
         border-radius: 16px;
     }
 
