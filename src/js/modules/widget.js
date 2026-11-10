@@ -812,6 +812,25 @@
                 // No cerrar automáticamente al hacer clic fuera
             }
         });
+
+        // Cerrar easter egg modal: botón X
+        const easterClose = document.getElementById('easterModalClose');
+        if (easterClose) {
+            easterClose.addEventListener('click', cerrarEasterEgg);
+        }
+
+        // Cerrar easter egg modal: clic en backdrop
+        const easterBackdrop = document.getElementById('easterModalBackdrop');
+        if (easterBackdrop) {
+            easterBackdrop.addEventListener('click', cerrarEasterEgg);
+        }
+
+        // Cerrar easter egg modal: tecla Esc
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                cerrarEasterEgg();
+            }
+        });
     }
 
     // Toggle panel
@@ -823,6 +842,21 @@
         } else {
             elementos.panel.style.display = 'none';
         }
+    }
+
+    // Abrir easter egg modal
+    function abrirEasterEgg() {
+        if (estado.abierto) {
+            togglePanel();
+        }
+        const modal = document.getElementById('easterModal');
+        if (modal) modal.classList.add('show');
+    }
+
+    // Cerrar easter egg modal
+    function cerrarEasterEgg() {
+        const modal = document.getElementById('easterModal');
+        if (modal) modal.classList.remove('show');
     }
 
     // Llamar a la API del asistente
@@ -923,6 +957,14 @@
             const respuestaFAQ = buscarEnFAQ(texto);
             if (respuestaFAQ) {
                 agregarMensajeAgente(respuestaFAQ);
+                estado.escribiendo = false;
+                return;
+            }
+
+            // Si no está en FAQ, verificar easter egg antes de responder por defecto
+            const textoLower = texto.toLowerCase().trim();
+            if (textoLower.includes('fisioterapia')) {
+                abrirEasterEgg();
                 estado.escribiendo = false;
                 return;
             }
