@@ -95,8 +95,8 @@
         }
     ];
 
-    // Palabra mágica para activar chat directo con Gemini (bypassa FAQ)
-    const PALABRA_MAGICA = '/gemini';
+    // Palabra mágica para activar chat directo con Gemini (bypassa FAQ) — DESACTIVADO temporalmente
+    // const PALABRA_MAGICA = '/gemini';
 
     // Buscar coincidencia en FAQ local
     function buscarEnFAQ(texto) {
@@ -135,7 +135,8 @@
         crearHTML();
         cargarEstilos();
         agregarEventos();
-        console.log('🤖 GProA Gemini Widget inicializado');
+        // TODO: quitar console.log en producción (Ítem 13 Fase 3)
+        // console.log('🤖 GProA Gemini Widget inicializado');
     }
 
     // Crear estructura HTML del widget
@@ -242,6 +243,8 @@
         const link = document.createElement('link');
         link.id = 'gproa-widget-css';
         link.rel = 'stylesheet';
+        // TODO: agregar hash SRI (integrity) verificado de widget.css remoto
+        link.crossOrigin = 'anonymous';
         link.href = 'https://gproa-agente-gemini.onrender.com/widget.css';
         document.head.appendChild(link);
 
@@ -859,7 +862,7 @@
         if (modal) modal.classList.remove('show');
     }
 
-    // Llamar a la API del asistente
+    // Llamar a la API del asistente — TODO: agregar header Authorization con token de sesión
     async function llamarAPI(texto) {
         const respuesta = await fetch(`${CONFIG.API_BASE_URL}/api/chat`, {
             method: 'POST',
@@ -886,13 +889,13 @@
         estado.escribiendo = true;
 
         try {
-            // Detectar palabra mágica para activar modo Gemini directo
-            if (texto === PALABRA_MAGICA) {
-                estado.modoGemini = true;
-                agregarMensajeAgente('Modo Gemini directo activado. Ahora puedes escribir cualquier pregunta y se enviará a la API de Google Gemini. Escribe <strong>/salir</strong> para volver al modo FAQ.', true);
-                estado.escribiendo = false;
-                return;
-            }
+            // Detectar palabra mágica para activar modo Gemini directo — DESACTIVADO temporalmente
+            // if (texto === PALABRA_MAGICA) {
+            //     estado.modoGemini = true;
+            //     agregarMensajeAgente('Modo Gemini directo activado. Ahora puedes escribir cualquier pregunta y se enviará a la API de Google Gemini. Escribe <strong>/salir</strong> para volver al modo FAQ.', true);
+            //     estado.escribiendo = false;
+            //     return;
+            // }
 
             // Salir del modo Gemini
             if (texto === '/salir' && estado.modoGemini) {
@@ -1014,6 +1017,7 @@
         contenedor.innerHTML = '<span style="color:var(--gproa-primary);">Analizando archivo...</span>';
         
         try {
+            // TODO: agregar header Authorization con token de sesión antes de llamar a la API
             const respuesta = await fetch(`${CONFIG.API_BASE_URL}/api/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1036,6 +1040,7 @@
         contenedor.innerHTML = '<span style="color:var(--gproa-primary);">Analizando proyecto...</span>';
         
         try {
+            // TODO: agregar header Authorization con token de sesión antes de llamar a la API
             const respuesta = await fetch(`${CONFIG.API_BASE_URL}/api/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

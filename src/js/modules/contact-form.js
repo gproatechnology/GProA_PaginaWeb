@@ -195,6 +195,7 @@ async function submitToFormspree(form, formData) {
     try {
         setLoadingState(true);
 
+        // TODO: agregar token CSRF y validar origen antes de enviar a Formspree (FORMSPREE_ENDPOINT expuesto en línea 6)
         const response = await fetch(FORMSPREE_ENDPOINT, {
             method: 'POST',
             body: formData,

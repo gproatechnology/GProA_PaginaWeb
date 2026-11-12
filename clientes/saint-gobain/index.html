@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso Clientes | Gyproc - Saint-Gobain | GProA Technology</title>
+    <title>Acceso Clientes | Panel Demo | GProA Technology</title>
     <link rel="stylesheet" href="./styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,28 +11,8 @@
     <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
 </head>
 <body>
-    <!-- Boot Sequence -->
-    <div class="boot-overlay" id="bootOverlay">
-        <div class="boot-logo">
-            <div class="entity-avatar">
-                <div class="entity-scan"></div>
-                <i class="fas fa-industry"></i>
-            </div>
-            <div class="boot-text">
-                <span class="boot-title">GProA TECHNOLOGY</span>
-                <span class="boot-sub">Gyproc // Saint-Gobain Portal</span>
-            </div>
-        </div>
-        <div class="boot-lines" id="bootLines">
-            <div class="boot-line">> Iniciando sistema...</div>
-            <div class="boot-line">> Verificando protocolo NDA...</div>
-            <div class="boot-line">> Cargando módulos de acceso...</div>
-            <div class="boot-line">> Acceso concedido.</div>
-        </div>
-    </div>
-
     <!-- App Layout -->
-    <div class="app-layout" id="appLayout" style="display: none;">
+    <div class="app-layout" id="appLayout">
         <!-- Video Background -->
         <div class="app-video-bg" aria-hidden="true">
             <video autoplay muted loop playsinline>
@@ -70,7 +50,7 @@
                 </div>
                 <div class="hud-brand">
                     <span class="brand-name">GProA</span>
-                    <span class="brand-sub">Gyproc // Saint-Gobain</span>
+                    <span class="brand-sub">Panel demo // GProA</span>
                 </div>
             </div>
             <div class="hud-topbar-center">
@@ -85,9 +65,6 @@
                 <a href="https://gproatechnology.com" class="btn btn-outline btn-sm">
                     <i class="fas fa-arrow-left"></i> Salir
                 </a>
-                <button type="button" class="btn btn-outline btn-sm" id="logoutBtn">
-                    <i class="fas fa-power-off"></i> Cerrar sesión
-                </button>
             </div>
         </header>
 
@@ -119,7 +96,7 @@
                     <div class="dashboard-header">
                         <div class="dashboard-title-block">
                             <h2 class="dashboard-title"><i class="fas fa-satellite-dish"></i> Mission Control</h2>
-                            <p class="dashboard-subtitle">Panel de control — Saint-Gobain // Gyproc</p>
+                            <p class="dashboard-subtitle">Panel de control — demo genérico</p>
                         </div>
                         <div class="dashboard-rank">
                             <span class="rank-badge">LVL</span>
@@ -234,10 +211,10 @@
                         <div class="dossier-header-left">
                             <div class="dossier-classified-stamp">DESCLASIFICADO</div>
                             <h2 class="dossier-title"><i class="fas fa-database"></i> Intel Files</h2>
-                            <p class="dossier-subtitle">Archivo operativo — Saint-Gobain // Gyproc</p>
+                            <p class="dossier-subtitle">Archivo operativo — demo genérico</p>
                         </div>
                         <div class="dossier-header-right">
-                            <span class="dossier-id">ID: <span class="mono">SG-2026-001</span></span>
+                            <span class="dossier-id">ID: <span class="mono">DEMO-001</span></span>
                         </div>
                     </div>
 
@@ -277,7 +254,7 @@
                             <p class="protocol-subtitle">Manual de operaciones — Confidencialidad NDA</p>
                         </div>
                         <div class="protocol-header-right">
-                            <span class="protocol-code">COD: <span class="mono">NDA-SG-2026</span></span>
+                            <span class="protocol-code">COD: <span class="mono">DEMO-2026</span></span>
                         </div>
                     </div>
                     <div class="protocol-panel">
@@ -292,42 +269,6 @@
                 </section>
             </div>
         </main>
-    </div>
-
-    <!-- Access / Login -->
-    <div class="access-container" id="accessContainer">
-        <div class="access-card">
-            <div class="access-header">
-                <div class="access-logo">
-                    <i class="fas fa-industry"></i>
-                </div>
-                <h1 class="glitch" data-text="Acceso Clientes">Acceso Clientes</h1>
-                <p class="access-subtitle">Gyproc - Saint-Gobain &bull; Zona restringida</p>
-                <p class="access-tagline">Innovación que redefine la construcción ligera</p>
-            </div>
-
-            <div class="access-body" id="accessBody">
-                <form id="accessForm" class="access-form" autocomplete="off">
-                    <div class="form-group">
-                        <label for="accessCode">Código de acceso NDA</label>
-                        <input type="password" id="accessCode" name="accessCode" placeholder="Ingresa tu código de acceso" required autocomplete="off">
-                        <span class="form-error" id="accessError"></span>
-                    </div>
-                    <div class="access-actions">
-                        <button type="submit" class="btn btn-primary btn-access">
-                            <span class="btn-text">Ingresar</span>
-                        </button>
-                        <a href="https://gproatechnology.com" class="btn btn-outline">
-                            <i class="fas fa-arrow-left"></i> Volver a GProA
-                        </a>
-                    </div>
-                </form>
-                <p class="access-hint">
-                    <i class="fas fa-info-circle"></i>
-                    Acceso autorizado exclusivamente para Eleazar (planta). Contacto asignado por GProA Technology.
-                </p>
-            </div>
-        </div>
     </div>
 
     <script type="module" src="./main.js"></script>

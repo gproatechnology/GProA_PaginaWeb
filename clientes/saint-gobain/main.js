@@ -4,10 +4,13 @@
  * Enterprise HUD Sci-Fi SPA
  */
 
-const ACCESS_CODE = null;
-
 let appData = null;
 let chartsInitialized = false;
+
+async function initApp() {
+    await loadData();
+    initClock();
+}
 
 async function loadData() {
     try {
@@ -30,15 +33,6 @@ async function loadData() {
     }
 }
 
-function initBoot() {
-    const overlay = document.getElementById('bootOverlay');
-    if (!overlay) return;
-
-    const hide = () => overlay.classList.add('hidden');
-    overlay.addEventListener('click', hide);
-    setTimeout(hide, 2200);
-}
-
 function initClock() {
     const clockEl = document.getElementById('hudClock');
     if (!clockEl) return;
@@ -53,45 +47,6 @@ function initClock() {
 
     update();
     setInterval(update, 1000);
-}
-
-function initAccess() {
-    const form = document.getElementById('accessForm');
-    const input = document.getElementById('accessCode');
-    const errorEl = document.getElementById('accessError');
-    const accessContainer = document.getElementById('accessContainer');
-    const appLayout = document.getElementById('appLayout');
-
-    if (!form) return;
-
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const code = input.value.trim();
-
-        if (ACCESS_CODE && code === ACCESS_CODE) {
-            errorEl.textContent = '';
-            accessContainer.style.display = 'none';
-            appLayout.style.display = 'flex';
-            input.value = '';
-
-            const overlay = document.getElementById('bootOverlay');
-            if (overlay) {
-                overlay.classList.add('hidden');
-            }
-
-            initClock();
-            loadData();
-        } else {
-            errorEl.textContent = 'Acceso restringido. Credenciales requeridas.';
-            input.classList.add('invalid');
-            input.focus();
-        }
-    });
-
-    input.addEventListener('input', () => {
-        errorEl.textContent = '';
-        input.classList.remove('invalid');
-    });
 }
 
 function initNavigation() {
@@ -177,28 +132,6 @@ function initTabs() {
             }
         });
     });
-}
-
-function initLogout() {
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
-            const appLayout = document.getElementById('appLayout');
-            const accessContainer = document.getElementById('accessContainer');
-            const accessCode = document.getElementById('accessCode');
-            const accessError = document.getElementById('accessError');
-
-            appLayout.style.display = 'none';
-            accessContainer.style.display = 'flex';
-            accessCode.value = '';
-            accessError.textContent = '';
-            chartsInitialized = false;
-
-            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-            const dashboard = document.getElementById('viewDashboard');
-            if (dashboard) dashboard.classList.add('active');
-        });
-    }
 }
 
 function renderAll() {
@@ -771,11 +704,9 @@ function initMagicCards() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    initBoot();
-    initAccess();
+    initApp();
     initNavigation();
     initTabs();
-    initLogout();
     initChartJs();
     initMagicCards();
 });
